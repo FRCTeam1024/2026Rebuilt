@@ -38,7 +38,7 @@ public class Intake extends SubsystemBase implements Logged {
   public Command intakeCommand() {
     return runEnd(
         () -> {
-          setOutput(0.3);
+          setOutput(0.6);
         },
         () -> {
           stop();
