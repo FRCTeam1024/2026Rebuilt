@@ -16,6 +16,8 @@ public final class Constants {
   public static final class ControlConstants {
     public static final int driverPort = 0;
     public static final double stickDeadband = 0.04;
+
+    public static final int operatorPort = 1;
   }
 
   public static final class SwerveConstants {
@@ -154,6 +156,30 @@ public final class Constants {
 
     /** The pose used to initialize the pose estimator */
     public static final Pose2d initialPose = Pose2d.kZero;
+  }
+
+  public static final class IntakeConstants {
+    public static final int motorID = 40;
+    public static final double maxOutputVoltage = 10;
+  }
+
+  public static final class ConveyorConstants {
+    public static final int motorID = 41;
+    public static final double maxOutputVoltage = 10;
+  }
+
+  public static final class KickerConstants {
+    public static final int leaderID = 42;
+    public static final int followerID = 43;
+
+    public static final double maxOutputVoltage = 10;
+  }
+
+  public static final class ShooterConstants {
+    public static final int leaderID = 42;
+    public static final int followerID = 43;
+
+    public static final double maxOutputVoltage = 10;
   }
 
   public static final

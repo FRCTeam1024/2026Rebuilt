@@ -21,8 +21,17 @@ public class RobotContainer implements Logged {
   private final CommandXboxController driver =
       new CommandXboxController(ControlConstants.driverPort);
 
+  private final CommandXboxController operator =
+      new CommandXboxController(ControlConstants.operatorPort);
+
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
+
+  private final Intake intake = new Intake();
+  private final Conveyor conveyor = new Conveyor();
+  private final Kicker kicker = new Kicker();
+  private final Shooter shooter = new Shooter();
+  private final Hood hood = new Hood();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -48,6 +57,15 @@ public class RobotContainer implements Logged {
   private void configureBindings() {
     /* Driver Buttons */
     driver.x().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+
+    operator
+        .leftTrigger()
+        .whileTrue(
+            Commands.parallel(
+                intake.intakeCommand(),
+                conveyor.feedCommand(),
+                kicker.feedCommand(),
+                shooter.spinUpCommand(() -> 5)));
   }
 
   /**
