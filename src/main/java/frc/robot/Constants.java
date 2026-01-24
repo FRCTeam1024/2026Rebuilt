@@ -183,8 +183,8 @@ public final class Constants {
   }
 
   public static final class HoodConstants {
-    public static final int leaderID = 46;
-    public static final int followerID = 47;
+    public static final int leaderID = 47;
+    public static final int followerID = 46;
   }
 
   public static final

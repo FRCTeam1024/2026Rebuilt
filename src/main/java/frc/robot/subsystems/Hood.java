@@ -24,7 +24,7 @@ public class Hood extends SubsystemBase implements Logged {
   public Hood() {
     var config = new TalonFXConfiguration();
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     config.CurrentLimits.StatorCurrentLimit = 40;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
@@ -40,10 +40,9 @@ public class Hood extends SubsystemBase implements Logged {
     // TODO: current homing
     leader.setPosition(0);
 
-    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     follower.getConfigurator().apply(config);
-
-    follower.setControl(followRequest);
+    // follower.setControl(followRequest);
   }
 
   public void setPosition(double position) {
