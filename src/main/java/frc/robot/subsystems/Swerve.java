@@ -21,8 +21,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
 import java.util.function.DoubleSupplier;
+import monologue.Logged;
 
-public class Swerve extends SubsystemBase {
+public class Swerve extends SubsystemBase implements Logged {
   public SwerveDrivePoseEstimator poseEstimator;
   public SwerveModule[] swerveMods;
   public Pigeon2 gyro;
