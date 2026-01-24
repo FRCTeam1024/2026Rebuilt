@@ -65,7 +65,7 @@ public class RobotContainer implements Logged {
                 intake.intakeCommand(),
                 conveyor.feedCommand(),
                 kicker.feedCommand(),
-                shooter.spinUpCommand(() -> 5)));
+                shooter.spinUpCommand(() -> 4)));
   }
 
   /**

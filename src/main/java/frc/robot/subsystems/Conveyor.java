@@ -38,7 +38,7 @@ public class Conveyor extends SubsystemBase implements Logged {
   public Command feedCommand() {
     return runEnd(
         () -> {
-          setOutput(0.8);
+          setOutput(0.3);
         },
         () -> {
           stop();
@@ -48,7 +48,7 @@ public class Conveyor extends SubsystemBase implements Logged {
   public Command ejectCommand() {
     return runEnd(
         () -> {
-          setOutput(-0.8);
+          setOutput(-0.3);
         },
         () -> {
           stop();

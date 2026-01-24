@@ -24,13 +24,13 @@ public class Kicker extends SubsystemBase implements Logged {
   public Kicker() {
     var config = new TalonFXConfiguration();
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     config.CurrentLimits.StatorCurrentLimit = 40;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     leader.getConfigurator().apply(config);
 
-    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     follower.getConfigurator().apply(config);
 
     follower.setControl(followRequest);
@@ -48,7 +48,7 @@ public class Kicker extends SubsystemBase implements Logged {
   public Command feedCommand() {
     return runEnd(
         () -> {
-          setOutput(0.8);
+          setOutput(0.3);
         },
         () -> {
           stop();
@@ -58,7 +58,7 @@ public class Kicker extends SubsystemBase implements Logged {
   public Command retractCommand() {
     return runEnd(
         () -> {
-          setOutput(-0.8);
+          setOutput(-0.3);
         },
         () -> {
           stop();
