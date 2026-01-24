@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import monologue.Monologue;
@@ -25,6 +26,9 @@ public class Robot extends TimedRobot {
 
   private final PowerDistribution powerDistribution = new PowerDistribution(0, ModuleType.kCTRE);
 
+  private final Timer userCodeTimer = new Timer();
+  private final Timer dtTimer = new Timer();
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -35,6 +39,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     Monologue.setupMonologue(m_robotContainer, "Robot", false, false);
     DriverStation.silenceJoystickConnectionWarning(true);
+    dtTimer.start();
   }
 
   /**
@@ -46,6 +51,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    m_robotContainer.log("Loop dt", dtTimer.get() * 1000);
+    dtTimer.restart();
+    userCodeTimer.restart();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -53,6 +61,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.log("Bus Voltage", RobotController.getInputVoltage());
     m_robotContainer.log("Total Current", powerDistribution.getTotalCurrent());
     CommandScheduler.getInstance().run();
+    m_robotContainer.log("User Code ms", userCodeTimer.get() * 1000);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
