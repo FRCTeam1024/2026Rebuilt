@@ -55,4 +55,19 @@ public class Shooter extends SubsystemBase implements Logged {
           stop();
         });
   }
+
+  @Override
+  public void periodic() {
+    log("Requested Voltage", voltageRequest.Output);
+    log("Leader Stator Current", leader.getStatorCurrent().getValueAsDouble());
+    log("Follower Stator Current", follower.getStatorCurrent().getValueAsDouble());
+    log("Leader Velocity", leader.getVelocity().getValueAsDouble());
+    log("Follower Velocity", follower.getVelocity().getValueAsDouble());
+    log("Leader Applied Voltage", leader.getMotorVoltage().getValueAsDouble());
+    log("Follower Applied Voltage", follower.getMotorVoltage().getValueAsDouble());
+    log("Leader Supply Voltage", leader.getSupplyVoltage().getValueAsDouble());
+    log("Follower Supply Voltage", follower.getSupplyVoltage().getValueAsDouble());
+    log("Leader Temperature", leader.getDeviceTemp().getValueAsDouble());
+    log("Follower Temperature", follower.getDeviceTemp().getValueAsDouble());
+  }
 }
