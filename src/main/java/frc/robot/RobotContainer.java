@@ -61,20 +61,24 @@ public class RobotContainer implements Logged {
     operator
         .leftTrigger()
         .whileTrue(
-            Commands.parallel(
-                intake.intakeCommand(),
-                conveyor.feedCommand(),
-                kicker.feedCommand(),
-                shooter.spinUpCommand()));
+            shooter
+                .spinUpCommand()
+                .withTimeout(1)
+                .andThen(
+                    Commands.parallel(
+                        intake.intakeCommand(),
+                        conveyor.feedCommand(),
+                        kicker.feedCommand(),
+                        shooter.spinUpCommand())));
 
-    operator.leftBumper().whileTrue(
-      Commands.parallel(
-        intake.ejectCommand(),
-        conveyor.ejectCommand(),
-        kicker.retractCommand(),
-        shooter.spinUpCommand(() -> -4)
-      )
-    );
+    operator
+        .leftBumper()
+        .whileTrue(
+            Commands.parallel(
+                intake.ejectCommand(),
+                conveyor.ejectCommand(),
+                kicker.retractCommand(),
+                shooter.spinUpCommand(() -> -4)));
 
     operator.rightTrigger().whileTrue(intake.intakeCommand());
   }
