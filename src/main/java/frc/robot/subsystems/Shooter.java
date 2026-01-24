@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.DoubleSupplier;
@@ -35,6 +36,7 @@ public class Shooter extends SubsystemBase implements Logged {
     follower.getConfigurator().apply(config);
 
     follower.setControl(followRequest);
+    SmartDashboard.putNumber("ShooterVoltage", 4);
   }
 
   public void setVoltage(double output) {
@@ -54,6 +56,10 @@ public class Shooter extends SubsystemBase implements Logged {
         () -> {
           stop();
         });
+  }
+
+  public Command spinUpCommand() {
+    return spinUpCommand(() -> SmartDashboard.getNumber("ShooterVoltage", 0));
   }
 
   @Override
