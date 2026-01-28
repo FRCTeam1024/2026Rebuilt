@@ -185,6 +185,8 @@ public final class Constants {
   public static final class HoodConstants {
     public static final int leaderID = 47;
     public static final int followerID = 46;
+    public static final double minPosition = 0.0;
+    public static final double maxPosition = 0.7;
   }
 
   public static final

@@ -81,6 +81,9 @@ public class RobotContainer implements Logged {
                 shooter.spinUpCommand(() -> -4)));
 
     operator.rightTrigger().whileTrue(intake.intakeCommand());
+
+    hood.setDefaultCommand(
+        hood.setPositionCommand(() -> -operator.getLeftY() * Constants.HoodConstants.maxPosition));
   }
 
   /**
