@@ -1,3 +1,4 @@
+import java.net.NetworkInterface;
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2026.1.1"
@@ -49,6 +50,59 @@ deploy {
                 }
             }
         }
+    }
+}
+
+// Dynamic team number selection based on network configuration.
+// Returns team number if IP matches 10.10.24.* (1024) or 10.10.25.* (1025), otherwise null.
+def getTeamFromIp() {
+    def virtualPatterns = [
+        'Virtual',
+        'VirtualBox',
+        'VMware',
+        'vEthernet',
+        'TAP-Windows',
+        'Loopback'
+    ]
+
+    NetworkInterface.networkInterfaces.toList()
+            .findAll { iface ->
+                iface.isUp() &&
+                        !iface.isLoopback() &&
+                        !virtualPatterns.any { pattern -> iface.displayName?.contains(pattern) || iface.name?.contains(pattern) }
+            }
+            .collectMany {
+                it.inetAddresses.toList()
+            }
+            .findAll { !it.isLoopbackAddress() && !(it instanceof java.net.Inet6Address && it.isLinkLocalAddress()) }
+            .collect { it.hostAddress }
+            .findResult { ip ->
+                if (ip.startsWith("10.10.24.")) return 1024
+                if (ip.startsWith("10.10.25.")) return 1025
+                null
+            }
+}
+
+// Runs before deploy to set team number from IP if available, otherwise uses preferences.
+tasks.register("detectTeam") {
+    doLast {
+        def discoveredTeam = getTeamFromIp()
+
+        if (discoveredTeam) {
+            logger.info("Discovered team number ${discoveredTeam} from IP address, overriding preferences")
+            deploy.targets.named("roborio") {
+                team = discoveredTeam
+            }
+        } else {
+            def preferencesTeam = deploy.targets.roborio.team
+            logger.lifecycle("No team number discovered from IP, using preferences file (${preferencesTeam})")
+        }
+    }
+}
+
+deploy.targets.named("roborio") {
+    it.getTargetDiscoveryTask().configure {
+        dependsOn detectTeam
     }
 }
 
