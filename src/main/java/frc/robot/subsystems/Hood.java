@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.HoodConstants;
 import java.util.function.DoubleSupplier;
 import monologue.Logged;
 
@@ -31,11 +32,13 @@ public class Hood extends SubsystemBase implements Logged {
     config.CurrentLimits.StatorCurrentLimit = 40;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-    config.Slot0.kP = 10;
+    config.Feedback.SensorToMechanismRatio = 4;
+
+    config.Slot0.kP = 50;
     config.Slot0.kI = 0;
-    config.Slot0.kD = 0;
+    config.Slot0.kD = 0.1;
     config.Slot0.kA = 0;
-    config.Slot0.kV = 0;
+    config.Slot0.kV = 0.45;
     config.Slot0.kG = 0;
     config.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
@@ -43,9 +46,9 @@ public class Hood extends SubsystemBase implements Logged {
     config.MotionMagic.MotionMagicAcceleration = 100;
 
     config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = HoodConstants.minPosition;
     config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.7;
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = HoodConstants.maxPosition;
 
     leader.getConfigurator().apply(config);
     // TODO: current homing
