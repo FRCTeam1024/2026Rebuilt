@@ -38,7 +38,7 @@ public class Intake extends SubsystemBase implements Logged {
   public Command intakeCommand() {
     return runEnd(
         () -> {
-          setOutput(0.6);
+          setOutput(0.7);
         },
         () -> {
           stop();
@@ -59,6 +59,7 @@ public class Intake extends SubsystemBase implements Logged {
   public void periodic() {
     log("Output Voltage", motor.getMotorVoltage().getValueAsDouble());
     log("Stator Current", motor.getStatorCurrent().getValueAsDouble());
+    log("Supply Current", motor.getSupplyCurrent().getValueAsDouble());
     log("Supply Voltage", motor.getSupplyVoltage().getValueAsDouble());
     log("Velocity", motor.getVelocity().getValueAsDouble());
     log("Requested Voltage", voltageRequest.Output);

@@ -48,7 +48,7 @@ public class Kicker extends SubsystemBase implements Logged {
   public Command feedCommand() {
     return runEnd(
         () -> {
-          setOutput(0.3);
+          setOutput(0.5);
         },
         () -> {
           stop();

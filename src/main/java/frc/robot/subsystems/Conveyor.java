@@ -38,7 +38,7 @@ public class Conveyor extends SubsystemBase implements Logged {
   public Command feedCommand() {
     return runEnd(
         () -> {
-          setOutput(0.3);
+          setOutput(0.25);
         },
         () -> {
           stop();
@@ -53,5 +53,16 @@ public class Conveyor extends SubsystemBase implements Logged {
         () -> {
           stop();
         });
+  }
+
+  @Override
+  public void periodic() {
+    log("Output Voltage", motor.getMotorVoltage().getValueAsDouble());
+    log("Stator Current", motor.getStatorCurrent().getValueAsDouble());
+    log("Supply Current", motor.getSupplyCurrent().getValueAsDouble());
+    log("Supply Voltage", motor.getSupplyVoltage().getValueAsDouble());
+    log("Velocity", motor.getVelocity().getValueAsDouble());
+    log("Requested Voltage", voltageRequest.Output);
+    log("Temperature", motor.getDeviceTemp().getValueAsDouble());
   }
 }

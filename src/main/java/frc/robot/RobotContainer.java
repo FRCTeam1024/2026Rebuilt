@@ -3,6 +3,7 @@ package frc.robot;
 import static edu.wpi.first.math.MathUtil.applyDeadband;
 import static frc.robot.Constants.*;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -61,15 +62,15 @@ public class RobotContainer implements Logged {
     operator
         .leftTrigger()
         .whileTrue(
-            shooter
-                .spinUpCommand()
-                .withTimeout(1)
-                .andThen(
+            // shooter
+            //     .spinUpCommand()
+            //     .withTimeout(1)
+            //     .andThen(
                     Commands.parallel(
-                        intake.intakeCommand(),
-                        conveyor.feedCommand(),
+                        // intake.intakeCommand(),
+                        // conveyor.feedCommand(),
                         kicker.feedCommand(),
-                        shooter.spinUpCommand())));
+                        shooter.spinUpCommand()));//);
 
     operator
         .leftBumper()
@@ -82,8 +83,9 @@ public class RobotContainer implements Logged {
 
     operator.rightTrigger().whileTrue(intake.intakeCommand());
 
+    SmartDashboard.putNumber("Hood angle", 0);
     hood.setDefaultCommand(
-        hood.setPositionCommand(() -> -operator.getLeftY() * Constants.HoodConstants.maxPosition));
+        hood.setPositionCommand(() -> SmartDashboard.getNumber("Hood angle", 0)));
   }
 
   /**
