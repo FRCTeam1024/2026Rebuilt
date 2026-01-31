@@ -1,9 +1,12 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Constants.ShooterConstants.*;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -11,7 +14,10 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import java.util.function.DoubleSupplier;
 import monologue.Logged;
 
@@ -20,6 +26,7 @@ public class Shooter extends SubsystemBase implements Logged {
   private final TalonFX leader = new TalonFX(leaderID);
   private final TalonFX follower = new TalonFX(followerID);
   private final VoltageOut voltageRequest = new VoltageOut(0);
+  private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
   private final Follower followRequest =
       new Follower(leader.getDeviceID(), MotorAlignmentValue.Opposed);
 
@@ -29,6 +36,14 @@ public class Shooter extends SubsystemBase implements Logged {
     config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     config.CurrentLimits.StatorCurrentLimit = 80;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
+
+    config.Slot0.kP = 0.15597;
+    config.Slot0.kI = 0;
+    config.Slot0.kD = 0;
+    config.Slot0.kS = 0.3401;
+    config.Slot0.kA = 0.035746;
+    config.Slot0.kV = 0.11947;
+    config.Slot0.kG = 0;
 
     leader.getConfigurator().apply(config);
 
@@ -42,6 +57,11 @@ public class Shooter extends SubsystemBase implements Logged {
   public void setVoltage(double output) {
     voltageRequest.Output = output;
     leader.setControl(voltageRequest);
+  }
+
+  public void setVelocity(double velocityRPS) {
+    velocityRequest.Velocity = velocityRPS;
+    leader.setControl(velocityRequest);
   }
 
   public void stop() {
@@ -60,6 +80,34 @@ public class Shooter extends SubsystemBase implements Logged {
 
   public Command spinUpCommand() {
     return spinUpCommand(() -> SmartDashboard.getNumber("ShooterVoltage", 0));
+  }
+
+  public Command sysIdRoutine() {
+    var routine = makeRoutine();
+    return Commands.sequence(
+        routine.quasistatic(Direction.kForward).withTimeout(12),
+        Commands.waitSeconds(5),
+        routine.dynamic(Direction.kForward).withTimeout(5),
+        Commands.waitSeconds(5),
+        routine.quasistatic(Direction.kReverse).withTimeout(12),
+        Commands.waitSeconds(5),
+        routine.dynamic(Direction.kReverse).withTimeout(5),
+        Commands.waitSeconds(5));
+  }
+
+  private SysIdRoutine makeRoutine() {
+    return new SysIdRoutine(
+        new SysIdRoutine.Config(
+            null,
+            Volts.of(4),
+            null,
+            state -> SignalLogger.writeString("ShooterSysIDState", state.toString())),
+        new SysIdRoutine.Mechanism(
+            volts -> {
+              setVoltage(volts.in(Volts));
+            },
+            log -> {},
+            this));
   }
 
   @Override

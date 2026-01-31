@@ -66,11 +66,10 @@ public class RobotContainer implements Logged {
             //     .spinUpCommand()
             //     .withTimeout(1)
             //     .andThen(
-                    Commands.parallel(
-                        // intake.intakeCommand(),
-                        // conveyor.feedCommand(),
-                        kicker.feedCommand(),
-                        shooter.spinUpCommand()));//);
+            Commands.parallel(
+                // intake.intakeCommand(),
+                // conveyor.feedCommand(),
+                kicker.feedCommand(), shooter.spinUpCommand())); // );
 
     operator
         .leftBumper()
@@ -83,9 +82,15 @@ public class RobotContainer implements Logged {
 
     operator.rightTrigger().whileTrue(intake.intakeCommand());
 
-    SmartDashboard.putNumber("Hood angle", 0);
+    operator.x().onTrue(shooter.sysIdRoutine());
+
+    SmartDashboard.putBoolean("Hood up", false);
     hood.setDefaultCommand(
-        hood.setPositionCommand(() -> SmartDashboard.getNumber("Hood angle", 0)));
+        hood.setPositionCommand(
+            () ->
+                SmartDashboard.getBoolean("Hood up", false)
+                    ? HoodConstants.maxPosition
+                    : HoodConstants.minPosition));
   }
 
   /**
