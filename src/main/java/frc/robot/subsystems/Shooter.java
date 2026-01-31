@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Constants.ShooterConstants.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
@@ -35,7 +36,7 @@ public class Shooter extends SubsystemBase implements Logged {
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     config.CurrentLimits.StatorCurrentLimit = 80;
-    config.CurrentLimits.StatorCurrentLimitEnable = true;
+    config.CurrentLimits.StatorCurrentLimitEnable = false;
 
     config.Slot0.kP = 0.15597;
     config.Slot0.kI = 0;
@@ -49,6 +50,19 @@ public class Shooter extends SubsystemBase implements Logged {
 
     config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     follower.getConfigurator().apply(config);
+
+    leader.getStatorCurrent().setUpdateFrequency(50);
+    follower.getStatorCurrent().setUpdateFrequency(50);
+
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50,
+        leader.getBridgeOutput(),
+        follower.getBridgeOutput(),
+        leader.getMotorOutputStatus(),
+        follower.getMotorOutputStatus(),
+        leader.getFaultField(),
+        follower.getFaultField()
+        );
 
     follower.setControl(followRequest);
     SmartDashboard.putNumber("ShooterVoltage", 4);
@@ -125,5 +139,13 @@ public class Shooter extends SubsystemBase implements Logged {
     log("Follower Supply Voltage", follower.getSupplyVoltage().getValueAsDouble());
     log("Leader Temperature", leader.getDeviceTemp().getValueAsDouble());
     log("Follower Temperature", follower.getDeviceTemp().getValueAsDouble());
+    log("Leader output status", leader.getMotorOutputStatus().toString());
+    log("Follower output status", follower.getMotorOutputStatus().toString());
+    log("Leader bridge status", leader.getBridgeOutput().toString());
+    log("Follower bridge status", follower.getBridgeOutput().toString());
+    log("Leader overvoltage", leader.getFault_OverSupplyV().getValue());
+    log("Follower overvoltage", follower.getFault_OverSupplyV().getValue());
+    log("Follower faults", follower.getFaultField().getValue());
+    log("Leader faults", leader.getFaultField().getValue());
   }
 }

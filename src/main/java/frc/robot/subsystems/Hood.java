@@ -51,6 +51,7 @@ public class Hood extends SubsystemBase implements Logged {
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = HoodConstants.maxPosition;
 
     leader.getConfigurator().apply(config);
+    leader.optimizeBusUtilization();
     // TODO: current homing
     leader.setPosition(0);
 

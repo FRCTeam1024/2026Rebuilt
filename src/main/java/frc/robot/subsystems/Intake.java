@@ -24,6 +24,7 @@ public class Intake extends SubsystemBase implements Logged {
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     motor.getConfigurator().apply(config);
+    motor.optimizeBusUtilization();
   }
 
   public void setOutput(double output) {

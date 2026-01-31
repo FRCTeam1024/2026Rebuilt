@@ -69,7 +69,7 @@ public class RobotContainer implements Logged {
             Commands.parallel(
                 // intake.intakeCommand(),
                 // conveyor.feedCommand(),
-                kicker.feedCommand(), shooter.spinUpCommand())); // );
+                kicker.feedCommand()));//, shooter.spinUpCommand())); // );
 
     operator
         .leftBumper()
