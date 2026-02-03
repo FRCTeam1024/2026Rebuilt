@@ -34,12 +34,16 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   public Robot() {
+    Timer initTimer = new Timer();
+    initTimer.start();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     Monologue.setupMonologue(m_robotContainer, "Robot", false, false);
     DriverStation.silenceJoystickConnectionWarning(true);
     dtTimer.start();
+    initTimer.stop();
+    m_robotContainer.log("Timing/Robot Init ms", initTimer.get() * 1000);
   }
 
   /**
@@ -51,17 +55,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    m_robotContainer.log("Loop dt", dtTimer.get() * 1000);
+    m_robotContainer.log("Timing/Loop dt", dtTimer.get() * 1000);
     dtTimer.restart();
     userCodeTimer.restart();
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
+
     m_robotContainer.log("Bus Voltage", RobotController.getInputVoltage());
     m_robotContainer.log("Total Current", powerDistribution.getTotalCurrent());
     CommandScheduler.getInstance().run();
-    m_robotContainer.log("User Code ms", userCodeTimer.get() * 1000);
+    m_robotContainer.log("Timing/User Code ms", userCodeTimer.get() * 1000);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

@@ -61,8 +61,7 @@ public class Shooter extends SubsystemBase implements Logged {
         leader.getMotorOutputStatus(),
         follower.getMotorOutputStatus(),
         leader.getFaultField(),
-        follower.getFaultField()
-        );
+        follower.getFaultField());
 
     follower.setControl(followRequest);
     SmartDashboard.putNumber("ShooterVoltage", 4);
