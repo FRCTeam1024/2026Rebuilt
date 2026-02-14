@@ -185,17 +185,17 @@ public final class Constants {
     public static final int motorID = 45;
 
     public static final double motorToHoodRatio =
-        3.0 * (60.0 / 15.0); // 3:1 MP, 15T:60T belt reduction
+        3.0 * (48.0 / 24.0); // 3:1 MP, 24T:48T belt reduction
 
     /* Hood position limits in degrees */
     public static final double minPosition = 0.0; // TODO: retune
-    public static final double maxPosition = 25.0;
+    public static final double maxPosition = 90.0;
 
     public static final double kP =
-        50.0; // TODO: retune, this is for when it was driven at the circumference
+        100.0; // TODO: retune, this is for when it was driven at the circumference
     public static final double kI = 0.0;
-    public static final double kD = 0.1;
-    public static final double kV = 0.45;
+    public static final double kD = 2;
+    public static final double kV = 0;
     public static final double kA = 0.0;
     public static final double kG = 0.0;
     public static final double cruiseVelocity =

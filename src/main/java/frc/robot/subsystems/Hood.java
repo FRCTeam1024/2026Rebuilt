@@ -42,15 +42,15 @@ public class Hood extends SubsystemBase implements Logged {
     config.MotionMagic.MotionMagicAcceleration = acceleration;
 
     config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = minPosition;
+    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Units.degreesToRotations(minPosition);
     config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = maxPosition;
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Units.degreesToRotations(maxPosition);
 
     motor.getConfigurator().apply(config);
 
     motor.optimizeBusUtilization();
     // TODO: current homing
-    // motor.setPosition(0);
+    motor.setPosition(0);
   }
 
   /**
@@ -78,5 +78,14 @@ public class Hood extends SubsystemBase implements Logged {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    log("Setpoint", positionRequest.Position);
+    log("Position", motor.getPosition().getValueAsDouble());
+    log("Velocity", motor.getVelocity().getValueAsDouble());
+    log("Applied Voltage", motor.getMotorVoltage().getValueAsDouble());
+    log("Stator Current", motor.getStatorCurrent().getValueAsDouble());
+    log("Supply Current", motor.getSupplyCurrent().getValueAsDouble());
+    log("Supply Voltage", motor.getSupplyVoltage().getValueAsDouble());
+    log("Temperature", motor.getDeviceTemp().getValueAsDouble());
+  }
 }
