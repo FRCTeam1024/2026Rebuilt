@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
 
-  private final PowerDistribution powerDistribution = new PowerDistribution(0, ModuleType.kCTRE);
+  private final PowerDistribution powerDistribution = new PowerDistribution(1, ModuleType.kRev);
 
   private final Timer userCodeTimer = new Timer();
   private final Timer dtTimer = new Timer();
