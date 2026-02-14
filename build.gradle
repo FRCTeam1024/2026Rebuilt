@@ -1,7 +1,7 @@
 import java.net.NetworkInterface;
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2026.1.1"
+    id "edu.wpi.first.GradleRIO" version "2026.2.1"
     id "com.diffplug.spotless" version "8.1.0"
 }
 
@@ -188,15 +188,17 @@ spotless {
         trimTrailingWhitespace()
         endWithNewline()
     }
-    groovyGradle {
-        target fileTree('.') {
-            include '**/*.gradle'
-            exclude '**/build/**', '**/build-*/**', '**/bin/**'
+    if( project.hasProperty("formatGradle")) {
+        groovyGradle {
+            target fileTree('.') {
+                include '**/*.gradle'
+                exclude '**/build/**', '**/build-*/**', '**/bin/**'
+            }
+            greclipse()
+            leadingTabsToSpaces(4)
+            trimTrailingWhitespace()
+            endWithNewline()
         }
-        greclipse()
-        leadingTabsToSpaces(4)
-        trimTrailingWhitespace()
-        endWithNewline()
     }
     format 'xml', {
         target fileTree('.') {
