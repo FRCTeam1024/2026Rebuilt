@@ -176,8 +176,8 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    public static final int leaderID = 44;
-    public static final int followerID = 45;
+    public static final int leftID = 44;
+    public static final int rightID = 45;
 
     public static final double maxOutputVoltage = 10;
   }

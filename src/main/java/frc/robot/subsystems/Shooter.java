@@ -6,12 +6,10 @@ import static frc.robot.Constants.ShooterConstants.*;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,17 +22,16 @@ import monologue.Logged;
 
 public class Shooter extends SubsystemBase implements Logged {
 
-  private final TalonFX leader = new TalonFX(leaderID);
-  private final TalonFX follower = new TalonFX(followerID);
+  private final TalonFX left = new TalonFX(leftID);
+  private final TalonFX right = new TalonFX(rightID);
+
   private final VoltageOut voltageRequest = new VoltageOut(0);
   private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
-  private final Follower followRequest =
-      new Follower(leader.getDeviceID(), MotorAlignmentValue.Opposed);
 
   public Shooter() {
     var config = new TalonFXConfiguration();
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     config.CurrentLimits.StatorCurrentLimit = 80;
     config.CurrentLimits.StatorCurrentLimitEnable = false;
 
@@ -46,35 +43,34 @@ public class Shooter extends SubsystemBase implements Logged {
     config.Slot0.kV = 0.11947;
     config.Slot0.kG = 0;
 
-    leader.getConfigurator().apply(config);
+    left.getConfigurator().apply(config);
 
-    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    follower.getConfigurator().apply(config);
-
-    leader.getStatorCurrent().setUpdateFrequency(50);
-    follower.getStatorCurrent().setUpdateFrequency(50);
+    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    right.getConfigurator().apply(config);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         50,
-        leader.getBridgeOutput(),
-        follower.getBridgeOutput(),
-        leader.getMotorOutputStatus(),
-        follower.getMotorOutputStatus(),
-        leader.getFaultField(),
-        follower.getFaultField());
-
-    follower.setControl(followRequest);
+        left.getStatorCurrent(),
+        right.getStatorCurrent(),
+        left.getBridgeOutput(),
+        right.getBridgeOutput(),
+        left.getMotorOutputStatus(),
+        right.getMotorOutputStatus(),
+        left.getFaultField(),
+        right.getFaultField());
     SmartDashboard.putNumber("ShooterVoltage", 4);
   }
 
   public void setVoltage(double output) {
     voltageRequest.Output = output;
-    leader.setControl(voltageRequest);
+    left.setControl(voltageRequest);
+    right.setControl(voltageRequest);
   }
 
   public void setVelocity(double velocityRPS) {
     velocityRequest.Velocity = velocityRPS;
-    leader.setControl(velocityRequest);
+    left.setControl(velocityRequest);
+    right.setControl(velocityRequest);
   }
 
   public void stop() {
@@ -126,25 +122,25 @@ public class Shooter extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     log("Requested Voltage", voltageRequest.Output);
-    log("Leader Supply Current", leader.getSupplyCurrent().getValueAsDouble());
-    log("Follower Supply Current", leader.getSupplyCurrent().getValueAsDouble());
-    log("Leader Stator Current", leader.getStatorCurrent().getValueAsDouble());
-    log("Follower Stator Current", follower.getStatorCurrent().getValueAsDouble());
-    log("Leader Velocity", leader.getVelocity().getValueAsDouble());
-    log("Follower Velocity", follower.getVelocity().getValueAsDouble());
-    log("Leader Applied Voltage", leader.getMotorVoltage().getValueAsDouble());
-    log("Follower Applied Voltage", follower.getMotorVoltage().getValueAsDouble());
-    log("Leader Supply Voltage", leader.getSupplyVoltage().getValueAsDouble());
-    log("Follower Supply Voltage", follower.getSupplyVoltage().getValueAsDouble());
-    log("Leader Temperature", leader.getDeviceTemp().getValueAsDouble());
-    log("Follower Temperature", follower.getDeviceTemp().getValueAsDouble());
-    log("Leader output status", leader.getMotorOutputStatus().toString());
-    log("Follower output status", follower.getMotorOutputStatus().toString());
-    log("Leader bridge status", leader.getBridgeOutput().toString());
-    log("Follower bridge status", follower.getBridgeOutput().toString());
-    log("Leader overvoltage", leader.getFault_OverSupplyV().getValue());
-    log("Follower overvoltage", follower.getFault_OverSupplyV().getValue());
-    log("Follower faults", follower.getFaultField().getValue());
-    log("Leader faults", leader.getFaultField().getValue());
+    log("Left Supply Current", left.getSupplyCurrent().getValueAsDouble());
+    log("Right Supply Current", right.getSupplyCurrent().getValueAsDouble());
+    log("Left Stator Current", left.getStatorCurrent().getValueAsDouble());
+    log("Right Stator Current", right.getStatorCurrent().getValueAsDouble());
+    log("Left Velocity", left.getVelocity().getValueAsDouble());
+    log("Right Velocity", right.getVelocity().getValueAsDouble());
+    log("Left Applied Voltage", left.getMotorVoltage().getValueAsDouble());
+    log("Right Applied Voltage", right.getMotorVoltage().getValueAsDouble());
+    log("Left Supply Voltage", left.getSupplyVoltage().getValueAsDouble());
+    log("Right Supply Voltage", right.getSupplyVoltage().getValueAsDouble());
+    log("Left Temperature", left.getDeviceTemp().getValueAsDouble());
+    log("Right Temperature", right.getDeviceTemp().getValueAsDouble());
+    log("Left output status", left.getMotorOutputStatus().toString());
+    log("Right output status", right.getMotorOutputStatus().toString());
+    log("Left bridge status", left.getBridgeOutput().toString());
+    log("Right bridge status", right.getBridgeOutput().toString());
+    log("Left overvoltage", left.getFault_OverSupplyV().getValue());
+    log("Right overvoltage", right.getFault_OverSupplyV().getValue());
+    log("Right faults", right.getFaultField().getValue());
+    log("Left faults", left.getFaultField().getValue());
   }
 }
