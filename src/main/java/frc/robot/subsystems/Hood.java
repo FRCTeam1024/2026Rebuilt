@@ -50,7 +50,7 @@ public class Hood extends SubsystemBase implements Logged {
 
     motor.optimizeBusUtilization();
     // TODO: current homing
-    motor.setPosition(0);
+    // motor.setPosition(0);
   }
 
   /**
