@@ -25,7 +25,7 @@ public final class Constants {
 
     /** Drive motor rotations per rotation of azimuth */
     public static final double azimuthCouplingRatio =
-        50.0 / 14.0; // TODO: This must be set for specific module
+        54.0 / 14.0; // TODO: This must be set for specific module
 
     /* Drivetrain Constants */
     public static final double trackWidth =
@@ -40,8 +40,8 @@ public final class Constants {
         SwerveDriveKinematicsUtils.fromWheelBases(wheelBase, trackWidth);
 
     /* Module Gear Ratios */
-    public static final double driveGearRatio = 6.75;
-    public static final double angleGearRatio = 150.0 / 7.0;
+    public static final double driveGearRatio = 6.03;
+    public static final double angleGearRatio = 287.0 / 11.0;
 
     /* Motor Inverts */
 
@@ -49,7 +49,7 @@ public final class Constants {
      * Direction the angle motor needs to go for the azimuth to move couterclockwise when viewed
      * from the top
      */
-    public static final InvertedValue angleMotorInvert = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue angleMotorInvert = InvertedValue.CounterClockwise_Positive;
 
     /** Direction the drive motor needs to go to drive the wheel "forwards" */
     public static final InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
