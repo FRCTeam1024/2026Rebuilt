@@ -170,20 +170,19 @@ public final class Constants {
 
   public static final class KickerConstants {
     public static final int leaderID = 42;
-    public static final int followerID = 43;
 
     public static final double maxOutputVoltage = 10;
   }
 
   public static final class ShooterConstants {
-    public static final int leftID = 44;
-    public static final int rightID = 45;
+    public static final int leftID = 43;
+    public static final int rightID = 44;
 
     public static final double maxOutputVoltage = 10;
   }
 
   public static final class HoodConstants {
-    public static final int motorID = 46;
+    public static final int motorID = 45;
 
     public static final double motorToHoodRatio =
         3.0 * (60.0 / 15.0); // 3:1 MP, 15T:60T belt reduction
@@ -206,6 +205,30 @@ public final class Constants {
     public static final double statorCurrentLimit = 40.0;
 
     public static final double homePosition = 0; // Degrees from horizontal
+  }
+
+  public static final class PivotConstants {
+    public static final int motorID = 46;
+
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
+    public static final double kG = 0;
+
+    public static final double minPosition = 0.0; // TODO: retune
+    public static final double maxPosition = 0.0; // TODO: retune
+    public static final double homePosition = 0; // Degrees from horizontal
+    public static final double intakePosition = 0;
+    public static final double stowPosition = 0;
+  }
+
+  public static final class ClimberConstants {
+    public static final int motorID = 47;
+
+    public static final double maxOutputVoltage = 10;
   }
 
   public static final
