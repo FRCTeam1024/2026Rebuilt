@@ -146,7 +146,7 @@ public class Swerve extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     poseEstimator.update(getGyroYaw(), getModulePositions());
-
+    log("Pose", poseEstimator.getEstimatedPosition());
     for (SwerveModule mod : swerveMods) {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
