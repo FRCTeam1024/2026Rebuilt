@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.SwerveConstants;
+import static frc.robot.Constants.SwerveConstants.*;
 
-import com.ctre.phoenix6.configs.Pigeon2Configuration;
-import com.ctre.phoenix6.hardware.Pigeon2;
+import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,12 +25,12 @@ import monologue.Logged;
 public class Swerve extends SubsystemBase implements Logged {
   public SwerveDrivePoseEstimator poseEstimator;
   public SwerveModule[] swerveMods;
-  public Pigeon2 gyro;
+  public Canandgyro gyro = new Canandgyro(gyroID);
 
   public Swerve() {
-    gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
-    gyro.getConfigurator().apply(new Pigeon2Configuration());
     gyro.setYaw(0);
+
+    gyro.resetFactoryDefaults(0.02);
 
     swerveMods =
         new SwerveModule[] {

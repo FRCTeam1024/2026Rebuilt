@@ -21,7 +21,7 @@ public final class Constants {
   }
 
   public static final class SwerveConstants {
-    public static final int pigeonID = 1;
+    public static final int gyroID = 1;
 
     /** Drive motor rotations per rotation of azimuth */
     public static final double azimuthCouplingRatio =
