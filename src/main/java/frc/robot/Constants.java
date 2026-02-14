@@ -183,8 +183,7 @@ public final class Constants {
   }
 
   public static final class HoodConstants {
-    public static final int leaderID = 47;
-    public static final int followerID = 46;
+    public static final int motorID = 46;
 
     public static final double motorToHoodRatio =
         3.0 * (60.0 / 15.0); // 3:1 MP, 15T:60T belt reduction

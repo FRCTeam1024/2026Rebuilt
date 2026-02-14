@@ -18,7 +18,7 @@ import monologue.Logged;
 
 public class Hood extends SubsystemBase implements Logged {
 
-  private final TalonFX motor = new TalonFX(leaderID);
+  private final TalonFX motor = new TalonFX(motorID);
   private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0);
 
   public Hood() {
