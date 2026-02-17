@@ -80,7 +80,7 @@ public class Hood extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     log("Setpoint", positionRequest.Position);
-    log("Position", motor.getPosition().getValueAsDouble());
+    log("Position", getPosition());
     log("Velocity", motor.getVelocity().getValueAsDouble());
     log("Applied Voltage", motor.getMotorVoltage().getValueAsDouble());
     log("Stator Current", motor.getStatorCurrent().getValueAsDouble());

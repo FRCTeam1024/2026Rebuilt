@@ -31,21 +31,21 @@ public class Shooter extends SubsystemBase implements Logged {
   public Shooter() {
     var config = new TalonFXConfiguration();
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     config.CurrentLimits.StatorCurrentLimit = 80;
-    config.CurrentLimits.StatorCurrentLimitEnable = false;
+    config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     config.Slot0.kP = 0.15597;
     config.Slot0.kI = 0;
     config.Slot0.kD = 0;
-    config.Slot0.kS = 0.3401;
+    config.Slot0.kS = 0.2; // tuned manually
     config.Slot0.kA = 0.035746;
-    config.Slot0.kV = 0.11947;
+    config.Slot0.kV = 0.1176470588; // tuned manually
     config.Slot0.kG = 0;
 
     left.getConfigurator().apply(config);
 
-    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     right.getConfigurator().apply(config);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
@@ -80,7 +80,7 @@ public class Shooter extends SubsystemBase implements Logged {
   public Command spinUpCommand(DoubleSupplier voltage) {
     return runEnd(
         () -> {
-          setVoltage(voltage.getAsDouble());
+          setVelocity(voltage.getAsDouble());
         },
         () -> {
           stop();

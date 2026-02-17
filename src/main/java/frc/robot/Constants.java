@@ -210,17 +210,22 @@ public final class Constants {
   public static final class PivotConstants {
     public static final int motorID = 46;
 
+    // Ratio from motor to crank arm
+    // 2 3:1 MP stages, 20T:50T spur, 20T:64T spur
+    public static final double motorToPivotRatio = 3.0 * 3.0 * (50.0 / 20.0) * (64.0 / 20.0);
+
     public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double kS = 0;
+    public static final double kS = 0.19;
     public static final double kV = 0;
     public static final double kA = 0;
     public static final double kG = 0;
 
-    public static final double minPosition = 0.0; // TODO: retune
-    public static final double maxPosition = 0.0; // TODO: retune
-    public static final double homePosition = 0; // Degrees from horizontal
+    // All positions are of the crank arm in rotations.
+    public static final double minPosition = 0.0;
+    public static final double maxPosition = 0.2;
+    public static final double homePosition = 0;
     public static final double intakePosition = 0;
     public static final double stowPosition = 0;
   }

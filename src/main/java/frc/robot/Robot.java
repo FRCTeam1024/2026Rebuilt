@@ -44,6 +44,11 @@ public class Robot extends TimedRobot {
     dtTimer.start();
     initTimer.stop();
     m_robotContainer.log("Timing/Robot Init ms", initTimer.get() * 1000);
+    addPeriodic(
+        () -> {
+          m_robotContainer.log("Total Current", powerDistribution.getTotalCurrent());
+        },
+        0.04);
   }
 
   /**
@@ -60,7 +65,6 @@ public class Robot extends TimedRobot {
     userCodeTimer.restart();
 
     m_robotContainer.log("Bus Voltage", RobotController.getInputVoltage());
-    m_robotContainer.log("Total Current", powerDistribution.getTotalCurrent());
     CommandScheduler.getInstance().run();
     m_robotContainer.log("Timing/User Code ms", userCodeTimer.get() * 1000);
   }
