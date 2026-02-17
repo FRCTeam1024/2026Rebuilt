@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.util.RadioLogger;
 import monologue.Monologue;
 
 /**
@@ -26,6 +28,8 @@ public class Robot extends TimedRobot {
 
   private final PowerDistribution powerDistribution = new PowerDistribution(1, ModuleType.kRev);
 
+  private final RadioLogger radioLogger = new RadioLogger();
+
   private final Timer userCodeTimer = new Timer();
   private final Timer dtTimer = new Timer();
 
@@ -36,19 +40,26 @@ public class Robot extends TimedRobot {
   public Robot() {
     Timer initTimer = new Timer();
     initTimer.start();
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
-    Monologue.setupMonologue(m_robotContainer, "Robot", false, false);
+
+    radioLogger.bind(this);
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
     DriverStation.silenceJoystickConnectionWarning(true);
-    dtTimer.start();
-    initTimer.stop();
-    m_robotContainer.log("Timing/Robot Init ms", initTimer.get() * 1000);
+
+    m_robotContainer = new RobotContainer();
+
+    Monologue.setupMonologue(m_robotContainer, "Robot", false, false);
+
     addPeriodic(
         () -> {
           m_robotContainer.log("Total Current", powerDistribution.getTotalCurrent());
         },
         0.04);
+
+    initTimer.stop();
+    m_robotContainer.log("Timing/Robot Init ms", initTimer.get() * 1000);
+
+    dtTimer.start();
   }
 
   /**
