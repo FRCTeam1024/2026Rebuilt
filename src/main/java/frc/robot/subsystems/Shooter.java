@@ -1,18 +1,21 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import static frc.robot.Constants.ShooterConstants.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,6 +32,7 @@ public class Shooter extends SubsystemBase implements Logged {
   private final VoltageOut voltageRequest = new VoltageOut(0);
   private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
 
+  private final CoastOut coastRequest = new CoastOut();
   private final StaticBrake estopRequest = new StaticBrake();
 
   public Shooter() {
@@ -51,6 +55,91 @@ public class Shooter extends SubsystemBase implements Logged {
     config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     right.getConfigurator().apply(config);
 
+    resetStatusFrequencies();
+  }
+
+  private void setControl(ControlRequest request) {
+    left.setControl(request);
+    right.setControl(request);
+  }
+
+  public void setVoltage(double output) {
+    voltageRequest.Output = output;
+    setControl(voltageRequest);
+  }
+
+  public void setVelocity(double velocityRPS) {
+    velocityRequest.Velocity = velocityRPS;
+    setControl(velocityRequest);
+  }
+
+  public void stop() {
+    setControl(coastRequest);
+  }
+
+  public void emergencyStop() {
+    setControl(estopRequest);
+  }
+
+  public Command velocityCommand(DoubleSupplier velocityRPS) {
+    return runEnd(
+        () -> {
+          setVelocity(velocityRPS.getAsDouble());
+        },
+        () -> {
+          stop();
+        });
+  }
+
+  public Command sysIdRoutine() {
+    var routine = makeSysIdRoutine();
+    return Commands.sequence(
+            runOnce(
+                () -> {
+                  setStatusFrequenciesForSysId();
+                }),
+            routine.quasistatic(Direction.kForward).withTimeout(12),
+            waitSeconds(5),
+            routine.dynamic(Direction.kForward).withTimeout(5),
+            waitSeconds(5),
+            routine.quasistatic(Direction.kReverse).withTimeout(12),
+            waitSeconds(5),
+            routine.dynamic(Direction.kReverse).withTimeout(5),
+            waitSeconds(5))
+        .finallyDo(
+            () -> {
+              resetStatusFrequencies();
+            });
+  }
+
+  private SysIdRoutine makeSysIdRoutine() {
+    return new SysIdRoutine(
+        new SysIdRoutine.Config(
+            null,
+            Volts.of(4),
+            Seconds.of(12),
+            state -> SignalLogger.writeString("ShooterSysIDState", state.toString())),
+        new SysIdRoutine.Mechanism(
+            volts -> {
+              setVoltage(volts.in(Volts));
+            },
+            log -> {},
+            this));
+  }
+
+  private void setStatusFrequenciesForSysId() {
+    // TODO: test how long this takes
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        100,
+        left.getMotorVoltage(),
+        right.getMotorVoltage(),
+        left.getVelocity(),
+        right.getVelocity(),
+        left.getPosition(),
+        right.getPosition());
+  }
+
+  private void resetStatusFrequencies() {
     BaseStatusSignal.setUpdateFrequencyForAll(
         50,
         left.getStatorCurrent(),
@@ -61,66 +150,6 @@ public class Shooter extends SubsystemBase implements Logged {
         right.getMotorOutputStatus(),
         left.getFaultField(),
         right.getFaultField());
-    SmartDashboard.putNumber("ShooterVoltage", 4);
-  }
-
-  public void setVoltage(double output) {
-    voltageRequest.Output = output;
-    left.setControl(voltageRequest);
-    right.setControl(voltageRequest);
-  }
-
-  public void setVelocity(double velocityRPS) {
-    velocityRequest.Velocity = velocityRPS;
-    left.setControl(velocityRequest);
-    right.setControl(velocityRequest);
-  }
-
-  public void stop() {
-    setVoltage(0);
-  }
-
-  public void emergencyStop() {
-    left.setControl(estopRequest);
-    right.setControl(estopRequest);
-  }
-
-  public Command velocityCommand(DoubleSupplier voltage) {
-    return runEnd(
-        () -> {
-          setVelocity(voltage.getAsDouble());
-        },
-        () -> {
-          stop();
-        });
-  }
-
-  public Command sysIdRoutine() {
-    var routine = makeRoutine();
-    return Commands.sequence(
-        routine.quasistatic(Direction.kForward).withTimeout(12),
-        Commands.waitSeconds(5),
-        routine.dynamic(Direction.kForward).withTimeout(5),
-        Commands.waitSeconds(5),
-        routine.quasistatic(Direction.kReverse).withTimeout(12),
-        Commands.waitSeconds(5),
-        routine.dynamic(Direction.kReverse).withTimeout(5),
-        Commands.waitSeconds(5));
-  }
-
-  private SysIdRoutine makeRoutine() {
-    return new SysIdRoutine(
-        new SysIdRoutine.Config(
-            null,
-            Volts.of(4),
-            null,
-            state -> SignalLogger.writeString("ShooterSysIDState", state.toString())),
-        new SysIdRoutine.Mechanism(
-            volts -> {
-              setVoltage(volts.in(Volts));
-            },
-            log -> {},
-            this));
   }
 
   @Override
