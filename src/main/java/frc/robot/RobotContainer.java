@@ -79,7 +79,7 @@ public class RobotContainer implements Logged {
                 intake.ejectCommand(),
                 conveyor.ejectCommand(),
                 kicker.retractCommand(),
-                shooter.spinUpCommand(() -> -4)));
+                shooter.velocityCommand(() -> -4)));
 
     operator.rightTrigger().whileTrue(intake.intakeCommand());
 
@@ -90,7 +90,11 @@ public class RobotContainer implements Logged {
         hood.setPositionCommand(() -> SmartDashboard.getNumber("Hood Angle", 0)));
     SmartDashboard.putNumber("Shooter velocity", 0);
     shooter.setDefaultCommand(
-        shooter.spinUpCommand(() -> SmartDashboard.getNumber("Shooter velocity", 0)));
+        shooter.velocityCommand(() -> SmartDashboard.getNumber("Shooter velocity", 0)));
+  }
+
+  public void emergencyStop() {
+    shooter.emergencyStop();
   }
 
   /**

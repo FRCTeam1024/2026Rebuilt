@@ -6,6 +6,7 @@ import static frc.robot.Constants.ShooterConstants.*;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -27,6 +28,8 @@ public class Shooter extends SubsystemBase implements Logged {
 
   private final VoltageOut voltageRequest = new VoltageOut(0);
   private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
+
+  private final StaticBrake estopRequest = new StaticBrake();
 
   public Shooter() {
     var config = new TalonFXConfiguration();
@@ -77,7 +80,12 @@ public class Shooter extends SubsystemBase implements Logged {
     setVoltage(0);
   }
 
-  public Command spinUpCommand(DoubleSupplier voltage) {
+  public void emergencyStop() {
+    left.setControl(estopRequest);
+    right.setControl(estopRequest);
+  }
+
+  public Command velocityCommand(DoubleSupplier voltage) {
     return runEnd(
         () -> {
           setVelocity(voltage.getAsDouble());
@@ -85,10 +93,6 @@ public class Shooter extends SubsystemBase implements Logged {
         () -> {
           stop();
         });
-  }
-
-  public Command spinUpCommand() {
-    return spinUpCommand(() -> SmartDashboard.getNumber("ShooterVoltage", 0));
   }
 
   public Command sysIdRoutine() {
