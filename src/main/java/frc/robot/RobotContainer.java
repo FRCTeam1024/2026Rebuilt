@@ -33,6 +33,7 @@ public class RobotContainer implements Logged {
   private final Kicker kicker = new Kicker();
   private final Shooter shooter = new Shooter();
   private final Hood hood = new Hood();
+  private final IntakePivot intakePivot = new IntakePivot();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

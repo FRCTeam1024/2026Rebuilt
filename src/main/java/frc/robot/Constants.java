@@ -214,19 +214,22 @@ public final class Constants {
     // 2 3:1 MP stages, 20T:50T spur, 20T:64T spur
     public static final double motorToPivotRatio = 3.0 * 3.0 * (50.0 / 20.0) * (64.0 / 20.0);
 
-    public static final double kP = 0;
+    public static final double kP = 100;
     public static final double kI = 0;
     public static final double kD = 0;
-    public static final double kS = 0.19;
-    public static final double kV = 0;
+    public static final double kS = 0.19; // manually tuned
+    // 12V / (free speed @ 12v / gear ratio)
+    public static final double kV = 12.0 / (6000.0 / 60.0 / motorToPivotRatio);
     public static final double kA = 0;
     public static final double kG = 0;
+    public static final double cruiseVelocity = 1;
+    public static final double acceleration = 10;
 
-    // All positions are of the crank arm in rotations.
-    public static final double minPosition = 0.0;
-    public static final double maxPosition = 0.2;
+    // All positions are of the crank arm in rotations. Currently 0 is all the way back.
+    public static final double reverseLimit = 0.0;
+    public static final double forwardLimit = 0.2;
     public static final double homePosition = 0;
-    public static final double intakePosition = 0;
+    public static final double intakePosition = 0.2;
     public static final double stowPosition = 0;
   }
 
