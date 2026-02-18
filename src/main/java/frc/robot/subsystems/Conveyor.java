@@ -26,6 +26,11 @@ public class Conveyor extends SubsystemBase implements Logged {
     motor.getConfigurator().apply(config);
   }
 
+  /**
+   * Sets the output voltage of the climber as a proportion of the max output.
+   *
+   * @param output the proportion of max output [-1, 1]
+   */
   public void setOutput(double output) {
     voltageRequest.Output = maxOutputVoltage * output;
     motor.setControl(voltageRequest);
