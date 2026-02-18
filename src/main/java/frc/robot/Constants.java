@@ -214,7 +214,7 @@ public final class Constants {
     // 2 3:1 MP stages, 20T:50T spur, 20T:64T spur
     public static final double motorToPivotRatio = 3.0 * 3.0 * (50.0 / 20.0) * (64.0 / 20.0);
 
-    public static final double kP = 100;
+    public static final double kP = 150;
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double kS = 0.19; // manually tuned
