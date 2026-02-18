@@ -236,7 +236,13 @@ public final class Constants {
   public static final class ClimberConstants {
     public static final int motorID = 47;
 
-    public static final double maxOutputVoltage = 10;
+    public static final double extendLimit = 0; // TODO: tune
+    public static final double retractLimit = 0;
+
+    public static final double maxOutputVoltage = 12;
+
+    public static final double retractOutput = 0.5;
+    public static final double extendOutput = -0.5;
   }
 
   public static final

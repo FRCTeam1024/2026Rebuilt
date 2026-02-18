@@ -34,6 +34,7 @@ public class RobotContainer implements Logged {
   private final Shooter shooter = new Shooter();
   private final Hood hood = new Hood();
   private final IntakePivot intakePivot = new IntakePivot();
+  private final Climber climber = new Climber();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -84,6 +85,10 @@ public class RobotContainer implements Logged {
     operator.rightTrigger().whileTrue(intake.intakeCommand());
 
     operator.x().onTrue(shooter.sysIdRoutine());
+
+    operator.povUp().whileTrue(climber.extendCommand());
+
+    operator.povDown().whileTrue(climber.retractCommand());
 
     SmartDashboard.putNumber("Hood Angle", 0);
     hood.setDefaultCommand(
