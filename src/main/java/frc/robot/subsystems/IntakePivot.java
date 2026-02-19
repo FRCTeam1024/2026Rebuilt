@@ -18,20 +18,24 @@ public class IntakePivot extends SubsystemBase implements Logged {
 
   public IntakePivot() {
     var config = new TalonFXConfiguration();
-    config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    // Intake mostly holds itself up in coast and brake is really annoying to move manually
+    config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     config.Feedback.SensorToMechanismRatio = motorToPivotRatio;
 
     config.CurrentLimits.StatorCurrentLimit = 60;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
-    config.CurrentLimits.SupplyCurrentLimit = 40;
+    config.CurrentLimits.SupplyCurrentLimit = 60;
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardLimit;
     config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseLimit;
     config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+
+    config.MotionMagic.MotionMagicCruiseVelocity = cruiseVelocity;
+    config.MotionMagic.MotionMagicAcceleration = acceleration;
 
     config.Slot0.kP = kP;
     config.Slot0.kI = kI;

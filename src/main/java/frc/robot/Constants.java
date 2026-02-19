@@ -223,7 +223,7 @@ public final class Constants {
     public static final double kA = 0;
     public static final double kG = 0;
     public static final double cruiseVelocity = 1;
-    public static final double acceleration = 10;
+    public static final double acceleration = 15;
 
     // All positions are of the crank arm in rotations. Currently 0 is all the way back.
     public static final double reverseLimit = 0.0;
