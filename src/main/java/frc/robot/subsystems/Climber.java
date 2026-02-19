@@ -22,9 +22,9 @@ public class Climber extends SubsystemBase implements Logged {
     config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = retractLimit;
-    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = extendLimit;
-    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     config.CurrentLimits.StatorCurrentLimit = 40;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
@@ -34,8 +34,10 @@ public class Climber extends SubsystemBase implements Logged {
         motor.getStatorCurrent(),
         motor.getSupplyCurrent(),
         motor.getSupplyVoltage(),
+        motor.getPosition(),
         motor.getVelocity(),
         motor.getDeviceTemp());
+    motor.setPosition(0);
   }
 
   /**
@@ -62,6 +64,7 @@ public class Climber extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
+    log("Position", motor.getPosition().getValueAsDouble());
     log("Output Voltage", motor.getMotorVoltage().getValueAsDouble());
     log("Stator Current", motor.getStatorCurrent().getValueAsDouble());
     log("Supply Current", motor.getSupplyCurrent().getValueAsDouble());
