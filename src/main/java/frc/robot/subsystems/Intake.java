@@ -63,7 +63,7 @@ public class Intake extends SubsystemBase implements Logged {
     // log("Supply Current", motor.getSupplyCurrent().getValueAsDouble());
     // log("Supply Voltage", motor.getSupplyVoltage().getValueAsDouble());
     // log("Velocity", motor.getVelocity().getValueAsDouble());
-    // log("Requested Voltage", voltageRequest.Output);
+    log("Requested Voltage", voltageRequest.Output);
     // log("Temperature", motor.getDeviceTemp().getValueAsDouble());
   }
 }

@@ -82,7 +82,14 @@ public class RobotContainer implements Logged {
                 kicker.retractCommand(),
                 shooter.velocityCommand(() -> -4)));
 
-    operator.rightTrigger().whileTrue(intake.intakeCommand());
+    operator
+        .rightTrigger(0.1)
+        .whileTrue(
+            Commands.parallel(
+                intake.intakeCommand(),
+                intakePivot
+                    .setGoalCommand(Constants.PivotConstants.intakePosition)
+                    .finallyDo(() -> intakePivot.setGoal(Constants.PivotConstants.stowPosition))));
 
     operator.x().onTrue(shooter.sysIdRoutine());
 
