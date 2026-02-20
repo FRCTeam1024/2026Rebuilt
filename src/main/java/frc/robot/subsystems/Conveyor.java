@@ -60,6 +60,22 @@ public class Conveyor extends SubsystemBase implements Logged {
         });
   }
 
+  /**
+   * Creates a command that oscillates the conveyor, repeatedly going forward, off, reverse, then
+   * off with predefined timing intervals.
+   *
+   * @return a command that repeatedly oscillates the conveyor
+   */
+  public Command oscillateCommand() {
+    return run(() -> setOutput(oscillateForwardSpeed))
+        .withTimeout(oscillateForwardTime)
+        .andThen(run(() -> stop()).withTimeout(oscillateOffTime1))
+        .andThen(run(() -> setOutput(oscillateReverseSpeed)).withTimeout(oscillateReverseTime))
+        .andThen(run(() -> stop()).withTimeout(oscillateOffTime2))
+        .repeatedly()
+        .finallyDo(() -> stop());
+  }
+
   @Override
   public void periodic() {
     log("Output Voltage", motor.getMotorVoltage().getValueAsDouble());
