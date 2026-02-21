@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import java.util.function.DoubleSupplier;
+import monologue.Annotations.Log;
 import monologue.Logged;
 
 public class Shooter extends SubsystemBase implements Logged {
@@ -79,6 +80,21 @@ public class Shooter extends SubsystemBase implements Logged {
 
   public void emergencyStop() {
     setControl(estopRequest);
+  }
+
+  @Log(key = "At Setpoint")
+  public boolean atSetpoint() {
+    return Math.abs(left.getVelocity().getValueAsDouble() - velocityRequest.Velocity)
+            < velocityToleranceRPS
+        && Math.abs(right.getVelocity().getValueAsDouble() - velocityRequest.Velocity)
+            < velocityToleranceRPS;
+  }
+
+  public Command spinUpCommand(DoubleSupplier velocityRPS) {
+    return run(() -> {
+          setVelocity(velocityRPS.getAsDouble());
+        })
+        .until(this::atSetpoint);
   }
 
   public Command velocityCommand(DoubleSupplier velocityRPS) {
