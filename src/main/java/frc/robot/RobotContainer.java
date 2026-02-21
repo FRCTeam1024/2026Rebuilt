@@ -32,7 +32,7 @@ public class RobotContainer implements Logged {
   private final Conveyor conveyor = new Conveyor();
   private final Kicker kicker = new Kicker();
   private final Shooter shooter = new Shooter();
-  private final Hood hood = new Hood();
+  // private final Hood hood = new Hood();
   private final IntakePivot intakePivot = new IntakePivot();
   private final Climber climber = new Climber();
 
@@ -64,14 +64,16 @@ public class RobotContainer implements Logged {
     operator
         .leftTrigger()
         .whileTrue(
-            // shooter
-            // .spinUpCommand()
-            // .withTimeout(1)
-            // .andThen(
-            Commands.parallel(
-                // intake.intakeCommand(),
-                // conveyor.feedCommand(),
-                kicker.feedCommand())); // , shooter.spinUpCommand())); // );
+            shooter
+                .spinUpCommand(() -> SmartDashboard.getNumber("Shooter velocity", 0))
+                .andThen(
+                    Commands.parallel(
+                        intake.intakeCommand(),
+                        conveyor.feedCommand(),
+                        kicker.feedCommand(),
+                        shooter.velocityCommand(
+                            () -> SmartDashboard.getNumber("Shooter velocity", 0))))
+                .finallyDo(shooter::stop)); // );
 
     operator
         .leftBumper()
@@ -80,29 +82,34 @@ public class RobotContainer implements Logged {
                 intake.ejectCommand(),
                 conveyor.ejectCommand(),
                 kicker.retractCommand(),
-                shooter.velocityCommand(() -> -4)));
+                shooter.velocityCommand(() -> -30),
+                intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
 
     operator
         .rightTrigger(0.1)
         .whileTrue(
             Commands.parallel(
                 intake.intakeCommand(),
-                intakePivot
-                    .setGoalCommand(Constants.PivotConstants.intakePosition)
-                    .finallyDo(() -> intakePivot.setGoal(Constants.PivotConstants.stowPosition))));
+                intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
 
     operator.x().onTrue(shooter.sysIdRoutine());
+
+    operator.y().onTrue(intakePivot.setGoalCommand(PivotConstants.intakePosition));
+    operator.a().onTrue(intakePivot.setGoalCommand(PivotConstants.stowPosition));
+    operator.b().onTrue(intakePivot.setGoalCommand(0.089));
 
     operator.povUp().whileTrue(climber.extendCommand());
 
     operator.povDown().whileTrue(climber.retractCommand());
 
+    // operator.b().whileTrue(conveyor.oscillateCommand());
+
     SmartDashboard.putNumber("Hood Angle", 0);
-    hood.setDefaultCommand(
-        hood.setPositionCommand(() -> SmartDashboard.getNumber("Hood Angle", 0)));
+    // hood.setDefaultCommand(
+        // hood.setPositionCommand(() -> SmartDashboard.getNumber("Hood Angle", 0)));
     SmartDashboard.putNumber("Shooter velocity", 0);
-    shooter.setDefaultCommand(
-        shooter.velocityCommand(() -> SmartDashboard.getNumber("Shooter velocity", 0)));
+    // shooter.setDefaultCommand(
+    //     shooter.velocityCommand(() -> SmartDashboard.getNumber("Shooter velocity", 0)));
   }
 
   public void emergencyStop() {
