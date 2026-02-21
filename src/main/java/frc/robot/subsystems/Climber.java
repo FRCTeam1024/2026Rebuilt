@@ -22,11 +22,12 @@ public class Climber extends SubsystemBase implements Logged {
     config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = retractLimit;
-    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = extendLimit;
-    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
     config.CurrentLimits.StatorCurrentLimit = 40;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
+    motor.getConfigurator().apply(config);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         50,
