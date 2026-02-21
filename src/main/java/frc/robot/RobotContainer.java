@@ -92,6 +92,12 @@ public class RobotContainer implements Logged {
                 intake.intakeCommand(),
                 intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
 
+                    driver
+        .rightTrigger(0.1)
+        .whileTrue(
+            Commands.parallel(
+                intake.intakeCommand(),
+                intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
     operator.x().onTrue(shooter.sysIdRoutine());
 
     operator.y().onTrue(intakePivot.setGoalCommand(PivotConstants.intakePosition));
