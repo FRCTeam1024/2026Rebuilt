@@ -59,7 +59,6 @@ public class Kicker extends SubsystemBase implements Logged {
   public void periodic() {
     log("Requested Voltage", voltageRequest.Output);
     log("Leader Supply Current", leader.getSupplyCurrent().getValueAsDouble());
-    log("Follower Supply Current", leader.getSupplyCurrent().getValueAsDouble());
     log("Leader Stator Current", leader.getStatorCurrent().getValueAsDouble());
     log("Leader Velocity", leader.getVelocity().getValueAsDouble());
     log("Leader Applied Voltage", leader.getMotorVoltage().getValueAsDouble());
