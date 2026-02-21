@@ -249,7 +249,7 @@ public final class Constants {
 
     public static final double maxOutputVoltage = 12;
 
-    public static final double retractOutput = 0.5;
+    public static final double retractOutput = 1;
     public static final double extendOutput = -0.5;
   }
 
