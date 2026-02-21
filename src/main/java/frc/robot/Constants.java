@@ -186,7 +186,7 @@ public final class Constants {
     public static final int leftID = 43;
     public static final int rightID = 44;
 
-    public static final double maxOutputVoltage = 10;
+    public static final double velocityToleranceRPS = 2.5;
   }
 
   public static final class HoodConstants {
@@ -230,14 +230,14 @@ public final class Constants {
     public static final double kV = 12.0 / (6000.0 / 60.0 / motorToPivotRatio);
     public static final double kA = 0;
     public static final double kG = 0;
-    public static final double cruiseVelocity = 1;
-    public static final double acceleration = 15;
+    public static final double cruiseVelocity = 0.5; // 1;
+    public static final double acceleration = 10; // 15;
 
     // All positions are of the crank arm in rotations. Currently 0 is all the way back.
     public static final double reverseLimit = 0.0;
-    public static final double forwardLimit = 0.2;
+    public static final double forwardLimit = 0.25;
     public static final double homePosition = 0;
-    public static final double intakePosition = 0.2;
+    public static final double intakePosition = 0.22998;
     public static final double stowPosition = 0;
   }
 

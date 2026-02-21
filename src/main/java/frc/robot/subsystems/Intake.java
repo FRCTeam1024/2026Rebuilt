@@ -19,8 +19,8 @@ public class Intake extends SubsystemBase implements Logged {
   public Intake() {
     var config = new TalonFXConfiguration();
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    config.CurrentLimits.StatorCurrentLimit = 40;
+    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    config.CurrentLimits.StatorCurrentLimit = 60;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     motor.getConfigurator().apply(config);
@@ -49,7 +49,7 @@ public class Intake extends SubsystemBase implements Logged {
   public Command ejectCommand() {
     return runEnd(
         () -> {
-          setOutput(-0.3);
+          setOutput(-0.7);
         },
         () -> {
           stop();
@@ -58,12 +58,12 @@ public class Intake extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
-    // log("Output Voltage", motor.getMotorVoltage().getValueAsDouble());
-    // log("Stator Current", motor.getStatorCurrent().getValueAsDouble());
-    // log("Supply Current", motor.getSupplyCurrent().getValueAsDouble());
-    // log("Supply Voltage", motor.getSupplyVoltage().getValueAsDouble());
-    // log("Velocity", motor.getVelocity().getValueAsDouble());
+    log("Output Voltage", motor.getMotorVoltage().getValueAsDouble());
+    log("Stator Current", motor.getStatorCurrent().getValueAsDouble());
+    log("Supply Current", motor.getSupplyCurrent().getValueAsDouble());
+    log("Supply Voltage", motor.getSupplyVoltage().getValueAsDouble());
+    log("Velocity", motor.getVelocity().getValueAsDouble());
     log("Requested Voltage", voltageRequest.Output);
-    // log("Temperature", motor.getDeviceTemp().getValueAsDouble());
+    log("Temperature", motor.getDeviceTemp().getValueAsDouble());
   }
 }
