@@ -167,8 +167,8 @@ public final class Constants {
     public static final int motorID = 41;
     public static final double maxOutputVoltage = 10;
 
-    public static final double oscillateForwardSpeed = 0.5;
-    public static final double oscillateReverseSpeed = -0.3;
+    public static final double oscillateForwardSpeed = 0.3;
+    public static final double oscillateReverseSpeed = -0.1;
 
     public static final double oscillateForwardTime = 0.3;
     public static final double oscillateOffTime1 = 0.1;
