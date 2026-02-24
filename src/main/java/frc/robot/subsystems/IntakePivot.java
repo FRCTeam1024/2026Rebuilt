@@ -5,6 +5,7 @@ import static frc.robot.Constants.PivotConstants.*;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -15,10 +16,12 @@ import monologue.Logged;
 public class IntakePivot extends SubsystemBase implements Logged {
   private TalonFX motor = new TalonFX(motorID);
   private MotionMagicVoltage positionRequest = new MotionMagicVoltage(0);
+  private VoltageOut homeRequest = new VoltageOut(0);
 
   public IntakePivot() {
     var config = new TalonFXConfiguration();
-    // Intake mostly holds itself up in coast and brake is really annoying to move manually
+    // Intake mostly holds itself up in coast and brake is really annoying to move
+    // manually
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
@@ -55,7 +58,20 @@ public class IntakePivot extends SubsystemBase implements Logged {
         motor.getSupplyCurrent(),
         motor.getSupplyVoltage(),
         motor.getDeviceTemp());
-    motor.setPosition(0);
+    setZero();
+    setGoal(0);
+  }
+
+  private void setHomingVoltage() {
+    homeRequest.Output = homeVoltage;
+    motor.setControl(homeRequest);
+  }
+
+  private void stopHoming() {
+    homeRequest.Output = 0;
+    motor.setControl(homeRequest);
+    setZero();
+    setGoal(0);
   }
 
   public void setGoal(double position) {
@@ -69,6 +85,14 @@ public class IntakePivot extends SubsystemBase implements Logged {
 
   public Command setGoalCommand(double position) {
     return run(() -> setGoal(position)).withName("Set Pivot Position");
+  }
+
+  public void setZero() {
+    motor.setPosition(homePosition);
+  }
+
+  public Command homeCommand() {
+    return run(this::setHomingVoltage).finallyDo(this::stopHoming);
   }
 
   @Override

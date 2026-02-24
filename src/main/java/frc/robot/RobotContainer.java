@@ -110,7 +110,7 @@ public class RobotContainer implements Logged {
 
     operator.povDown().whileTrue(climber.retractCommand());
 
-    // operator.x().whileTrue(conveyor.oscillateCommand());
+    operator.back().whileTrue(intakePivot.homeCommand());
 
     SmartDashboard.putNumber("Hood Angle", 0);
     // hood.setDefaultCommand(
