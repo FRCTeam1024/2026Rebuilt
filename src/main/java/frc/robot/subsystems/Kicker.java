@@ -3,11 +3,10 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.KickerConstants.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,8 +14,8 @@ import monologue.Logged;
 
 public class Kicker extends SubsystemBase implements Logged {
 
-  private final TalonFX leader = new TalonFX(leaderID);
-  private final TalonFX follower = new TalonFX(48);
+  private final TalonFX left = new TalonFX(leaderID);
+  private final TalonFX right = new TalonFX(48);
   private final VoltageOut voltageRequest = new VoltageOut(0);
 
   public Kicker() {
@@ -25,16 +24,20 @@ public class Kicker extends SubsystemBase implements Logged {
     config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     config.CurrentLimits.StatorCurrentLimit = 80;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
+    left.getConfigurator().apply(config);
 
-    leader.getConfigurator().apply(config);
     config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    follower.getConfigurator().apply(config);
-    follower.setControl(new Follower(leaderID, MotorAlignmentValue.Opposed));
+    right.getConfigurator().apply(config);
+  }
+
+  public void setControl(ControlRequest req) {
+    left.setControl(req);
+    right.setControl(req);
   }
 
   public void setOutput(double output) {
     voltageRequest.Output = maxOutputVoltage * output;
-    leader.setControl(voltageRequest);
+    setControl(voltageRequest);
   }
 
   public void stop() {
@@ -64,11 +67,17 @@ public class Kicker extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     log("Requested Voltage", voltageRequest.Output);
-    log("Leader Supply Current", leader.getSupplyCurrent().getValueAsDouble());
-    log("Leader Stator Current", leader.getStatorCurrent().getValueAsDouble());
-    log("Leader Velocity", leader.getVelocity().getValueAsDouble());
-    log("Leader Applied Voltage", leader.getMotorVoltage().getValueAsDouble());
-    log("Leader Supply Voltage", leader.getSupplyVoltage().getValueAsDouble());
-    log("Leader Temperature", leader.getDeviceTemp().getValueAsDouble());
+    log("Left Supply Current", left.getSupplyCurrent().getValueAsDouble());
+    log("Left Stator Current", left.getStatorCurrent().getValueAsDouble());
+    log("Left Velocity", left.getVelocity().getValueAsDouble());
+    log("Left Applied Voltage", left.getMotorVoltage().getValueAsDouble());
+    log("Left Supply Voltage", left.getSupplyVoltage().getValueAsDouble());
+    log("Left Temperature", left.getDeviceTemp().getValueAsDouble());
+    log("Right Supply Current", right.getSupplyCurrent().getValueAsDouble());
+    log("Right Stator Current", right.getStatorCurrent().getValueAsDouble());
+    log("Right Velocity", right.getVelocity().getValueAsDouble());
+    log("Right Applied Voltage", right.getMotorVoltage().getValueAsDouble());
+    log("Right Supply Voltage", right.getSupplyVoltage().getValueAsDouble());
+    log("Right Temperature", right.getDeviceTemp().getValueAsDouble());
   }
 }

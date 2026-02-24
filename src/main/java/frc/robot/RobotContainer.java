@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.math.MathUtil.applyDeadband;
 import static frc.robot.Constants.*;
+import static frc.robot.Constants.ShooterConstants.hubShotRPS;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -65,14 +66,15 @@ public class RobotContainer implements Logged {
         .leftTrigger()
         .whileTrue(
             shooter
-                .spinUpCommand(() -> SmartDashboard.getNumber("Shooter velocity", 0))
+                .spinUpCommand(
+                    () -> SmartDashboard.getNumber("Shooter velocity", ShooterConstants.hubShotRPS))
                 .andThen(
                     Commands.parallel(
                         intake.intakeCommand(),
-                        conveyor.feedCommand(),
+                        conveyor.oscillateCommand(),
                         kicker.feedCommand(),
                         shooter.velocityCommand(
-                            () -> SmartDashboard.getNumber("Shooter velocity", 0))))
+                            () -> SmartDashboard.getNumber("Shooter velocity", hubShotRPS))))
                 .finallyDo(shooter::stop)); // );
 
     operator
@@ -98,7 +100,7 @@ public class RobotContainer implements Logged {
             Commands.parallel(
                 intake.intakeCommand(),
                 intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
-    operator.x().onTrue(shooter.sysIdRoutine());
+    // operator.x().onTrue(shooter.sysIdRoutine());
 
     operator.y().onTrue(intakePivot.setGoalCommand(PivotConstants.intakePosition));
     operator.a().onTrue(intakePivot.setGoalCommand(PivotConstants.stowPosition));
@@ -108,12 +110,12 @@ public class RobotContainer implements Logged {
 
     operator.povDown().whileTrue(climber.retractCommand());
 
-    // operator.b().whileTrue(conveyor.oscillateCommand());
+    // operator.x().whileTrue(conveyor.oscillateCommand());
 
     SmartDashboard.putNumber("Hood Angle", 0);
     // hood.setDefaultCommand(
     // hood.setPositionCommand(() -> SmartDashboard.getNumber("Hood Angle", 0)));
-    SmartDashboard.putNumber("Shooter velocity", 0);
+    SmartDashboard.putNumber("Shooter velocity", hubShotRPS);
     // shooter.setDefaultCommand(
     //     shooter.velocityCommand(() -> SmartDashboard.getNumber("Shooter velocity", 0)));
   }

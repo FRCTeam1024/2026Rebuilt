@@ -187,6 +187,8 @@ public final class Constants {
     public static final int rightID = 44;
 
     public static final double velocityToleranceRPS = 2.5;
+
+    public static final double hubShotRPS = 42.0;
   }
 
   public static final class HoodConstants {
