@@ -12,7 +12,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.HoodConstants;
 import java.util.function.DoubleSupplier;
 import monologue.Logged;
 
@@ -28,7 +27,7 @@ public class Hood extends SubsystemBase implements Logged {
     config.CurrentLimits.StatorCurrentLimit = statorCurrentLimit;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-    config.Feedback.SensorToMechanismRatio = HoodConstants.motorToHoodRatio;
+    // config.Feedback.SensorToMechanismRatio = HoodConstants.motorToHoodRatio;
 
     config.Slot0.kP = kP;
     config.Slot0.kI = kI;

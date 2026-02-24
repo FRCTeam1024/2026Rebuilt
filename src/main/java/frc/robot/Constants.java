@@ -199,16 +199,14 @@ public final class Constants {
     public static final double minPosition = 0.0; // TODO: retune
     public static final double maxPosition = 90.0;
 
-    public static final double kP =
-        100.0; // TODO: retune, this is for when it was driven at the circumference
+    public static final double kP = 100.0;
     public static final double kI = 0.0;
     public static final double kD = 2;
     public static final double kV = 0;
     public static final double kA = 0.0;
     public static final double kG = 0.0;
-    public static final double cruiseVelocity =
-        10.0; // TODO: retune, this is for when it was driven at the circumference
-    public static final double acceleration = 100.0;
+    public static final double cruiseVelocity = 90.0;
+    public static final double acceleration = 1500.0;
 
     public static final double statorCurrentLimit = 40.0;
 
@@ -250,7 +248,7 @@ public final class Constants {
     public static final double maxOutputVoltage = 12;
 
     public static final double retractOutput = 1;
-    public static final double extendOutput = -0.5;
+    public static final double extendOutput = 1;
   }
 
   public static final

@@ -25,7 +25,7 @@ public class Climber extends SubsystemBase implements Logged {
     config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = extendLimit;
     config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
-    config.CurrentLimits.StatorCurrentLimit = 40;
+    config.CurrentLimits.StatorCurrentLimit = 80;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
     motor.getConfigurator().apply(config);
 

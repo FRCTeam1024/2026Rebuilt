@@ -92,7 +92,7 @@ public class RobotContainer implements Logged {
                 intake.intakeCommand(),
                 intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
 
-                    driver
+    driver
         .rightTrigger(0.1)
         .whileTrue(
             Commands.parallel(
@@ -112,7 +112,7 @@ public class RobotContainer implements Logged {
 
     SmartDashboard.putNumber("Hood Angle", 0);
     // hood.setDefaultCommand(
-        // hood.setPositionCommand(() -> SmartDashboard.getNumber("Hood Angle", 0)));
+    // hood.setPositionCommand(() -> SmartDashboard.getNumber("Hood Angle", 0)));
     SmartDashboard.putNumber("Shooter velocity", 0);
     // shooter.setDefaultCommand(
     //     shooter.velocityCommand(() -> SmartDashboard.getNumber("Shooter velocity", 0)));
