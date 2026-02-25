@@ -233,7 +233,7 @@ public final class Constants {
     public static final double cruiseVelocity = 0.5; // 1;
     public static final double acceleration = 10; // 15;
 
-    public static final double homeVoltage = 1.0;
+    public static final double homeVoltage = -1.0;
 
     // All positions are of the crank arm in rotations. Currently 0 is all the way back.
     public static final double reverseLimit = 0.0;

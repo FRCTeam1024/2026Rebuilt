@@ -33,9 +33,9 @@ public class IntakePivot extends SubsystemBase implements Logged {
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = forwardLimit;
-    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = reverseLimit;
-    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
     config.MotionMagic.MotionMagicCruiseVelocity = cruiseVelocity;
     config.MotionMagic.MotionMagicAcceleration = acceleration;
