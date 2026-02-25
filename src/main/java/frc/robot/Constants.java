@@ -252,9 +252,9 @@ public final class Constants {
     public static final double maxOutputVoltage = 12;
 
     public static final double retractOutput = 1;
-    public static final double extendOutput = 1;
+    public static final double extendOutput = -1;
 
-    public static final int limitSwitchPin = 0;
+    public static final int limitSwitchPin = 1;
   }
 
   public static final

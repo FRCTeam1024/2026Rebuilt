@@ -19,8 +19,7 @@ public class Climber extends SubsystemBase implements Logged {
 
   private final VoltageOut voltageRequest = new VoltageOut(0);
 
-  private final DigitalInput limitSwitchPos = new DigitalInput(limitSwitchPin);
-  private final DigitalInput limitSwitchNeg = new DigitalInput(limitSwitchPin + 1);
+  private final DigitalInput limitSwitch = new DigitalInput(limitSwitchPin);
 
   public Climber() {
     var config = new TalonFXConfiguration();
@@ -48,12 +47,7 @@ public class Climber extends SubsystemBase implements Logged {
 
   @Log(key = "At Bottom")
   public boolean isAtBottom() {
-    return limitSwitchPos.get();
-  }
-
-  @Log(key = "At Bottom (comp)")
-  public boolean isAtBottomComplement() {
-    return limitSwitchNeg.get();
+    return !limitSwitch.get();
   }
 
   /**
