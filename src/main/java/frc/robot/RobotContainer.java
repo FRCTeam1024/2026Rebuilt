@@ -88,7 +88,7 @@ public class RobotContainer implements Logged {
                 intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
 
     operator
-        .rightTrigger(0.1)
+        .rightTrigger(0.1).or(driver.rightTrigger(0.1))
         .whileTrue(
             Commands.parallel(
                 intake.intakeCommand(),
