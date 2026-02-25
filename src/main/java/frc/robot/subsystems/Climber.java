@@ -8,14 +8,19 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import monologue.Annotations.Log;
 import monologue.Logged;
 
 public class Climber extends SubsystemBase implements Logged {
   private final TalonFX motor = new TalonFX(motorID);
 
   private final VoltageOut voltageRequest = new VoltageOut(0);
+
+  private final DigitalInput limitSwitchPos = new DigitalInput(limitSwitchPin);
+  private final DigitalInput limitSwitchNeg = new DigitalInput(limitSwitchPin + 1);
 
   public Climber() {
     var config = new TalonFXConfiguration();
@@ -41,6 +46,16 @@ public class Climber extends SubsystemBase implements Logged {
     motor.setPosition(0);
   }
 
+  @Log(key = "At Bottom")
+  public boolean isAtBottom() {
+    return limitSwitchPos.get();
+  }
+
+  @Log(key = "At Bottom (comp)")
+  public boolean isAtBottomComplement() {
+    return limitSwitchNeg.get();
+  }
+
   /**
    * Sets the output voltage of the climber as a proportion of the max output.
    *
@@ -48,6 +63,7 @@ public class Climber extends SubsystemBase implements Logged {
    */
   public void setOutput(double output) {
     voltageRequest.Output = maxOutputVoltage * output;
+    voltageRequest.LimitForwardMotion = isAtBottom();
     motor.setControl(voltageRequest);
   }
 
