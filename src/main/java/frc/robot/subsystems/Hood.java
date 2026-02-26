@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.HoodConstants.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -47,6 +48,16 @@ public class Hood extends SubsystemBase implements Logged {
 
     motor.getConfigurator().apply(config);
 
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50,
+        motor.getPosition(),
+        motor.getVelocity(),
+        motor.getMotorVoltage(),
+        motor.getStatorCurrent(),
+        motor.getSupplyCurrent(),
+        motor.getSupplyVoltage());
+
+    BaseStatusSignal.setUpdateFrequencyForAll(4, motor.getDeviceTemp());
     motor.optimizeBusUtilization();
     // TODO: current homing
     motor.setPosition(0);

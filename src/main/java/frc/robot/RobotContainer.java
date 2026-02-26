@@ -36,6 +36,7 @@ public class RobotContainer implements Logged {
   // private final Hood hood = new Hood();
   private final IntakePivot intakePivot = new IntakePivot();
   private final Climber climber = new Climber();
+  private final Hood hood = new Hood();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -88,7 +89,8 @@ public class RobotContainer implements Logged {
                 intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
 
     operator
-        .rightTrigger(0.1).or(driver.rightTrigger(0.1))
+        .rightTrigger(0.1)
+        .or(driver.rightTrigger(0.1))
         .whileTrue(
             Commands.parallel(
                 intake.intakeCommand(),

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.ConveyorConstants.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -24,6 +25,16 @@ public class Conveyor extends SubsystemBase implements Logged {
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     motor.getConfigurator().apply(config);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50,
+        motor.getMotorVoltage(),
+        motor.getStatorCurrent(),
+        motor.getSupplyCurrent(),
+        motor.getSupplyVoltage(),
+        motor.getVelocity());
+    BaseStatusSignal.setUpdateFrequencyForAll(4, motor.getDeviceTemp());
+    motor.optimizeBusUtilization();
+    setOutput(0);
   }
 
   /**

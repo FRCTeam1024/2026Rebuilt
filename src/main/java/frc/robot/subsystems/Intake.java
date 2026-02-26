@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.IntakeConstants.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -24,6 +25,15 @@ public class Intake extends SubsystemBase implements Logged {
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     motor.getConfigurator().apply(config);
+
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50,
+        motor.getMotorVoltage(),
+        motor.getStatorCurrent(),
+        motor.getSupplyCurrent(),
+        motor.getSupplyVoltage(),
+        motor.getVelocity());
+    BaseStatusSignal.setUpdateFrequencyForAll(4, motor.getDeviceTemp());
     motor.optimizeBusUtilization();
   }
 
@@ -39,7 +49,7 @@ public class Intake extends SubsystemBase implements Logged {
   public Command intakeCommand() {
     return runEnd(
         () -> {
-          setOutput(0.7);
+          setOutput(1.0);
         },
         () -> {
           stop();

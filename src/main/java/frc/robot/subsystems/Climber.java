@@ -40,9 +40,14 @@ public class Climber extends SubsystemBase implements Logged {
         motor.getSupplyCurrent(),
         motor.getSupplyVoltage(),
         motor.getPosition(),
-        motor.getVelocity(),
-        motor.getDeviceTemp());
+        motor.getVelocity());
+
+    BaseStatusSignal.setUpdateFrequencyForAll(4, motor.getDeviceTemp());
+    motor.optimizeBusUtilization();
     motor.setPosition(0);
+
+    // voltageRequest.UpdateFreqHz = 50;
+    setOutput(0);
   }
 
   @Log(key = "At Bottom")

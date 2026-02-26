@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.KickerConstants.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -28,6 +29,23 @@ public class Kicker extends SubsystemBase implements Logged {
 
     config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     right.getConfigurator().apply(config);
+
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        50,
+        left.getSupplyCurrent(),
+        right.getSupplyCurrent(),
+        left.getStatorCurrent(),
+        right.getStatorCurrent(),
+        left.getVelocity(),
+        right.getVelocity(),
+        left.getMotorVoltage(),
+        right.getMotorVoltage(),
+        left.getSupplyVoltage(),
+        right.getSupplyVoltage());
+    BaseStatusSignal.setUpdateFrequencyForAll(4, left.getDeviceTemp(), right.getDeviceTemp());
+    left.optimizeBusUtilization();
+    right.optimizeBusUtilization();
+    setOutput(0);
   }
 
   public void setControl(ControlRequest req) {

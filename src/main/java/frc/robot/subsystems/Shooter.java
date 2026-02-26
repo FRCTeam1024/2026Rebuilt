@@ -57,6 +57,9 @@ public class Shooter extends SubsystemBase implements Logged {
     right.getConfigurator().apply(config);
 
     resetStatusFrequencies();
+    left.optimizeBusUtilization();
+    right.optimizeBusUtilization();
+    stop();
   }
 
   private void setControl(ControlRequest request) {
@@ -158,14 +161,25 @@ public class Shooter extends SubsystemBase implements Logged {
   private void resetStatusFrequencies() {
     BaseStatusSignal.setUpdateFrequencyForAll(
         50,
+        right.getSupplyCurrent(),
+        right.getSupplyCurrent(),
         left.getStatorCurrent(),
         right.getStatorCurrent(),
+        left.getVelocity(),
+        right.getVelocity(),
+        left.getMotorVoltage(),
+        right.getMotorVoltage(),
+        left.getSupplyVoltage(),
+        right.getSupplyVoltage()
+      );
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        4,
+        left.getDeviceTemp(),
+        right.getDeviceTemp(),
         left.getBridgeOutput(),
         right.getBridgeOutput(),
         left.getMotorOutputStatus(),
-        right.getMotorOutputStatus(),
-        left.getFaultField(),
-        right.getFaultField());
+        right.getMotorOutputStatus());
   }
 
   @Override
@@ -187,8 +201,6 @@ public class Shooter extends SubsystemBase implements Logged {
     log("Right output status", right.getMotorOutputStatus().toString());
     log("Left bridge status", left.getBridgeOutput().toString());
     log("Right bridge status", right.getBridgeOutput().toString());
-    log("Left overvoltage", left.getFault_OverSupplyV().getValue());
-    log("Right overvoltage", right.getFault_OverSupplyV().getValue());
     log("Right faults", right.getFaultField().getValue());
     log("Left faults", left.getFaultField().getValue());
   }

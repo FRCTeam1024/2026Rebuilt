@@ -56,8 +56,9 @@ public class IntakePivot extends SubsystemBase implements Logged {
         motor.getMotorVoltage(),
         motor.getStatorCurrent(),
         motor.getSupplyCurrent(),
-        motor.getSupplyVoltage(),
-        motor.getDeviceTemp());
+        motor.getSupplyVoltage());
+    BaseStatusSignal.setUpdateFrequencyForAll(4, motor.getDeviceTemp());
+    motor.optimizeBusUtilization();
     setZero();
     setGoal(0);
   }
