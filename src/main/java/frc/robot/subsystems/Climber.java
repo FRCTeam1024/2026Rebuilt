@@ -23,14 +23,12 @@ public class Climber extends SubsystemBase implements Logged {
 
   public Climber() {
     var config = new TalonFXConfiguration();
-    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = retractLimit;
-    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
-    config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = extendLimit;
-    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
     config.CurrentLimits.StatorCurrentLimit = 80;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
+    config.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
+    config.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = 0;
     motor.getConfigurator().apply(config);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
@@ -62,7 +60,7 @@ public class Climber extends SubsystemBase implements Logged {
    */
   public void setOutput(double output) {
     voltageRequest.Output = maxOutputVoltage * output;
-    voltageRequest.LimitForwardMotion = isAtBottom();
+    voltageRequest.LimitReverseMotion = isAtBottom();
     motor.setControl(voltageRequest);
   }
 
