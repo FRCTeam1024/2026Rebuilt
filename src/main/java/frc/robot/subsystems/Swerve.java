@@ -3,6 +3,10 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.SwerveConstants;
 import static frc.robot.Constants.SwerveConstants.*;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -14,10 +18,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.SwerveModule;
 import java.util.function.DoubleSupplier;
 import monologue.Logged;
@@ -48,6 +54,36 @@ public class Swerve extends SubsystemBase implements Logged {
             SwerveConstants.initialPose,
             VecBuilder.fill(0.1, 0.1, 0.1),
             VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(45)));
+
+    RobotConfig config;
+    try {
+      config = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      // Handle exception as needed
+      e.printStackTrace();
+      // TODO: handle gracefully
+      throw new RuntimeException("Failed to load config");
+    }
+    AutoBuilder.configure(
+        this::getPose,
+        this::setPose,
+        this::getRobotRelativeChassisSpeeds,
+        (speeds, feedforwards) -> driveRobotRelative(speeds),
+        new PPHolonomicDriveController(
+            new PIDConstants(Constants.AutoConstants.kPXController),
+            new PIDConstants(Constants.AutoConstants.kPThetaController)),
+        config,
+        Swerve::shouldFlipPath,
+        this // Reference to this subsystem to set requirements
+        );
+  }
+
+  private static boolean shouldFlipPath() {
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      return alliance.get() == DriverStation.Alliance.Red;
+    }
+    return false;
   }
 
   public void drive(
@@ -67,6 +103,11 @@ public class Swerve extends SubsystemBase implements Logged {
         SwerveConstants.swerveKinematics.toSwerveModuleStates(robotRelativeChassisSpeeds);
 
     setModuleStates(swerveModuleStates, isOpenLoop);
+  }
+
+  public void driveRobotRelative(ChassisSpeeds speeds) {
+    SwerveModuleState[] swerveModuleStates = swerveKinematics.toSwerveModuleStates(speeds);
+    setModuleStates(swerveModuleStates, false);
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates, boolean isOpenLoop) {
@@ -91,6 +132,10 @@ public class Swerve extends SubsystemBase implements Logged {
       positions[mod.moduleNumber] = mod.getPosition();
     }
     return positions;
+  }
+
+  public ChassisSpeeds getRobotRelativeChassisSpeeds() {
+    return swerveKinematics.toChassisSpeeds(getModuleStates());
   }
 
   public Pose2d getPose() {
