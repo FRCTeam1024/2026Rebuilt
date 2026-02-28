@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static frc.robot.Constants.VisionConstants.*;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,7 +19,10 @@ import org.photonvision.targeting.PhotonPipelineResult;
 public class AprilTagVision implements Logged {
   private List<VisionCamera> cameras = new ArrayList<>();
 
-  public AprilTagVision() {}
+  public AprilTagVision() {
+    addCamera("Left Camera", leftCameraName, robotToLeftCamera);
+    addCamera("Right Camera", rightCameraName, robotToRightCamera);
+  }
 
   public void addCamera(String name, String photonName, Transform3d robotToCamera) {
     var camera = new PhotonCamera(photonName);

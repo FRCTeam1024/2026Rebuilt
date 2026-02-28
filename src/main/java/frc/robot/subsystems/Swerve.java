@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AprilTagVision;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.FieldPoses;
 import frc.robot.SwerveModule;
 import java.util.function.DoubleSupplier;
 import monologue.Logged;
@@ -203,6 +204,14 @@ public class Swerve extends SubsystemBase implements Logged {
         getPose());
 
     log("Pose", poseEstimator.getEstimatedPosition());
+    var hubCenter =
+        DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
+                == DriverStation.Alliance.Blue
+            ? FieldPoses.blueHubCenter
+            : FieldPoses.redHubCenter;
+    log(
+        "Distance to center of hub",
+        getPose().getTranslation().getDistance(hubCenter));
     for (SwerveModule mod : swerveMods) {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());

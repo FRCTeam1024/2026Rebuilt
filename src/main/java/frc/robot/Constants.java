@@ -7,6 +7,8 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -19,6 +21,25 @@ public final class Constants {
       AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 
   public static boolean aprilTagsEnabled = false;
+
+  public static final class VisionConstants {
+
+    public static final String leftCameraName = "LeftCam";
+    public static final String rightCameraName = "RightCam";
+
+    public static final Transform3d robotToLeftCamera =
+        new Transform3d(
+            0.005868,
+            0.103812,
+            0.530977,
+            new Rotation3d(0, Units.degreesToRadians(-25), Units.degreesToRadians(-20)));
+    public static final Transform3d robotToRightCamera =
+        new Transform3d(
+            0.005871,
+            -0.103812,
+            0.530977,
+            new Rotation3d(0, Units.degreesToRadians(-25), Units.degreesToRadians(20)));
+  }
 
   public static final class ControlConstants {
     public static final int driverPort = 0;
@@ -223,6 +244,12 @@ public final class Constants {
 
     public static final double statorCurrentLimit = 40.0;
 
+    public static final double homeCurrentDebounceSeconds = 0.125;
+    public static final double homeVelocityDebounceSeconds = 0.125;
+    public static final double homeCurrentThresholdAmps = 5.0;
+    public static final double homeVelocityThresholdRPS = 0.1;
+    public static final double homeOutputVolts = -0.3;
+
     public static final double homePosition = 0; // Degrees from horizontal
   }
 
@@ -257,13 +284,10 @@ public final class Constants {
   public static final class ClimberConstants {
     public static final int motorID = 50;
 
-    public static final double extendLimit = -170; // TODO: tune
-    public static final double retractLimit = 0;
-
     public static final double maxOutputVoltage = 12;
 
-    public static final double retractOutput = 1;
-    public static final double extendOutput = -1;
+    public static final double retractOutput = -1;
+    public static final double extendOutput = 1;
 
     public static final int limitSwitchPin = 1;
   }
