@@ -30,7 +30,7 @@ public class Hood extends SubsystemBase implements Logged {
 
     // config.Feedback.SensorToMechanismRatio = HoodConstants.motorToHoodRatio;
 
-    config.Slot0.kP = kP;
+    config.Slot0.kP = kP; 
     config.Slot0.kI = kI;
     config.Slot0.kD = kD;
     config.Slot0.kA = kA;
@@ -41,9 +41,9 @@ public class Hood extends SubsystemBase implements Logged {
     config.MotionMagic.MotionMagicCruiseVelocity = cruiseVelocity;
     config.MotionMagic.MotionMagicAcceleration = acceleration;
 
-    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
     config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Units.degreesToRotations(minPosition);
-    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
     config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Units.degreesToRotations(maxPosition);
 
     motor.getConfigurator().apply(config);
@@ -62,6 +62,8 @@ public class Hood extends SubsystemBase implements Logged {
     // TODO: current homing
     motor.setPosition(0);
   }
+
+
 
   /**
    * Get the current hood position in degrees.
