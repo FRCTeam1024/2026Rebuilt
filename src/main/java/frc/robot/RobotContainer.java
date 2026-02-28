@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.lib.util.CommandUtils;
 import frc.robot.subsystems.*;
 import monologue.Logged;
 
@@ -65,18 +66,25 @@ public class RobotContainer implements Logged {
 
     operator
         .leftTrigger()
+        .or(operator.rightBumper())
         .whileTrue(
             shooter
-                .spinUpCommand(
+                .velocityCommand(
                     () -> SmartDashboard.getNumber("Shooter velocity", ShooterConstants.hubShotRPS))
-                .andThen(
-                    Commands.parallel(
-                        intake.intakeCommand(),
-                        conveyor.oscillateCommand(),
-                        kicker.feedCommand(),
-                        shooter.velocityCommand(
-                            () -> SmartDashboard.getNumber("Shooter velocity", hubShotRPS))))
-                .finallyDo(shooter::stop)); // );
+                .finallyDo(shooter::stop));
+
+    operator
+        .leftTrigger()
+        .or(operator.rightBumper())
+        .and(shooter::atSetpoint)
+        .whileTrue(CommandUtils.rumbleController(operator));
+
+    operator
+        .rightBumper()
+        .and(shooter::atSetpoint)
+        .whileTrue(
+            Commands.parallel(
+                intake.intakeCommand(), conveyor.oscillateCommand(), kicker.feedCommand()));
 
     operator
         .leftBumper()

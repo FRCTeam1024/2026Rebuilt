@@ -16,6 +16,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -67,21 +68,32 @@ public class Shooter extends SubsystemBase implements Logged {
     right.setControl(request);
   }
 
+  private double getAverageVelocity() {
+    return (left.getVelocity().getValueAsDouble() + right.getVelocity().getValueAsDouble()) / 2.0;
+  }
+
   public void setVoltage(double output) {
     voltageRequest.Output = output;
     setControl(voltageRequest);
   }
 
   public void setVelocity(double velocityRPS) {
+    setVelocity(velocityRPS, 0);
+  }
+
+  public void setVelocity(double velocityRPS, double accelerationRPS2) {
     velocityRequest.Velocity = velocityRPS;
+    velocityRequest.Acceleration = accelerationRPS2;
     setControl(velocityRequest);
   }
 
   public void stop() {
+    velocityRequest.Velocity = 0;
     setControl(coastRequest);
   }
 
   public void emergencyStop() {
+    velocityRequest.Velocity = 0;
     setControl(estopRequest);
   }
 
@@ -91,6 +103,11 @@ public class Shooter extends SubsystemBase implements Logged {
             < velocityToleranceRPS
         && Math.abs(right.getVelocity().getValueAsDouble() - velocityRequest.Velocity)
             < velocityToleranceRPS;
+  }
+
+  public boolean stopped() {
+    return Math.abs(left.getVelocity().getValueAsDouble()) < 0.01
+        && Math.abs(right.getVelocity().getValueAsDouble()) < 0.01;
   }
 
   public Command spinUpCommand(DoubleSupplier velocityRPS) {
@@ -108,6 +125,30 @@ public class Shooter extends SubsystemBase implements Logged {
         () -> {
           stop();
         });
+  }
+
+  public Command runIdleCommand(DoubleSupplier velocityRPS) {
+    SlewRateLimiter velocitySlewRateLimiter = new SlewRateLimiter(velocitySlewRateRPSPerSecond);
+    return startRun(
+            () -> {
+              velocitySlewRateLimiter.reset(getAverageVelocity());
+            },
+            () -> {
+              double targetVelocity = velocityRPS.getAsDouble();
+              double currentVelocity = velocitySlewRateLimiter.lastValue();
+              double slewedVelocity = velocitySlewRateLimiter.calculate(targetVelocity);
+
+              double acceleration = 0;
+              if (slewedVelocity != targetVelocity) {
+                acceleration =
+                    slewedVelocity > currentVelocity
+                        ? velocitySlewRateRPSPerSecond
+                        : -velocitySlewRateRPSPerSecond;
+              }
+
+              setVelocity(slewedVelocity, acceleration);
+            })
+        .finallyDo(this::stop);
   }
 
   public Command sysIdRoutine() {
