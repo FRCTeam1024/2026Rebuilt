@@ -184,14 +184,15 @@ public final class Constants {
   }
 
   public static final class KickerConstants {
-    public static final int leaderID = 42;
+    public static final int upperShaftMotorID = 42;
+    public static final int lowerShaftMotorID = 43;
 
     public static final double maxOutputVoltage = 10;
   }
 
   public static final class ShooterConstants {
-    public static final int leftID = 43;
-    public static final int rightID = 44;
+    public static final int leftID = 44;
+    public static final int rightID = 45;
 
     public static final double velocityToleranceRPS = 2.5;
 
@@ -202,7 +203,7 @@ public final class Constants {
   }
 
   public static final class HoodConstants {
-    public static final int motorID = 45;
+    public static final int motorID = 46;
 
     public static final double motorToHoodRatio =
         3.0 * (48.0 / 24.0); // 3:1 MP, 24T:48T belt reduction
@@ -226,7 +227,7 @@ public final class Constants {
   }
 
   public static final class PivotConstants {
-    public static final int motorID = 46;
+    public static final int motorID = 48;
 
     // Ratio from motor to crank arm
     // 2 3:1 MP stages, 20T:50T spur, 20T:64T spur
@@ -254,7 +255,7 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final int motorID = 47;
+    public static final int motorID = 50;
 
     public static final double extendLimit = -170; // TODO: tune
     public static final double retractLimit = 0;

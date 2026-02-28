@@ -34,11 +34,10 @@ public class RobotContainer implements Logged {
   private final Conveyor conveyor = new Conveyor();
   private final Kicker kicker = new Kicker();
   private final Shooter shooter = new Shooter();
-  // private final Hood hood = new Hood();
+  private final Hood hood = new Hood();
   private final IntakePivot intakePivot = new IntakePivot();
   private final Climber climber = new Climber();
 
-  //   private final Hood hood = new Hood();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -123,7 +122,7 @@ public class RobotContainer implements Logged {
 
     operator.back().whileTrue(intakePivot.homeCommand());
 
-    shooter.setDefaultCommand(shooter.runIdleCommand(() -> 20));
+    // shooter.setDefaultCommand(shooter.runIdleCommand(() -> 20));
 
     // operator.start().onTrue(shooter.sysIdRoutine());
 

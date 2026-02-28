@@ -15,8 +15,8 @@ import monologue.Logged;
 
 public class Kicker extends SubsystemBase implements Logged {
 
-  private final TalonFX left = new TalonFX(leaderID);
-  private final TalonFX right = new TalonFX(48);
+  private final TalonFX upper = new TalonFX(upperShaftMotorID);
+  private final TalonFX lower = new TalonFX(lowerShaftMotorID);
   private final VoltageOut voltageRequest = new VoltageOut(0);
 
   public Kicker() {
@@ -25,32 +25,32 @@ public class Kicker extends SubsystemBase implements Logged {
     config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     config.CurrentLimits.StatorCurrentLimit = 80;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
-    left.getConfigurator().apply(config);
+    upper.getConfigurator().apply(config);
 
     config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    right.getConfigurator().apply(config);
+    lower.getConfigurator().apply(config);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         50,
-        left.getSupplyCurrent(),
-        right.getSupplyCurrent(),
-        left.getStatorCurrent(),
-        right.getStatorCurrent(),
-        left.getVelocity(),
-        right.getVelocity(),
-        left.getMotorVoltage(),
-        right.getMotorVoltage(),
-        left.getSupplyVoltage(),
-        right.getSupplyVoltage());
-    BaseStatusSignal.setUpdateFrequencyForAll(4, left.getDeviceTemp(), right.getDeviceTemp());
-    left.optimizeBusUtilization();
-    right.optimizeBusUtilization();
+        upper.getSupplyCurrent(),
+        lower.getSupplyCurrent(),
+        upper.getStatorCurrent(),
+        lower.getStatorCurrent(),
+        upper.getVelocity(),
+        lower.getVelocity(),
+        upper.getMotorVoltage(),
+        lower.getMotorVoltage(),
+        upper.getSupplyVoltage(),
+        lower.getSupplyVoltage());
+    BaseStatusSignal.setUpdateFrequencyForAll(4, upper.getDeviceTemp(), lower.getDeviceTemp());
+    upper.optimizeBusUtilization();
+    lower.optimizeBusUtilization();
     setOutput(0);
   }
 
   public void setControl(ControlRequest req) {
-    left.setControl(req);
-    right.setControl(req);
+    upper.setControl(req);
+    lower.setControl(req);
   }
 
   public void setOutput(double output) {
@@ -85,17 +85,17 @@ public class Kicker extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     log("Requested Voltage", voltageRequest.Output);
-    log("Left Supply Current", left.getSupplyCurrent().getValueAsDouble());
-    log("Left Stator Current", left.getStatorCurrent().getValueAsDouble());
-    log("Left Velocity", left.getVelocity().getValueAsDouble());
-    log("Left Applied Voltage", left.getMotorVoltage().getValueAsDouble());
-    log("Left Supply Voltage", left.getSupplyVoltage().getValueAsDouble());
-    log("Left Temperature", left.getDeviceTemp().getValueAsDouble());
-    log("Right Supply Current", right.getSupplyCurrent().getValueAsDouble());
-    log("Right Stator Current", right.getStatorCurrent().getValueAsDouble());
-    log("Right Velocity", right.getVelocity().getValueAsDouble());
-    log("Right Applied Voltage", right.getMotorVoltage().getValueAsDouble());
-    log("Right Supply Voltage", right.getSupplyVoltage().getValueAsDouble());
-    log("Right Temperature", right.getDeviceTemp().getValueAsDouble());
+    log("Left Supply Current", upper.getSupplyCurrent().getValueAsDouble());
+    log("Left Stator Current", upper.getStatorCurrent().getValueAsDouble());
+    log("Left Velocity", upper.getVelocity().getValueAsDouble());
+    log("Left Applied Voltage", upper.getMotorVoltage().getValueAsDouble());
+    log("Left Supply Voltage", upper.getSupplyVoltage().getValueAsDouble());
+    log("Left Temperature", upper.getDeviceTemp().getValueAsDouble());
+    log("Right Supply Current", lower.getSupplyCurrent().getValueAsDouble());
+    log("Right Stator Current", lower.getStatorCurrent().getValueAsDouble());
+    log("Right Velocity", lower.getVelocity().getValueAsDouble());
+    log("Right Applied Voltage", lower.getMotorVoltage().getValueAsDouble());
+    log("Right Supply Voltage", lower.getSupplyVoltage().getValueAsDouble());
+    log("Right Temperature", lower.getDeviceTemp().getValueAsDouble());
   }
 }
