@@ -37,7 +37,8 @@ public class RobotContainer implements Logged {
   // private final Hood hood = new Hood();
   private final IntakePivot intakePivot = new IntakePivot();
   private final Climber climber = new Climber();
-  private final Hood hood = new Hood();
+
+  //   private final Hood hood = new Hood();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -64,6 +65,7 @@ public class RobotContainer implements Logged {
     /* Driver Buttons */
     driver.x().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
 
+    // Left trigger or right bumper spins up flywheel
     operator
         .leftTrigger()
         .or(operator.rightBumper())
@@ -110,7 +112,6 @@ public class RobotContainer implements Logged {
             Commands.parallel(
                 intake.intakeCommand(),
                 intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
-    // operator.x().onTrue(shooter.sysIdRoutine());
 
     operator.y().onTrue(intakePivot.setGoalCommand(PivotConstants.intakePosition));
     operator.a().onTrue(intakePivot.setGoalCommand(PivotConstants.stowPosition));
@@ -121,6 +122,10 @@ public class RobotContainer implements Logged {
     operator.povDown().whileTrue(climber.retractCommand());
 
     operator.back().whileTrue(intakePivot.homeCommand());
+
+    shooter.setDefaultCommand(shooter.runIdleCommand(() -> 20));
+
+    // operator.start().onTrue(shooter.sysIdRoutine());
 
     SmartDashboard.putNumber("Hood Angle", 0);
     // hood.setDefaultCommand(

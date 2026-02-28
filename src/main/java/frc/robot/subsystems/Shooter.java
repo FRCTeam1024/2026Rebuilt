@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
-import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import static frc.robot.Constants.ShooterConstants.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -44,13 +43,12 @@ public class Shooter extends SubsystemBase implements Logged {
     config.CurrentLimits.StatorCurrentLimit = 80;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-    config.Slot0.kP = 0.15597;
+    config.Slot0.kP = 0.93952; // 5RPS max error, 6v max control effort
     config.Slot0.kI = 0;
     config.Slot0.kD = 0;
-    config.Slot0.kS = 0.2; // tuned manually
-    config.Slot0.kA = 0.035746;
-    config.Slot0.kV = 0.1176470588; // tuned manually
-    config.Slot0.kG = 0;
+    config.Slot0.kS = 0.12894; // left slightly higher than right (.15ish vs .12ish)
+    config.Slot0.kA = 0.012348;
+    config.Slot0.kV = 0.11456;
 
     left.getConfigurator().apply(config);
 
@@ -151,24 +149,29 @@ public class Shooter extends SubsystemBase implements Logged {
         .finallyDo(this::stop);
   }
 
+  private Command fastStopCommand() {
+    return runOnce(this::emergencyStop).andThen(idle()).until(this::stopped);
+  }
+
   public Command sysIdRoutine() {
     var routine = makeSysIdRoutine();
     return Commands.sequence(
             runOnce(
                 () -> {
-                  setStatusFrequenciesForSysId();
+                  // setStatusFrequenciesForSysId();
                 }),
+            fastStopCommand(),
             routine.quasistatic(Direction.kForward).withTimeout(12),
-            waitSeconds(5),
+            fastStopCommand(),
             routine.dynamic(Direction.kForward).withTimeout(5),
-            waitSeconds(5),
+            fastStopCommand(),
             routine.quasistatic(Direction.kReverse).withTimeout(12),
-            waitSeconds(5),
+            fastStopCommand(),
             routine.dynamic(Direction.kReverse).withTimeout(5),
-            waitSeconds(5))
+            fastStopCommand())
         .finallyDo(
             () -> {
-              resetStatusFrequencies();
+              // resetStatusFrequencies();
             });
   }
 
@@ -201,18 +204,21 @@ public class Shooter extends SubsystemBase implements Logged {
 
   private void resetStatusFrequencies() {
     BaseStatusSignal.setUpdateFrequencyForAll(
+        100,
+        left.getPosition(),
+        right.getPosition(),
+        left.getVelocity(),
+        right.getVelocity(),
+        left.getMotorVoltage(),
+        right.getMotorVoltage());
+    BaseStatusSignal.setUpdateFrequencyForAll(
         50,
         right.getSupplyCurrent(),
         right.getSupplyCurrent(),
         left.getStatorCurrent(),
         right.getStatorCurrent(),
-        left.getVelocity(),
-        right.getVelocity(),
-        left.getMotorVoltage(),
-        right.getMotorVoltage(),
         left.getSupplyVoltage(),
-        right.getSupplyVoltage()
-      );
+        right.getSupplyVoltage());
     BaseStatusSignal.setUpdateFrequencyForAll(
         4,
         left.getDeviceTemp(),
@@ -225,7 +231,8 @@ public class Shooter extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
-    log("Requested Voltage", voltageRequest.Output);
+    // log("Requested Voltage", voltageRequest.Output);
+    log("Requested Velocity", velocityRequest.Velocity);
     log("Left Supply Current", left.getSupplyCurrent().getValueAsDouble());
     log("Right Supply Current", right.getSupplyCurrent().getValueAsDouble());
     log("Left Stator Current", left.getStatorCurrent().getValueAsDouble());
