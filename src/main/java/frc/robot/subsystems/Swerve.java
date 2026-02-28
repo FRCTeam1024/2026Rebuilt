@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.AprilTagVision;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.SwerveModule;
@@ -29,9 +30,10 @@ import java.util.function.DoubleSupplier;
 import monologue.Logged;
 
 public class Swerve extends SubsystemBase implements Logged {
-  public SwerveDrivePoseEstimator poseEstimator;
-  public SwerveModule[] swerveMods;
-  public Canandgyro gyro = new Canandgyro(gyroID);
+  private SwerveDrivePoseEstimator poseEstimator;
+  private SwerveModule[] swerveMods;
+  private Canandgyro gyro = new Canandgyro(gyroID);
+  private AprilTagVision vision = new AprilTagVision();
 
   public Swerve() {
     gyro.setYaw(0);
@@ -191,6 +193,15 @@ public class Swerve extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     poseEstimator.update(getGyroYaw(), getModulePositions());
+    vision.processVisionUpdates(
+        (estimatedPose) -> {
+          if (Constants.aprilTagsEnabled) {
+            poseEstimator.addVisionMeasurement(
+                estimatedPose.estimatedPose.toPose2d(), estimatedPose.timestampSeconds);
+          }
+        },
+        getPose());
+
     log("Pose", poseEstimator.getEstimatedPosition());
     for (SwerveModule mod : swerveMods) {
       SmartDashboard.putNumber(

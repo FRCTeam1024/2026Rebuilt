@@ -3,6 +3,8 @@ package frc.robot;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -12,6 +14,11 @@ import frc.lib.util.SwerveDriveKinematicsUtils;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
+
+  public static final AprilTagFieldLayout kAndyMarkField =
+      AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
+
+  public static boolean aprilTagsEnabled = false;
 
   public static final class ControlConstants {
     public static final int driverPort = 0;
