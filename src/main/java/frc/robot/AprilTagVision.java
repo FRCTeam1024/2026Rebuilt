@@ -33,6 +33,7 @@ public class AprilTagVision implements Logged {
   public void processVisionUpdates(Consumer<EstimatedRobotPose> poseConsumer, Pose2d curPose) {
     for (var camera : cameras) {
       var results = camera.camera().getAllUnreadResults();
+      log(camera.name() + " Num Targets", results.size());
       if (!results.isEmpty()) {
         var result = results.get(results.size() - 1);
         var estimatedPose = camera.estimator().estimateCoprocMultiTagPose(result);

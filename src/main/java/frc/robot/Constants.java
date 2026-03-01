@@ -20,12 +20,12 @@ public final class Constants {
   public static final AprilTagFieldLayout kAndyMarkField =
       AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
 
-  public static boolean aprilTagsEnabled = false;
+  public static boolean aprilTagsEnabled = true;
 
   public static final class VisionConstants {
 
-    public static final String leftCameraName = "LeftCam";
-    public static final String rightCameraName = "RightCam";
+    public static final String leftCameraName = "Arducam_OV9281_6";
+    public static final String rightCameraName = "Arducam_OV9281_2";
 
     public static final Transform3d robotToLeftCamera =
         new Transform3d(

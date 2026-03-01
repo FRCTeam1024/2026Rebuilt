@@ -209,9 +209,7 @@ public class Swerve extends SubsystemBase implements Logged {
                 == DriverStation.Alliance.Blue
             ? FieldPoses.blueHubCenter
             : FieldPoses.redHubCenter;
-    log(
-        "Distance to center of hub",
-        getPose().getTranslation().getDistance(hubCenter));
+    log("Distance to center of hub", getPose().getTranslation().getDistance(hubCenter));
     for (SwerveModule mod : swerveMods) {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
