@@ -29,6 +29,10 @@ public class Climber extends SubsystemBase implements Logged {
     config.CurrentLimits.StatorCurrentLimitEnable = true;
     config.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
     config.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = 0;
+
+    config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 10000; // TODO: find upper limit
+
     motor.getConfigurator().apply(config);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
@@ -44,7 +48,7 @@ public class Climber extends SubsystemBase implements Logged {
     motor.optimizeBusUtilization();
     motor.setPosition(0);
 
-    // voltageRequest.UpdateFreqHz = 50;
+    voltageRequest.UpdateFreqHz = 50;
     setOutput(0);
   }
 
