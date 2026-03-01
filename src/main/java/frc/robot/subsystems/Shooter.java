@@ -43,12 +43,12 @@ public class Shooter extends SubsystemBase implements Logged {
     config.CurrentLimits.StatorCurrentLimit = 80;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-    config.Slot0.kP = 0.93952; // 5RPS max error, 6v max control effort
+    config.Slot0.kP = 0.15597;
     config.Slot0.kI = 0;
     config.Slot0.kD = 0;
-    config.Slot0.kS = 0.12894; // left slightly higher than right (.15ish vs .12ish)
-    config.Slot0.kA = 0.012348;
-    config.Slot0.kV = 0.11456;
+    config.Slot0.kS = 0.2; // tuned manually
+    config.Slot0.kA = 0.035746;
+    config.Slot0.kV = 0.1176470588; // tuned manually
 
     left.getConfigurator().apply(config);
 

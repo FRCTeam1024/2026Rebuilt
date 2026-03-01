@@ -215,7 +215,7 @@ public final class Constants {
     public static final int leftID = 44;
     public static final int rightID = 45;
 
-    public static final double velocityToleranceRPS = 2.5;
+    public static final double velocityToleranceRPS = 5;
 
     public static final double hubShotRPS = 42.0;
 
