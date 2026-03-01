@@ -9,7 +9,10 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import monologue.Logged;
 
@@ -64,7 +67,7 @@ public class IntakePivot extends SubsystemBase implements Logged {
   }
 
   private void setHomingVoltage() {
-    homeRequest.Output = homeVoltage;
+    homeRequest.Output = homeOutputVolts;
     motor.setControl(homeRequest);
   }
 
@@ -84,6 +87,10 @@ public class IntakePivot extends SubsystemBase implements Logged {
     return motor.getPosition().getValueAsDouble();
   }
 
+  public double getVelocity() {
+    return motor.getVelocity().getValueAsDouble();
+  }
+
   public Command setGoalCommand(double position) {
     return run(() -> setGoal(position)).withName("Set Pivot Position");
   }
@@ -94,6 +101,34 @@ public class IntakePivot extends SubsystemBase implements Logged {
 
   public Command homeCommand() {
     return run(this::setHomingVoltage).finallyDo(this::stopHoming);
+  }
+
+  public Command currentHome() {
+    VoltageOut homeOutput = new VoltageOut(0);
+    Debouncer currentDebounce = new Debouncer(homeCurrentDebounceSeconds, DebounceType.kRising);
+    Debouncer velocityDebounce = new Debouncer(homeVelocityDebounceSeconds, DebounceType.kRising);
+
+    return runOnce(
+            () -> {
+              currentDebounce.calculate(false);
+              velocityDebounce.calculate(false);
+              motor.setControl(homeOutput.withOutput(homeOutputVolts));
+            })
+        .andThen(Commands.idle())
+        .until(
+            () ->
+                currentDebounce.calculate(
+                        motor.getStatorCurrent().getValueAsDouble() > homeCurrentThresholdAmps)
+                    && velocityDebounce.calculate(
+                        Math.abs(getVelocity()) < homeVelocityThresholdRPS))
+        .finallyDo(
+            (interrupted) -> {
+              motor.setControl(homeOutput.withOutput(0));
+              motor.setPosition(homePosition, 0);
+              if (!interrupted) {
+                motor.setControl(positionRequest.withPosition(homePosition));
+              }
+            });
   }
 
   @Override

@@ -38,7 +38,6 @@ public class RobotContainer implements Logged {
   private final IntakePivot intakePivot = new IntakePivot();
   private final Climber climber = new Climber();
 
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     s_Swerve.setDefaultCommand(
@@ -120,7 +119,8 @@ public class RobotContainer implements Logged {
 
     operator.povDown().whileTrue(climber.retractCommand());
 
-    operator.back().whileTrue(intakePivot.homeCommand());
+    operator.back().whileTrue(intakePivot.currentHome());
+    operator.x().whileTrue(hood.currentHome());
 
     // shooter.setDefaultCommand(shooter.runIdleCommand(() -> 20));
 

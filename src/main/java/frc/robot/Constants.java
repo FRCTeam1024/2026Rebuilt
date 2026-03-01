@@ -244,13 +244,14 @@ public final class Constants {
 
     public static final double statorCurrentLimit = 40.0;
 
+    // Values for homing routine
     public static final double homeCurrentDebounceSeconds = 0.125;
     public static final double homeVelocityDebounceSeconds = 0.125;
     public static final double homeCurrentThresholdAmps = 5.0;
     public static final double homeVelocityThresholdRPS = 0.1;
     public static final double homeOutputVolts = -0.3;
 
-    public static final double homePosition = 0; // Degrees from horizontal
+    public static final double homePosition = 0;
   }
 
   public static final class PivotConstants {
@@ -271,7 +272,12 @@ public final class Constants {
     public static final double cruiseVelocity = 0.5; // 1;
     public static final double acceleration = 10; // 15;
 
-    public static final double homeVoltage = -1.0;
+    // Values for homing routine
+    public static final double homeCurrentDebounceSeconds = 0.125;
+    public static final double homeVelocityDebounceSeconds = 0.125;
+    public static final double homeCurrentThresholdAmps = 10.0;
+    public static final double homeVelocityThresholdRPS = 0.1 / motorToPivotRatio;
+    public static final double homeOutputVolts = -1.0;
 
     // All positions are of the crank arm in rotations. Currently 0 is all the way back.
     public static final double reverseLimit = 0.0;
