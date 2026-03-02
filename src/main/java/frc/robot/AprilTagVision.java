@@ -22,6 +22,7 @@ public class AprilTagVision implements Logged {
   public AprilTagVision() {
     addCamera("Left Camera", leftCameraName, robotToLeftCamera);
     addCamera("Right Camera", rightCameraName, robotToRightCamera);
+    addCamera("Rear Camera", rearCameraName, robotToRearCamera);
   }
 
   public void addCamera(String name, String photonName, Transform3d robotToCamera) {

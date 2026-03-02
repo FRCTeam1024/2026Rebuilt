@@ -26,6 +26,7 @@ public final class Constants {
 
     public static final String leftCameraName = "Arducam_OV9281_6";
     public static final String rightCameraName = "Arducam_OV9281_2";
+    public static final String rearCameraName = "Arducam_OV9281_3";
 
     public static final Transform3d robotToLeftCamera =
         new Transform3d(
@@ -39,6 +40,12 @@ public final class Constants {
             -0.103812,
             0.530977,
             new Rotation3d(0, Units.degreesToRadians(-25), Units.degreesToRadians(20)));
+
+    public static final Transform3d robotToRearCamera = new Transform3d(
+      -0.309123, -0.248447, 0.201433, new Rotation3d(
+        0, 0, Units.degreesToRadians(145)
+      )
+    );
   }
 
   public static final class ControlConstants {
@@ -101,7 +108,7 @@ public final class Constants {
     public static final int driveSupplyCurrentLower = 60;
     public static final double driveSupplyCurrentLowerTime = 0.1;
     public static final boolean driveEnableSupplyCurrentLimit = true;
-    public static final double driveStatorCurrentLimit = 60;
+    public static final double driveStatorCurrentLimit = 80;
     public static final boolean driveEnableStatorCurrentLimit = true;
 
     /* These values are used by the drive motor controller to ramp in open loop and closed loop driving.
