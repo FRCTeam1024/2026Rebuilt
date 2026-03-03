@@ -2,6 +2,8 @@ package frc.robot;
 
 import static frc.robot.Constants.SwerveConstants;
 
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.StatusSignalCollection;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -13,6 +15,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Voltage;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -31,6 +36,17 @@ public class SwerveModule {
   /* angle motor control requests */
   private final PositionVoltage anglePositionRequest = new PositionVoltage(0);
 
+  /* Status signals */
+  private final StatusSignal<Angle> drivePosition;
+  private final StatusSignal<AngularVelocity> driveVelocity;
+  private final StatusSignal<Voltage> driveVoltage;
+  private final StatusSignal<Angle> anglePosition;
+  private final StatusSignal<AngularVelocity> angleVelocity;
+  private final StatusSignal<Angle> cancoderAbsolutePosition;
+
+  /* Status signal collection for synchronized updates */
+  private final StatusSignalCollection signals;
+
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
     this.angleOffset = moduleConstants.angleOffset();
@@ -42,23 +58,38 @@ public class SwerveModule {
     /* Angle Motor Config */
     mAngleMotor = new TalonFX(moduleConstants.angleMotorID());
     mAngleMotor.getConfigurator().apply(getTurnMotorConfig());
-    resetToAbsolute();
 
     /* Drive Motor Config */
     mDriveMotor = new TalonFX(moduleConstants.driveMotorID());
     mDriveMotor.getConfigurator().apply(getDriveMotorConfig());
     mDriveMotor.getConfigurator().setPosition(0.0);
 
-    angleEncoder.getAbsolutePosition().setUpdateFrequency(100);
-    angleEncoder.optimizeBusUtilization();
+    /* Extract StatusSignals to members */
+    drivePosition = mDriveMotor.getPosition();
+    driveVelocity = mDriveMotor.getVelocity();
+    driveVoltage = mDriveMotor.getMotorVoltage();
+    anglePosition = mAngleMotor.getPosition();
+    angleVelocity = mAngleMotor.getVelocity();
+    cancoderAbsolutePosition = angleEncoder.getAbsolutePosition();
 
-    mDriveMotor.getVelocity().setUpdateFrequency(100);
-    mDriveMotor.getPosition().setUpdateFrequency(100);
-    mDriveMotor.getMotorVoltage().setUpdateFrequency(100);
+    /* Create StatusSignalCollection and register all signals */
+    signals = new StatusSignalCollection();
+    signals.addSignals(
+        drivePosition,
+        driveVelocity,
+        driveVoltage,
+        anglePosition,
+        angleVelocity,
+        cancoderAbsolutePosition);
+
+    /* Configure update frequencies */
+    signals.setUpdateFrequencyForAll(100);
+
+    angleEncoder.optimizeBusUtilization();
     mDriveMotor.optimizeBusUtilization();
-    mAngleMotor.getVelocity().setUpdateFrequency(100);
-    mAngleMotor.getPosition().setUpdateFrequency(100);
     mAngleMotor.optimizeBusUtilization();
+
+    resetToAbsolute();
   }
 
   private TalonFXConfiguration getDriveMotorConfig() {
@@ -162,7 +193,7 @@ public class SwerveModule {
     double compensationVelocity =
         calculateCompensationVelocity(
             speedMetersPerSecond,
-            mAngleMotor.getVelocity().getValueAsDouble(),
+            angleVelocity.getValueAsDouble(),
             SwerveConstants.azimuthCouplingRatio);
     var outputVelocity = requestedVelocityRPS + compensationVelocity;
 
@@ -188,11 +219,11 @@ public class SwerveModule {
   }
 
   public Rotation2d getCANcoder() {
-    return Rotation2d.fromRotations(angleEncoder.getAbsolutePosition().getValueAsDouble());
+    return Rotation2d.fromRotations(cancoderAbsolutePosition.getValueAsDouble());
   }
 
   public Rotation2d getAngle() {
-    return Rotation2d.fromRotations(mAngleMotor.getPosition().getValueAsDouble());
+    return Rotation2d.fromRotations(anglePosition.getValueAsDouble());
   }
 
   public void resetToAbsolute() {
@@ -202,15 +233,15 @@ public class SwerveModule {
 
   public SwerveModuleState getState() {
     return new SwerveModuleState(
-        motorRotToWheelMeter(mDriveMotor.getVelocity().getValueAsDouble()), getAngle());
+        motorRotToWheelMeter(driveVelocity.getValueAsDouble()), getAngle());
   }
 
   public double getVoltage() {
-    return mDriveMotor.getMotorVoltage().getValueAsDouble();
+    return driveVoltage.getValueAsDouble();
   }
 
   public SwerveModulePosition getPosition() {
-    var driveRotations = mDriveMotor.getPosition().getValueAsDouble();
+    var driveRotations = drivePosition.getValueAsDouble();
     // Calculate how many drive rotations were caused by azimuth coupling
     var azimuthCompensationDistance =
         getAngle().getRotations() * SwerveConstants.azimuthCouplingRatio;
@@ -219,6 +250,10 @@ public class SwerveModule {
     var trueDriveRotations = driveRotations - azimuthCompensationDistance;
 
     return new SwerveModulePosition(motorRotToWheelMeter(trueDriveRotations), getAngle());
+  }
+  
+  public void refresh() {
+    signals.refreshAll();
   }
 
   public static double wheelMeterToMotorRot(double wheelMeters) {
