@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
@@ -56,6 +58,9 @@ public class Robot extends TimedRobot {
     //     },
     //     0.04);
 
+    if (isReal()) {
+      WebServer.start(5800, Filesystem.getDeployDirectory().toString());
+    }
     initTimer.stop();
     m_robotContainer.log("Timing/Robot Init ms", initTimer.get() * 1000);
 
