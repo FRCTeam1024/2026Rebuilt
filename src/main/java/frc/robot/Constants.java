@@ -41,11 +41,9 @@ public final class Constants {
             0.530977,
             new Rotation3d(0, Units.degreesToRadians(-25), Units.degreesToRadians(20)));
 
-    public static final Transform3d robotToRearCamera = new Transform3d(
-      -0.309123, -0.248447, 0.201433, new Rotation3d(
-        0, 0, Units.degreesToRadians(145)
-      )
-    );
+    public static final Transform3d robotToRearCamera =
+        new Transform3d(
+            -0.309123, -0.248447, 0.201433, new Rotation3d(0, 0, Units.degreesToRadians(145)));
   }
 
   public static final class ControlConstants {
@@ -290,7 +288,7 @@ public final class Constants {
     public static final double reverseLimit = 0.0;
     public static final double forwardLimit = 0.25;
     public static final double homePosition = 0;
-    public static final double intakePosition = 0.24; // No kicker bar
+    public static final double intakePosition = 0.203; // No kicker bar
     public static final double stowPosition = 0;
   }
 
