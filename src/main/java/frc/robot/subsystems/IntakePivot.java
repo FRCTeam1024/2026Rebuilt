@@ -5,6 +5,7 @@ import static frc.robot.Constants.PivotConstants.*;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -99,12 +100,9 @@ public class IntakePivot extends SubsystemBase implements Logged {
     motor.setPosition(homePosition);
   }
 
-  public Command homeCommand() {
-    return run(this::setHomingVoltage).finallyDo(this::stopHoming);
-  }
-
   public Command currentHome() {
-    VoltageOut homeOutput = new VoltageOut(0);
+    VoltageOut homeOutputRequest = new VoltageOut(homeOutputVolts);
+    StaticBrake brakeRequest = new StaticBrake();
     Debouncer currentDebounce = new Debouncer(homeCurrentDebounceSeconds, DebounceType.kRising);
     Debouncer velocityDebounce = new Debouncer(homeVelocityDebounceSeconds, DebounceType.kRising);
 
@@ -112,7 +110,7 @@ public class IntakePivot extends SubsystemBase implements Logged {
             () -> {
               currentDebounce.calculate(false);
               velocityDebounce.calculate(false);
-              motor.setControl(homeOutput.withOutput(homeOutputVolts));
+              motor.setControl(homeOutputRequest);
             })
         .andThen(Commands.idle())
         .until(
@@ -123,7 +121,7 @@ public class IntakePivot extends SubsystemBase implements Logged {
                         Math.abs(getVelocity()) < homeVelocityThresholdRPS))
         .finallyDo(
             (interrupted) -> {
-              motor.setControl(homeOutput.withOutput(0));
+              motor.setControl(brakeRequest);
               motor.setPosition(homePosition, 0);
               if (!interrupted) {
                 motor.setControl(positionRequest.withPosition(homePosition));
