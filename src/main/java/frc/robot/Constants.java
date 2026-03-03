@@ -288,8 +288,9 @@ public final class Constants {
     public static final double reverseLimit = 0.0;
     public static final double forwardLimit = 0.25;
     public static final double homePosition = 0;
-    public static final double intakePosition = 0.203; // No kicker bar
     public static final double stowPosition = 0;
+    public static final double insideBumperPosition = 0.089;
+    public static final double intakePosition = 0.203; // No kicker bar
   }
 
   public static final class ClimberConstants {

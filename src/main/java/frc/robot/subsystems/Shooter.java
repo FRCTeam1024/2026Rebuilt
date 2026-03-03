@@ -108,6 +108,13 @@ public class Shooter extends SubsystemBase implements Logged {
         && Math.abs(right.getVelocity().getValueAsDouble()) < 0.01;
   }
 
+  /**
+   * Spin the shooter up to the given velocity. Ends when the shooter reaches the target velocity.
+   * The shooter will not be stopped when the command ends.
+   *
+   * @param velocityRPS The target velocity in rotations per second.
+   * @return A command that spins up the shooter.
+   */
   public Command spinUpCommand(DoubleSupplier velocityRPS) {
     return run(() -> {
           setVelocity(velocityRPS.getAsDouble());
@@ -115,6 +122,12 @@ public class Shooter extends SubsystemBase implements Logged {
         .until(this::atSetpoint);
   }
 
+  /**
+   * Run the shooter at the given velocity while the command is active, and stop when it ends.
+   *
+   * @param velocityRPS The target velocity in rotations per second.
+   * @return A command that runs the shooter at the given velocity.
+   */
   public Command velocityCommand(DoubleSupplier velocityRPS) {
     return runEnd(
         () -> {
@@ -125,6 +138,13 @@ public class Shooter extends SubsystemBase implements Logged {
         });
   }
 
+  /**
+   * Idle the shooter, allowing it to slew up to the target velocity at a limited acceleration, and
+   * stop when the command ends.
+   *
+   * @param velocityRPS
+   * @return
+   */
   public Command runIdleCommand(DoubleSupplier velocityRPS) {
     SlewRateLimiter velocitySlewRateLimiter = new SlewRateLimiter(velocitySlewRateRPSPerSecond);
     return startRun(

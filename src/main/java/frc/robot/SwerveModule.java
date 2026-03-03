@@ -251,7 +251,7 @@ public class SwerveModule {
 
     return new SwerveModulePosition(motorRotToWheelMeter(trueDriveRotations), getAngle());
   }
-  
+
   public void refresh() {
     signals.refreshAll();
   }

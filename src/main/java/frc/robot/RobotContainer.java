@@ -38,6 +38,9 @@ public class RobotContainer implements Logged {
   private final IntakePivot intakePivot = new IntakePivot();
   private final Climber climber = new Climber();
 
+  private final FuelHandler fuelHandler =
+      new FuelHandler(intake, conveyor, kicker, shooter, hood, intakePivot);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     s_Swerve.setDefaultCommand(
@@ -79,41 +82,15 @@ public class RobotContainer implements Logged {
         .and(shooter::atSetpoint)
         .whileTrue(CommandUtils.rumbleController(operator));
 
-    operator
-        .rightBumper()
-        .and(shooter::atSetpoint)
-        .whileTrue(
-            Commands.parallel(
-                intake.intakeCommand(), conveyor.oscillateCommand(), kicker.feedCommand()));
+    operator.rightBumper().and(shooter::atSetpoint).whileTrue(fuelHandler.feedIntoShooterCommand());
 
-    operator
-        .leftBumper()
-        .whileTrue(
-            Commands.parallel(
-                intake.ejectCommand(),
-                conveyor.ejectCommand(),
-                kicker.retractCommand(),
-                shooter.velocityCommand(() -> -30),
-                intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
+    operator.leftBumper().whileTrue(fuelHandler.vomitCommand());
 
-    operator
-        .rightTrigger(0.1)
-        .or(driver.rightTrigger(0.1))
-        .whileTrue(
-            Commands.parallel(
-                intake.intakeCommand(),
-                intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
-
-    driver
-        .rightTrigger(0.1)
-        .whileTrue(
-            Commands.parallel(
-                intake.intakeCommand(),
-                intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition)));
+    operator.rightTrigger(0.1).or(driver.rightTrigger(0.1)).whileTrue(fuelHandler.intakeCommand());
 
     operator.y().onTrue(intakePivot.setGoalCommand(PivotConstants.intakePosition));
     operator.a().onTrue(intakePivot.setGoalCommand(PivotConstants.stowPosition));
-    operator.b().onTrue(intakePivot.setGoalCommand(0.089));
+    operator.b().onTrue(intakePivot.setGoalCommand(PivotConstants.insideBumperPosition));
 
     operator.povUp().whileTrue(climber.extendCommand());
 
@@ -126,12 +103,7 @@ public class RobotContainer implements Logged {
 
     // operator.start().onTrue(shooter.sysIdRoutine());
 
-    SmartDashboard.putNumber("Hood Angle", 0);
-    // hood.setDefaultCommand(
-    // hood.setPositionCommand(() -> SmartDashboard.getNumber("Hood Angle", 0)));
     SmartDashboard.putNumber("Shooter velocity", hubShotRPS);
-    // shooter.setDefaultCommand(
-    //     shooter.velocityCommand(() -> SmartDashboard.getNumber("Shooter velocity", 0)));
   }
 
   public void emergencyStop() {
