@@ -59,7 +59,7 @@ public class Intake extends SubsystemBase implements Logged {
   public Command ejectCommand() {
     return runEnd(
         () -> {
-          setOutput(-0.7);
+          setOutput(-1.0);
         },
         () -> {
           stop();
