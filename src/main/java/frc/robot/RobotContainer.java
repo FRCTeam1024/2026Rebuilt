@@ -68,7 +68,7 @@ public class RobotContainer implements Logged {
 
     // Left trigger or right bumper spins up flywheel
     operator
-        .leftTrigger()
+        .rightTrigger()
         .or(operator.rightBumper())
         .whileTrue(
             shooter
@@ -77,7 +77,7 @@ public class RobotContainer implements Logged {
                 .finallyDo(shooter::stop));
 
     operator
-        .leftTrigger()
+        .rightTrigger(0.1)
         .or(operator.rightBumper())
         .and(shooter::atSetpoint)
         .whileTrue(CommandUtils.rumbleController(operator));
@@ -86,15 +86,15 @@ public class RobotContainer implements Logged {
 
     operator.leftBumper().whileTrue(fuelHandler.vomitCommand());
 
-    operator.rightTrigger(0.1).or(driver.rightTrigger(0.1)).whileTrue(fuelHandler.intakeCommand());
-
+    operator.leftTrigger(0.1).or(driver.leftTrigger(0.1)).whileTrue(fuelHandler.intakeCommand());
+    
     operator.y().onTrue(intakePivot.setGoalCommand(PivotConstants.intakePosition));
     operator.a().onTrue(intakePivot.setGoalCommand(PivotConstants.stowPosition));
     operator.b().onTrue(intakePivot.setGoalCommand(PivotConstants.insideBumperPosition));
 
-    operator.povUp().whileTrue(climber.extendCommand());
+    operator.povUp().or(driver.povUp()).whileTrue(climber.extendCommand());
 
-    operator.povDown().whileTrue(climber.retractCommand());
+    operator.povDown().or(driver.povDown()).whileTrue(climber.retractCommand());
 
     operator.back().whileTrue(intakePivot.currentHome());
     operator.x().whileTrue(hood.currentHome());
