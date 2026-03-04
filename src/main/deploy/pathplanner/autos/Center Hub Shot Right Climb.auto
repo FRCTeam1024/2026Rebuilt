@@ -5,6 +5,18 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Reverse From Hub"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "extendIntake"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -23,6 +35,12 @@
                       "data": {
                         "waitTime": 5.0
                       }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "shooterFeed"
+                      }
                     }
                   ]
                 }
@@ -37,28 +55,28 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Left Hub to Left Climb"
-          }
-        },
-        {
-          "type": "race",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "climbRetract"
+                  "pathName": "Reverse From Hub to Right Climb"
                 }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 2.5
+                  "name": "retractIntake"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "climbRetract"
           }
         }
       ]

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5574733096085422,
+        "x": 2.922680901542112,
         "y": 4.137212336892052
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.599905100830369,
-        "y": 4.072657176749703
+        "x": 2.4442692307692324,
+        "y": 3.0117179487179486
       },
       "isLocked": false,
-      "linkedName": "Center Hub Start"
+      "linkedName": "Reverse From Hub End"
     },
     {
       "anchor": {
-        "x": 2.922680901542112,
-        "y": 4.137212336892052
+        "x": 1.141910256410258,
+        "y": 2.8372948717948714
       },
       "prevControl": {
-        "x": 4.009359430604983,
-        "y": 4.126453143534994
+        "x": 1.548897435897437,
+        "y": 2.732641025641026
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reverse From Hub End"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 1.33221985386958
   },
   "useDefaultConstraints": true
 }

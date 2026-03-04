@@ -53,8 +53,11 @@ public class RobotContainer implements Logged {
             () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband)));
 
     NamedCommands.registerCommand("shootFuelFromHub", shooter.velocityCommand( () -> ShooterConstants.hubShotRPS));
-    NamedCommands.registerCommand("climbExtend", climber.extendCommand());
+    NamedCommands.registerCommand("climbExtend", climber.autoExtendCommand());
     NamedCommands.registerCommand("climbRetract", climber.retractCommand());
+    NamedCommands.registerCommand("extendIntake", fuelHandler.intakeCommand());
+    NamedCommands.registerCommand("shooterFeed", fuelHandler.feedIntoShooterCommand().onlyIf(shooter :: atSetpoint));
+    NamedCommands.registerCommand("retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
 
     // Configure the button bindings
     configureBindings();
