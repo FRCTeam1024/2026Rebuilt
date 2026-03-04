@@ -4,6 +4,7 @@ import static frc.robot.Constants.ClimberConstants.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -18,20 +19,23 @@ public class Climber extends SubsystemBase implements Logged {
   private final TalonFX motor = new TalonFX(motorID);
 
   private final VoltageOut voltageRequest = new VoltageOut(0);
+  private final PositionVoltage positionVoltageRequest = new PositionVoltage(0);
 
   private final DigitalInput limitSwitch = new DigitalInput(limitSwitchPin);
 
   public Climber() {
     var config = new TalonFXConfiguration();
     config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     config.CurrentLimits.StatorCurrentLimit = 80;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
     config.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
     config.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = 0;
 
     config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 10000; // TODO: find upper limit
+    config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = maxExtend; // TODO: find upper limit
+
+    config.Slot0.kP = 10;
 
     motor.getConfigurator().apply(config);
 
@@ -70,6 +74,17 @@ public class Climber extends SubsystemBase implements Logged {
 
   public void stop() {
     setOutput(0);
+  }
+
+  public boolean atSetpoint() {
+    return Math.abs(motor.getPosition().getValueAsDouble() - positionVoltageRequest.Position) < positionTolerance;
+  }
+
+  public Command autoExtendCommand() {
+    return run(
+        () -> {
+          motor.setControl(positionVoltageRequest.withPosition(maxExtend));
+        }).until(this::atSetpoint);
   }
 
   public Command retractCommand() {

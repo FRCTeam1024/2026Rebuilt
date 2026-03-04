@@ -302,6 +302,8 @@ public final class Constants {
     public static final double extendOutput = 1;
 
     public static final int limitSwitchPin = 1;
+    public static final double maxExtend = 142;
+    public static final double positionTolerance = 5;
   }
 
   public static final
