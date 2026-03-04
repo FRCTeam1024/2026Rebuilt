@@ -4,10 +4,12 @@ import static edu.wpi.first.math.MathUtil.applyDeadband;
 import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShooterConstants.hubShotRPS;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,9 +21,6 @@ import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.*;
 import monologue.Logged;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -63,17 +62,24 @@ public class RobotContainer implements Logged {
             () -> applyDeadband(-driver.getLeftX(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband)));
 
-    NamedCommands.registerCommand("shootFuelFromHub", shooter.velocityCommand( () -> ShooterConstants.hubShotRPS));
+    NamedCommands.registerCommand("wait5", Commands.waitSeconds(5));
+    NamedCommands.registerCommand(
+        "shootFuelFromHub", shooter.velocityCommand(() -> ShooterConstants.hubShotRPS));
     NamedCommands.registerCommand("climbExtend", climber.autoExtendCommand());
     NamedCommands.registerCommand("climbRetract", climber.autoClimbCommand());
-    NamedCommands.registerCommand("extendIntake", fuelHandler.intakeCommand());
-    NamedCommands.registerCommand("shooterFeed", fuelHandler.feedIntoShooterCommand().onlyIf(shooter :: atSetpoint));
-    NamedCommands.registerCommand("retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
+    NamedCommands.registerCommand("extendIntake", fuelHandler.extendIntake());
+    NamedCommands.registerCommand(
+        "shooterFeed",
+        Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterCommand()));
+    NamedCommands.registerCommand(
+        "retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
 
     // Configure the button bindings
     configureBindings();
 
     autoChooser = AutoBuilder.buildAutoChooser();
+
+    setupDashboard();
   }
 
   /**
@@ -110,7 +116,7 @@ public class RobotContainer implements Logged {
     operator.leftBumper().whileTrue(fuelHandler.vomitCommand());
 
     operator.leftTrigger(0.1).or(driver.leftTrigger(0.1)).whileTrue(fuelHandler.intakeCommand());
-    
+
     operator.y().onTrue(intakePivot.setGoalCommand(PivotConstants.intakePosition));
     operator.a().onTrue(intakePivot.setGoalCommand(PivotConstants.stowPosition));
     operator.b().onTrue(intakePivot.setGoalCommand(PivotConstants.insideBumperPosition));
@@ -136,7 +142,7 @@ public class RobotContainer implements Logged {
 
   public void setupDashboard() {
     driverTab.add(autoChooser).withPosition(0, 0).withSize(2, 1);
-    driverTab.addBoolean("Shooter Ready", () -> shooter.atSetpoint()).withPosition(0,1);
+    driverTab.addBoolean("Shooter Ready", () -> shooter.atSetpoint()).withPosition(0, 1);
     Shuffleboard.selectTab("Driver");
   }
 

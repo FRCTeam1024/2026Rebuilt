@@ -77,21 +77,22 @@ public class Climber extends SubsystemBase implements Logged {
   }
 
   public boolean atSetpoint() {
-    return Math.abs(motor.getPosition().getValueAsDouble() - positionVoltageRequest.Position) < positionTolerance;
+    return Math.abs(motor.getPosition().getValueAsDouble() - positionVoltageRequest.Position)
+        < positionTolerance;
   }
 
   public Command autoExtendCommand() {
-    return run(
-        () -> {
+    return run(() -> {
           motor.setControl(positionVoltageRequest.withPosition(maxExtend));
-        }).until(this::atSetpoint);
+        })
+        .until(this::atSetpoint);
   }
 
   public Command autoClimbCommand() {
-    return run(
-        () -> {
-          motor.setControl(positionVoltageRequest.withPosition(maxExtend*0.2));
-        }).until(this::atSetpoint);
+    return run(() -> {
+          motor.setControl(positionVoltageRequest.withPosition(maxExtend * 0.2));
+        })
+        .until(this::atSetpoint);
   }
 
   public Command retractCommand() {

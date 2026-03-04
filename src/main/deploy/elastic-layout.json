@@ -3,13 +3,6 @@
   "grid_size": 128,
   "tabs": [
     {
-      "name": "Teleoperated",
-      "grid_layout": {
-        "layouts": [],
-        "containers": []
-      }
-    },
-    {
       "name": "Status",
       "grid_layout": {
         "layouts": [],
@@ -22,7 +15,7 @@
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Robot/s_Swerve/vision/Left Camera Connected",
+              "topic": "/Robot/swerve/vision/Left Camera Connected",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -39,7 +32,7 @@
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Robot/s_Swerve/vision/Right Camera Connected",
+              "topic": "/Robot/swerve/vision/Right Camera Connected",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
@@ -56,13 +49,26 @@
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/Robot/s_Swerve/vision/Rear Camera Connected",
+              "topic": "/Robot/swerve/vision/Rear Camera Connected",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,
               "false_color": 4294198070,
               "true_icon": "None",
               "false_icon": "None"
+            }
+          },
+          {
+            "title": "SendableChooser[0]",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/Shuffleboard/Driver/SendableChooser[0]",
+              "period": 0.06,
+              "sort_options": false
             }
           }
         ]

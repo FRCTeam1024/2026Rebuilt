@@ -97,7 +97,8 @@ public class Shooter extends SubsystemBase implements Logged {
 
   @Log(key = "At Setpoint")
   public boolean atSetpoint() {
-    return Math.abs(left.getVelocity().getValueAsDouble() - velocityRequest.Velocity)
+    return velocityRequest.Velocity != 0
+        && Math.abs(left.getVelocity().getValueAsDouble() - velocityRequest.Velocity)
             < velocityToleranceRPS
         && Math.abs(right.getVelocity().getValueAsDouble() - velocityRequest.Velocity)
             < velocityToleranceRPS;

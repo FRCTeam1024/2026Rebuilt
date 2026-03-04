@@ -34,6 +34,10 @@ public class FuelHandler {
         intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition));
   }
 
+  public Command extendIntake() {
+    return intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition);
+  }
+
   public Command feedIntoShooterCommand() {
     return Commands.parallel(
         intake.intakeCommand(), conveyor.oscillateCommand(), kicker.feedCommand());

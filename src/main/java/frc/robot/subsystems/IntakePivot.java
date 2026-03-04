@@ -93,7 +93,7 @@ public class IntakePivot extends SubsystemBase implements Logged {
   }
 
   public Command setGoalCommand(double position) {
-    return run(() -> setGoal(position)).withName("Set Pivot Position");
+    return runOnce(() -> setGoal(position)).withName("Set Pivot Position");
   }
 
   public void setZero() {
