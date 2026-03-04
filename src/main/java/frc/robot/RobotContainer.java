@@ -13,6 +13,9 @@ import frc.lib.util.CommandUtils;
 import frc.robot.subsystems.*;
 import monologue.Logged;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -48,6 +51,10 @@ public class RobotContainer implements Logged {
             () -> applyDeadband(-driver.getLeftY(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getLeftX(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband)));
+
+    NamedCommands.registerCommand("shootFuelFromHub", shooter.velocityCommand( () -> ShooterConstants.hubShotRPS));
+    NamedCommands.registerCommand("climbExtend", climber.extendCommand());
+    NamedCommands.registerCommand("climbRetract", climber.retractCommand());
 
     // Configure the button bindings
     configureBindings();
