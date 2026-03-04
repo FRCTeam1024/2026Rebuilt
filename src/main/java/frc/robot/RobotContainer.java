@@ -102,6 +102,7 @@ public class RobotContainer implements Logged {
     operator.povUp().or(driver.povUp()).whileTrue(climber.extendCommand());
 
     operator.povDown().or(driver.povDown()).whileTrue(climber.retractCommand());
+    operator.povRight().or(driver.povRight()).onTrue(climber.autoExtendCommand());
 
     operator.back().whileTrue(intakePivot.currentHome());
     operator.x().whileTrue(hood.currentHome());
