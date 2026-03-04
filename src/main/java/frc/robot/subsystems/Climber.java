@@ -87,6 +87,13 @@ public class Climber extends SubsystemBase implements Logged {
         }).until(this::atSetpoint);
   }
 
+  public Command autoClimbCommand() {
+    return run(
+        () -> {
+          motor.setControl(positionVoltageRequest.withPosition(maxExtend*0.2));
+        }).until(this::atSetpoint);
+  }
+
   public Command retractCommand() {
     return runEnd(() -> setOutput(retractOutput), () -> stop());
   }

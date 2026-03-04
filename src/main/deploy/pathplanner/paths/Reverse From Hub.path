@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 3.5574733096085422,
-        "y": 4.137212336892052
+        "y": 4.05
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.599905100830369,
-        "y": 4.072657176749703
+        "x": 2.5974733096085423,
+        "y": 4.05
       },
       "isLocked": false,
       "linkedName": "Center Hub Start"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 2.922680901542112,
-        "y": 4.137212336892052
+        "y": 4.05
       },
       "prevControl": {
-        "x": 4.009359430604983,
-        "y": 4.126453143534994
+        "x": 4.009412692633152,
+        "y": 4.05
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,16 +33,16 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 2.75,
     "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularVelocity": 573.0,
+    "maxAngularAcceleration": 859.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.33221985386958
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,

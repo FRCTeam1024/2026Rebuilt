@@ -8,47 +8,68 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.852539237156675,
-        "y": 2.8381638835660197
+        "x": 2.0023974358974375,
+        "y": 2.116346153846154
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Hub"
     },
     {
       "anchor": {
-        "x": 1.0140000000000011,
-        "y": 2.848923076923077
+        "x": 1.4,
+        "y": 2.8372948717948714
       },
       "prevControl": {
-        "x": 0.6912241992882571,
-        "y": 2.8812006569942508
+        "x": 1.8935366740283612,
+        "y": 2.8372948717948714
+      },
+      "nextControl": {
+        "x": 0.9382835977495148,
+        "y": 2.8372948717948714
+      },
+      "isLocked": false,
+      "linkedName": "Right Climb Preset"
+    },
+    {
+      "anchor": {
+        "x": 1.1,
+        "y": 2.8372948717948714
+      },
+      "prevControl": {
+        "x": 1.4243856650660731,
+        "y": 2.8372948717948714
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Climb"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 2.75,
     "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularVelocity": 573.0,
+    "maxAngularAcceleration": 859.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.4688007143857804
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 46.1017061152064
+    "rotation": 45.0
   },
   "useDefaultConstraints": true
 }

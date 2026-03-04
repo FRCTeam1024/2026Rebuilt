@@ -5,11 +5,18 @@ import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShooterConstants.hubShotRPS;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.CommandUtils;
+import frc.robot.Constants.ControlConstants;
+import frc.robot.Constants.PivotConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.*;
 import monologue.Logged;
 
@@ -44,6 +51,10 @@ public class RobotContainer implements Logged {
   private final FuelHandler fuelHandler =
       new FuelHandler(intake, conveyor, kicker, shooter, hood, intakePivot);
 
+  private final SendableChooser<Command> autoChooser;
+
+  private final ShuffleboardTab driverTab = Shuffleboard.getTab("Driver");
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     s_Swerve.setDefaultCommand(
@@ -54,13 +65,15 @@ public class RobotContainer implements Logged {
 
     NamedCommands.registerCommand("shootFuelFromHub", shooter.velocityCommand( () -> ShooterConstants.hubShotRPS));
     NamedCommands.registerCommand("climbExtend", climber.autoExtendCommand());
-    NamedCommands.registerCommand("climbRetract", climber.retractCommand());
+    NamedCommands.registerCommand("climbRetract", climber.autoClimbCommand());
     NamedCommands.registerCommand("extendIntake", fuelHandler.intakeCommand());
     NamedCommands.registerCommand("shooterFeed", fuelHandler.feedIntoShooterCommand().onlyIf(shooter :: atSetpoint));
     NamedCommands.registerCommand("retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
 
     // Configure the button bindings
     configureBindings();
+
+    autoChooser = AutoBuilder.buildAutoChooser();
   }
 
   /**
@@ -121,12 +134,18 @@ public class RobotContainer implements Logged {
     shooter.emergencyStop();
   }
 
+  public void setupDashboard() {
+    driverTab.add(autoChooser).withPosition(0, 0).withSize(2, 1);
+    driverTab.addBoolean("Shooter Ready", () -> shooter.atSetpoint()).withPosition(0,1);
+    Shuffleboard.selectTab("Driver");
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return Commands.none();
+    return autoChooser.getSelected();
   }
 }
