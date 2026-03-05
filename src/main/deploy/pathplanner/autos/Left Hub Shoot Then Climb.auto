@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "extendIntake"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -37,22 +43,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "retractIntake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Left Hub to Left Climb"
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "climbRetract"
-                }
-              }
-            ]
+            "name": "climbRetract"
           }
         }
       ]

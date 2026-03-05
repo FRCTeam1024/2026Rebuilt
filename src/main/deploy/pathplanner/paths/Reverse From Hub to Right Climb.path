@@ -16,28 +16,28 @@
     },
     {
       "anchor": {
-        "x": 1.5256410256410273,
-        "y": 2.5465897435897444
+        "x": 1.7465769230769244,
+        "y": 2.662871794871795
       },
       "prevControl": {
-        "x": 2.255052196040789,
-        "y": 2.4283068510924863
+        "x": 2.475988093476686,
+        "y": 2.544588902374537
       },
       "nextControl": {
-        "x": 1.127550871429876,
-        "y": 2.611144903732093
+        "x": 1.3484867688657731,
+        "y": 2.7274269550141437
       },
       "isLocked": false,
-      "linkedName": "Right Climb Preset"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.1,
-        "y": 2.8372948717948714
+        "x": 0.98,
+        "y": 2.95
       },
       "prevControl": {
-        "x": 1.4093589743589754,
-        "y": 2.5931025641025642
+        "x": 1.3242435897435907,
+        "y": 2.8453461538461546
       },
       "nextControl": null,
       "isLocked": false,
@@ -54,8 +54,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.75,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.5,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 573.0,
     "maxAngularAcceleration": 859.0,
     "nominalVoltage": 12.0,
@@ -71,5 +71,5 @@
     "velocity": 0,
     "rotation": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

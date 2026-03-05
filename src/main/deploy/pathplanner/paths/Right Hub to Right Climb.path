@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4442948717948725,
-        "y": 2.848923076923077
+        "x": 3.43,
+        "y": 2.694
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0023974358974375,
-        "y": 2.116346153846154
+        "x": 2.662538461538462,
+        "y": 2.4846923076923075
       },
       "isLocked": false,
       "linkedName": "Right Hub"
     },
     {
       "anchor": {
-        "x": 1.5256410256410273,
-        "y": 2.5465897435897444
+        "x": 1.7465769230769244,
+        "y": 2.662871794871795
       },
       "prevControl": {
-        "x": 2.0191776996693886,
-        "y": 2.5465897435897444
+        "x": 2.2401135971052857,
+        "y": 2.662871794871795
       },
       "nextControl": {
-        "x": 1.0639246233905422,
-        "y": 2.5465897435897444
+        "x": 1.2848605208264392,
+        "y": 2.662871794871795
       },
       "isLocked": false,
-      "linkedName": "Right Climb Preset"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.1,
-        "y": 2.8372948717948714
+        "x": 0.98,
+        "y": 2.95
       },
       "prevControl": {
-        "x": 1.4243856650660731,
-        "y": 2.8372948717948714
+        "x": 1.304385665066073,
+        "y": 2.95
       },
       "nextControl": null,
       "isLocked": false,
@@ -54,8 +54,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.75,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 573.0,
     "maxAngularAcceleration": 859.0,
     "nominalVoltage": 12.0,

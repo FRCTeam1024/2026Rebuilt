@@ -65,7 +65,7 @@ public final class Constants {
         Units.inchesToMeters(21.626); // TODO: This must be tuned to specific robot
     public static final double wheelBase =
         Units.inchesToMeters(21.626); // TODO: This must be tuned to specific robot
-    public static final double wheelCircumference = Units.inchesToMeters(4 * Math.PI);
+    public static final double wheelCircumference = Units.inchesToMeters(3.795 * Math.PI);
 
     /* Swerve Kinematics
      * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
