@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Reverse From Hub"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "extendIntake"
@@ -23,19 +17,19 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shootFuelFromHub"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shooterFeed"
+                  "name": "shootFuelFromSide"
                 }
               },
               {
                 "type": "wait",
                 "data": {
                   "waitTime": 10.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooterFeed"
                 }
               }
             ]

@@ -12,20 +12,20 @@
         "y": 5.858683274021352
       },
       "isLocked": false,
-      "linkedName": "Left Start"
+      "linkedName": "Left Hub Start"
     },
     {
       "anchor": {
-        "x": 1.1302820512829967,
+        "x": 1.1,
         "y": 4.62803846154285
       },
       "prevControl": {
-        "x": 1.4701897983392653,
+        "x": 1.4399077470562687,
         "y": 5.417556346381969
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Climb"
     }
   ],
   "rotationTargets": [],
@@ -33,16 +33,16 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
-    "maxAngularVelocity": 573.0,
-    "maxAngularAcceleration": 859.0,
+    "maxVelocity": 1.5,
+    "maxAcceleration": 1.5,
+    "maxAngularVelocity": 150.0,
+    "maxAngularAcceleration": 150.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.23610153906995
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
@@ -50,5 +50,5 @@
     "velocity": 0,
     "rotation": -45.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

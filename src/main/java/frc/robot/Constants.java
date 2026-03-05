@@ -223,6 +223,7 @@ public final class Constants {
     public static final double velocityToleranceRPS = 5;
 
     public static final double hubShotRPS = 42.0;
+    public static final double sideShotRPS = 60.0;
 
     /** Maximum rate of change for velocity setpoint in RPS per second */
     public static final double velocitySlewRateRPSPerSecond = 20.0;

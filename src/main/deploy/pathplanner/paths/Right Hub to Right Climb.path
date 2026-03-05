@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.662538461538462,
-        "y": 2.4846923076923075
+        "x": 2.6768333333333345,
+        "y": 2.6279871794871794
       },
       "isLocked": false,
-      "linkedName": "Right Hub"
+      "linkedName": "Right Hub Start"
     },
     {
       "anchor": {
-        "x": 1.7465769230769244,
-        "y": 2.662871794871795
+        "x": 1.6302948717948724,
+        "y": 2.8024102564102567
       },
       "prevControl": {
-        "x": 2.2401135971052857,
-        "y": 2.662871794871795
+        "x": 2.2233333333333345,
+        "y": 2.6745000000000005
       },
       "nextControl": {
-        "x": 1.2848605208264392,
-        "y": 2.662871794871795
+        "x": 1.178957372197042,
+        "y": 2.8997575602450825
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 2.95
       },
       "prevControl": {
-        "x": 1.304385665066073,
-        "y": 2.95
+        "x": 1.2814487179487193,
+        "y": 2.9535769230769233
       },
       "nextControl": null,
       "isLocked": false,
@@ -54,10 +54,10 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
-    "maxAngularVelocity": 573.0,
-    "maxAngularAcceleration": 859.0,
+    "maxVelocity": 1.5,
+    "maxAcceleration": 1.5,
+    "maxAngularVelocity": 150.0,
+    "maxAngularAcceleration": 150.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -71,5 +71,5 @@
     "velocity": 0,
     "rotation": 45.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

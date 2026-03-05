@@ -5,9 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Right Hub to Right Climb"
+            "name": "extendIntake"
           }
         },
         {
@@ -17,16 +17,28 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shootFuelFromHub"
+                  "name": "shootFuelFromSide"
                 }
               },
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 10.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooterFeed"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "retractIntake"
           }
         }
       ]
