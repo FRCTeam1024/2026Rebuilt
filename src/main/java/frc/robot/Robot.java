@@ -63,7 +63,6 @@ public class Robot extends TimedRobot {
     }
     initTimer.stop();
     m_robotContainer.log("Timing/Robot Init ms", initTimer.get() * 1000);
-
     dtTimer.start();
   }
 
