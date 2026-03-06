@@ -225,7 +225,7 @@ public class Shooter extends SubsystemBase implements Logged {
 
   private void resetStatusFrequencies() {
     BaseStatusSignal.setUpdateFrequencyForAll(
-        100,
+        50,
         left.getPosition(),
         right.getPosition(),
         left.getVelocity(),
