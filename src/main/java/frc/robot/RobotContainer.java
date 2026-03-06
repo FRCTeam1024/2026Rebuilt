@@ -75,6 +75,7 @@ public class RobotContainer implements Logged {
     configureBindings();
 
     autoChooser = AutoBuilder.buildAutoChooser();
+    setupDashboard();
   }
 
   /**
