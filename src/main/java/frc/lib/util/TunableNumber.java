@@ -2,6 +2,7 @@ package frc.lib.util;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import java.util.function.DoubleSupplier;
 
 /**
  * A utility class for creating tunable numbers that can be adjusted via NetworkTables.
@@ -13,7 +14,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * double currentSpeed = speed.get();
  * </pre>
  */
-public class TunableNumber {
+public class TunableNumber implements DoubleSupplier {
   private final String key;
   private final NetworkTableEntry entry;
   private double lastValue;
@@ -43,14 +44,9 @@ public class TunableNumber {
     return value;
   }
 
-  /**
-   * Sets the value on NetworkTables.
-   *
-   * @param value The value to set
-   */
-  public void set(double value) {
-    entry.setDouble(value);
-    lastValue = value;
+  @Override
+  public double getAsDouble() {
+    return get();
   }
 
   /**
