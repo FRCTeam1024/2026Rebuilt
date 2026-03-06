@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.util.TunableNumber;
 import frc.robot.Constants;
 
 public class FuelHandler {
@@ -12,6 +13,11 @@ public class FuelHandler {
   private final Shooter shooter;
   private final Hood hood;
   private final IntakePivot intakePivot;
+
+  private final TunableNumber hoodPositionTuner =
+      new TunableNumber("FuelHandlerTuning/HoodPosition", 0);
+  private final TunableNumber flywheelVelocityTuner =
+      new TunableNumber("FuelHandlerTuning/FlywheelVelocity", 0);
 
   public FuelHandler(
       Intake intake,
@@ -50,5 +56,10 @@ public class FuelHandler {
         kicker.retractCommand(),
         shooter.velocityCommand(() -> -30),
         intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition));
+  }
+
+  public Command tuningModeCommand() {
+    return Commands.parallel(
+        shooter.velocityCommand(flywheelVelocityTuner), hood.setPositionCommand(hoodPositionTuner));
   }
 }

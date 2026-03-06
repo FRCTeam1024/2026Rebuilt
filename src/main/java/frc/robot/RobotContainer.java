@@ -124,6 +124,8 @@ public class RobotContainer implements Logged {
     operator.back().whileTrue(intakePivot.currentHome());
     operator.x().whileTrue(hood.currentHome());
 
+    operator.start().whileTrue(fuelHandler.tuningModeCommand());
+
     // shooter.setDefaultCommand(shooter.runIdleCommand(() -> 20));
 
     // operator.start().onTrue(shooter.sysIdRoutine());
