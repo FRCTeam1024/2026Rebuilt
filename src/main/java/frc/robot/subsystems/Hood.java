@@ -5,7 +5,6 @@ import static frc.robot.Constants.HoodConstants.*;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -14,16 +13,25 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.DoubleSupplier;
+import monologue.Annotations.Log;
 import monologue.Logged;
 
 public class Hood extends SubsystemBase implements Logged {
 
   private final TalonFX motor = new TalonFX(motorID);
   private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0);
+
+  @Log private HomeState homeState = HomeState.Incomplete;
+  private Timer homeStateChangeTimer = new Timer();
+  private final Debouncer currentDebounce = new Debouncer(0.125, DebounceType.kRising);
+  private final Debouncer velocityDebounce = new Debouncer(0.125, DebounceType.kRising);
+  private final VoltageOut homeOutput = new VoltageOut(0);
 
   public Hood() {
     var config = new TalonFXConfiguration();
@@ -85,7 +93,9 @@ public class Hood extends SubsystemBase implements Logged {
    */
   public void setGoalPosition(double position) {
     positionRequest.Position = position;
-    motor.setControl(positionRequest);
+    if (homeState == HomeState.Complete || homeState == HomeState.TimedOut) {
+      motor.setControl(positionRequest);
+    }
   }
 
   public Command setPositionCommand(DoubleSupplier position) {
@@ -94,7 +104,6 @@ public class Hood extends SubsystemBase implements Logged {
 
   public Command currentHome() {
     VoltageOut homeOutputRequest = new VoltageOut(homeOutputVolts);
-    StaticBrake brakeRequest = new StaticBrake();
     Debouncer currentDebounce = new Debouncer(homeCurrentDebounceSeconds, DebounceType.kRising);
     Debouncer velocityDebounce = new Debouncer(homeVelocityDebounceSeconds, DebounceType.kRising);
 
@@ -102,7 +111,7 @@ public class Hood extends SubsystemBase implements Logged {
             () -> {
               currentDebounce.calculate(false);
               velocityDebounce.calculate(false);
-              motor.setControl(homeOutputRequest);
+              motor.setControl(homeOutputRequest.withOutput(homeOutputVolts));
             })
         .andThen(Commands.idle())
         .until(
@@ -111,12 +120,59 @@ public class Hood extends SubsystemBase implements Logged {
                     motor.getStatorCurrent().getValueAsDouble() > homeCurrentThresholdAmps))
         .finallyDo(
             (interrupted) -> {
-              motor.setControl(brakeRequest);
+              motor.setControl(homeOutputRequest.withOutput(0));
               motor.setPosition(homePosition, 0);
               if (!interrupted) {
                 motor.setControl(positionRequest.withPosition(stowPosition));
               }
             });
+  }
+
+  private boolean homeConditionMet() {
+    var currentInRange =
+        currentDebounce.calculate(
+            motor.getStatorCurrent().getValueAsDouble() > homeCurrentThresholdAmps);
+    return currentInRange;
+  }
+
+  private void setHomeState(HomeState state) {
+    homeState = state;
+    homeStateChangeTimer.restart();
+  }
+
+  private void runHomeStateMachine() {
+    switch (homeState) {
+      case Incomplete:
+        if (DriverStation.isEnabled()) {
+          motor.setControl(homeOutput.withOutput(homeOutputVolts));
+          currentDebounce.calculate(false);
+          velocityDebounce.calculate(false);
+          setHomeState(HomeState.Running);
+        }
+        break;
+      case Running:
+        motor.setControl(homeOutput.withOutput(homeOutputVolts));
+        if (!DriverStation.isEnabled()) {
+          // We've disabled since starting. Go back to incomplete.
+          motor.setControl(homeOutput.withOutput(0));
+          setHomeState(HomeState.Incomplete);
+        } else if (homeConditionMet()) {
+          motor.setPosition(homePosition, 0);
+          // go to last requested position
+          motor.setControl(positionRequest);
+          setHomeState((HomeState.Complete));
+        } else if (homeStateChangeTimer.hasElapsed(3)) {
+          motor.setPosition(0);
+          motor.setControl(homeOutput.withOutput(0));
+          DriverStation.reportError(
+              "Initial hood homing timed out! Manual homing still available.", false);
+          setHomeState(HomeState.TimedOut);
+        }
+        break;
+      case Complete:
+      case TimedOut:
+        break;
+    }
   }
 
   @Override
@@ -129,5 +185,13 @@ public class Hood extends SubsystemBase implements Logged {
     log("Supply Current", motor.getSupplyCurrent().getValueAsDouble());
     log("Supply Voltage", motor.getSupplyVoltage().getValueAsDouble());
     log("Temperature", motor.getDeviceTemp().getValueAsDouble());
+    runHomeStateMachine();
+  }
+
+  public enum HomeState {
+    Incomplete,
+    Running,
+    Complete,
+    TimedOut
   }
 }

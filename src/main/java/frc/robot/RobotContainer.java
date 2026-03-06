@@ -70,7 +70,8 @@ public class RobotContainer implements Logged {
     NamedCommands.registerCommand("climbRetract", climber.autoClimbCommand());
     NamedCommands.registerCommand("extendIntake", fuelHandler.extendIntake());
     NamedCommands.registerCommand(
-        "shooterFeed", Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterCommand()));
+        "shooterFeed",
+        Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterCommand()));
     NamedCommands.registerCommand(
         "retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
 
@@ -125,9 +126,9 @@ public class RobotContainer implements Logged {
     operator.povRight().or(driver.povRight()).onTrue(climber.autoExtendCommand());
 
     operator.back().whileTrue(intakePivot.currentHome());
-    operator.x().whileTrue(hood.currentHome());
+    operator.start().whileTrue(hood.currentHome());
 
-    operator.start().whileTrue(fuelHandler.tuningModeCommand());
+    operator.x().whileTrue(fuelHandler.tuningModeCommand());
 
     // shooter.setDefaultCommand(shooter.runIdleCommand(() -> 20));
 
