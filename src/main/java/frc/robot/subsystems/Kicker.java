@@ -45,7 +45,7 @@ public class Kicker extends SubsystemBase implements Logged {
     BaseStatusSignal.setUpdateFrequencyForAll(4, upper.getDeviceTemp(), lower.getDeviceTemp());
     upper.optimizeBusUtilization();
     lower.optimizeBusUtilization();
-    setOutput(0);
+    setOutputVolts(0);
   }
 
   public void setControl(ControlRequest req) {
@@ -53,19 +53,19 @@ public class Kicker extends SubsystemBase implements Logged {
     lower.setControl(req);
   }
 
-  public void setOutput(double output) {
-    voltageRequest.Output = maxOutputVoltage * output;
+  public void setOutputVolts(double output) {
+    voltageRequest.Output = output;
     setControl(voltageRequest);
   }
 
   public void stop() {
-    setOutput(0);
+    setOutputVolts(0);
   }
 
   public Command feedCommand() {
     return runEnd(
         () -> {
-          setOutput(0.5);
+          setOutputVolts(5);
         },
         () -> {
           stop();
@@ -75,7 +75,7 @@ public class Kicker extends SubsystemBase implements Logged {
   public Command retractCommand() {
     return runEnd(
         () -> {
-          setOutput(-0.3);
+          setOutputVolts(-3);
         },
         () -> {
           stop();
