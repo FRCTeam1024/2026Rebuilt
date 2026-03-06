@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -67,9 +68,9 @@ public class RobotContainer implements Logged {
         "shootFuelFromSide", shooter.velocityCommand(() -> ShooterConstants.sideShotRPS));
     NamedCommands.registerCommand("climbExtend", climber.autoExtendCommand());
     NamedCommands.registerCommand("climbRetract", climber.autoClimbCommand());
-    NamedCommands.registerCommand("extendIntake", fuelHandler.intakeCommand());
+    NamedCommands.registerCommand("extendIntake", fuelHandler.extendIntake());
     NamedCommands.registerCommand(
-        "shooterFeed", fuelHandler.feedIntoShooterCommand().onlyIf(shooter::atSetpoint));
+        "shooterFeed", Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterCommand()));
     NamedCommands.registerCommand(
         "retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
 
