@@ -222,7 +222,7 @@ public final class Constants {
 
     public static final double velocityToleranceRPS = 5;
 
-    public static final double hubShotRPS = 42.0;
+    public static final double hubShotRPS = 40.0;
     public static final double sideShotRPS = 60.0;
 
     /** Maximum rate of change for velocity setpoint in RPS per second */
@@ -251,13 +251,14 @@ public final class Constants {
     public static final double statorCurrentLimit = 40.0;
 
     // Values for homing routine
-    public static final double homeCurrentDebounceSeconds = 0.125;
+    public static final double homeCurrentDebounceSeconds = 0.1;
     public static final double homeVelocityDebounceSeconds = 0.125;
-    public static final double homeCurrentThresholdAmps = 5.0;
-    public static final double homeVelocityThresholdRPS = 0.1;
-    public static final double homeOutputVolts = -0.3;
+    public static final double homeCurrentThresholdAmps = 4.0;
+    public static final double homeVelocityThresholdRPS = 1.5;
+    public static final double homeOutputVolts = -0.75;
 
-    public static final double homePosition = 0;
+    public static final double homePosition = -1.9;
+    public static final double stowPosition = 0;
   }
 
   public static final class PivotConstants {

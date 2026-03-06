@@ -32,8 +32,6 @@ public class Hood extends SubsystemBase implements Logged {
     config.CurrentLimits.StatorCurrentLimit = statorCurrentLimit;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-    // config.Feedback.SensorToMechanismRatio = HoodConstants.motorToHoodRatio;
-
     config.Slot0.kP = kP;
     config.Slot0.kI = kI;
     config.Slot0.kD = kD;
@@ -110,15 +108,13 @@ public class Hood extends SubsystemBase implements Logged {
         .until(
             () ->
                 currentDebounce.calculate(
-                        motor.getStatorCurrent().getValueAsDouble() > homeCurrentThresholdAmps)
-                    && velocityDebounce.calculate(
-                        Math.abs(getVelocity()) < homeVelocityThresholdRPS))
+                    motor.getStatorCurrent().getValueAsDouble() > homeCurrentThresholdAmps))
         .finallyDo(
             (interrupted) -> {
               motor.setControl(brakeRequest);
               motor.setPosition(homePosition, 0);
               if (!interrupted) {
-                motor.setControl(positionRequest.withPosition(homePosition));
+                motor.setControl(positionRequest.withPosition(stowPosition));
               }
             });
   }
