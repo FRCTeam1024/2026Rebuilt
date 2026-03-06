@@ -38,7 +38,7 @@ public class RobotContainer implements Logged {
       new CommandXboxController(ControlConstants.operatorPort);
 
   /* Subsystems */
-  private final Swerve s_Swerve = new Swerve();
+  private final Swerve swerve = new Swerve();
 
   private final Intake intake = new Intake();
   private final Conveyor conveyor = new Conveyor();
@@ -57,8 +57,8 @@ public class RobotContainer implements Logged {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    s_Swerve.setDefaultCommand(
-        s_Swerve.driveFieldRelativeCmd(
+    swerve.setDefaultCommand(
+        swerve.driveFieldRelativeCmd(
             () -> applyDeadband(-driver.getLeftY(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getLeftX(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband)));
@@ -88,12 +88,11 @@ public class RobotContainer implements Logged {
    */
   private void configureBindings() {
     /* Driver Buttons */
-    driver.x().onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+    driver.x().onTrue(new InstantCommand(() -> swerve.zeroHeading()));
 
-    // Left trigger or right bumper spins up flywheel
+    // Right trigger or right bumper spins up flywheel
     operator
         .rightTrigger()
-        .or(operator.rightBumper())
         .whileTrue(
             shooter
                 .velocityCommand(
@@ -111,7 +110,8 @@ public class RobotContainer implements Logged {
     operator.leftBumper().whileTrue(fuelHandler.vomitCommand());
 
     operator.leftTrigger(0.1).or(driver.leftTrigger(0.1)).whileTrue(fuelHandler.intakeCommand());
-    
+
+
     operator.y().onTrue(intakePivot.setGoalCommand(PivotConstants.intakePosition));
     operator.a().onTrue(intakePivot.setGoalCommand(PivotConstants.stowPosition));
     operator.b().onTrue(intakePivot.setGoalCommand(PivotConstants.insideBumperPosition));
