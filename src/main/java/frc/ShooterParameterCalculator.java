@@ -12,7 +12,12 @@ public class ShooterParameterCalculator {
   static {
     map.put(0.5, new ShooterParameters(0, 42.0)); 
     map.put(1.268, new ShooterParameters(0, 42.0)); //hub shot
-    map.put(1.706, new ShooterParameters(20,53));// Side auto shot
+    map.put(1.706, new ShooterParameters(10,42));// Side auto shot
+    map.put(1.962, new ShooterParameters(20,45));//1 robot away from hub
+    map.put(2.267, new ShooterParameters(22,45));
+    map.put(2.572, new ShooterParameters(24,47));
+    map.put(4.096, new ShooterParameters(70,57));//test was limited by ceiling height
+  
   }
 
   public record ShooterParameters(double hoodPosition, double shooterVelocity) {

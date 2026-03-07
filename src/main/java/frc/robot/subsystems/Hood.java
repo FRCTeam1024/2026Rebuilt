@@ -92,6 +92,10 @@ public class Hood extends SubsystemBase implements Logged {
    * @param position The desired hood position in degrees.
    */
   public void setGoalPosition(double position) {
+
+    if (position > 100) {
+      position = 100;
+    }
     positionRequest.Position = position;
     if (homeState == HomeState.Complete || homeState == HomeState.TimedOut) {
       motor.setControl(positionRequest);
