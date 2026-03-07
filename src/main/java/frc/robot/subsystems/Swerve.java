@@ -112,6 +112,10 @@ public class Swerve extends SubsystemBase implements Logged {
     setModuleStates(swerveModuleStates, false);
   }
 
+  public void teleopDriveCommand() {
+
+  }
+
   public void setModuleStates(SwerveModuleState[] desiredStates, boolean isOpenLoop) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.SwerveConstants.maxSpeed);
 
@@ -180,6 +184,11 @@ public class Swerve extends SubsystemBase implements Logged {
           double translationVal = x.getAsDouble();
           double strafeVal = y.getAsDouble();
           double rotationVal = omega.getAsDouble();
+
+          if (shouldFlipPath()) {
+              translationVal = translationVal * -1;
+              strafeVal = strafeVal * -1;
+          }
 
           drive(
               new Translation2d(translationVal, strafeVal)
