@@ -10,7 +10,9 @@ public class ShooterParameterCalculator {
       new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterParameters::interpolate);
 
   static {
-    map.put(0.5, new ShooterParameters(0, 42.0)); // hub shot
+    map.put(0.5, new ShooterParameters(0, 42.0)); 
+    map.put(1.268, new ShooterParameters(0, 42.0)); //hub shot
+    map.put(1.706, new ShooterParameters(20,53));// Side auto shot
   }
 
   public record ShooterParameters(double hoodPosition, double shooterVelocity) {

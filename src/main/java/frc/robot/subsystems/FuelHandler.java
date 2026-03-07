@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.util.TunableNumber;
 import frc.robot.Constants;
+import java.util.function.DoubleSupplier;
 
 public class FuelHandler {
 
@@ -47,6 +48,11 @@ public class FuelHandler {
   public Command feedIntoShooterCommand() {
     return Commands.parallel(
         intake.intakeCommand(), conveyor.oscillateCommand(), kicker.feedCommand());
+  }
+
+  public Command feedIntoShooterHoodCommand() {
+    return Commands.parallel(
+        intake.intakeCommand(), conveyor.oscillateCommand(), kicker.feedCommand(), hood.setPositionCommand(() -> 20));
   }
 
   public Command vomitCommand() {

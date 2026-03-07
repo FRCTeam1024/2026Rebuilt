@@ -33,7 +33,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "shooterFeed"
+                        "name": "shooterFeedWithHood"
                       }
                     }
                   ]

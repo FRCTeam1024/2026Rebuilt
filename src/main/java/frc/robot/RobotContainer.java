@@ -62,6 +62,10 @@ public class RobotContainer implements Logged {
             () -> applyDeadband(-driver.getLeftX(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband)));
 
+    hood.setDefaultCommand((
+      hood.setPositionCommand(() -> 0)
+    ));
+
     NamedCommands.registerCommand(
         "shootFuelFromHub", shooter.velocityCommand(() -> ShooterConstants.hubShotRPS));
     NamedCommands.registerCommand(
@@ -72,8 +76,10 @@ public class RobotContainer implements Logged {
     NamedCommands.registerCommand(
         "shooterFeed",
         Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterCommand()));
+    NamedCommands.registerCommand("shooterFeedWithHood", Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterHoodCommand()));
     NamedCommands.registerCommand(
         "retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
+
 
     // Configure the button bindings
     configureBindings();
@@ -111,6 +117,7 @@ public class RobotContainer implements Logged {
         .whileTrue(CommandUtils.rumbleController(operator));
 
     operator.rightBumper().and(shooter::atSetpoint).whileTrue(fuelHandler.feedIntoShooterCommand());
+
 
     operator.leftBumper().whileTrue(fuelHandler.vomitCommand());
 
