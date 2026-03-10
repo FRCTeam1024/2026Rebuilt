@@ -35,6 +35,8 @@ public class Swerve extends SubsystemBase implements Logged {
   private Canandgyro gyro = new Canandgyro(gyroID);
   private AprilTagVision vision = new AprilTagVision();
 
+  private double hubDistance;
+
   public Swerve() {
     gyro.setYaw(0);
 
@@ -199,6 +201,10 @@ public class Swerve extends SubsystemBase implements Logged {
         });
   }
 
+  public DoubleSupplier getDistanceToHub() {
+    return () -> hubDistance;
+  }
+
   @Override
   public void periodic() {
     for (SwerveModule mod : swerveMods) {
@@ -223,6 +229,7 @@ public class Swerve extends SubsystemBase implements Logged {
                 == DriverStation.Alliance.Blue
             ? FieldPoses.blueHubCenter
             : FieldPoses.redHubCenter;
-    log("Distance to center of hub", getPose().getTranslation().getDistance(hubCenter));
+    hubDistance = getPose().getTranslation().getDistance((hubCenter));
+    log("Distance to center of hub", hubDistance);
   }
 }

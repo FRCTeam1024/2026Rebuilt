@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
 import monologue.Logged;
+import frc.ShooterParameterCalculator;
 
 public class Hood extends SubsystemBase implements Logged {
 
@@ -104,6 +105,10 @@ public class Hood extends SubsystemBase implements Logged {
 
   public Command setPositionCommand(DoubleSupplier position) {
     return run(() -> setGoalPosition(position.getAsDouble()));
+  }
+
+  public Command distanceCommand(DoubleSupplier distance) {
+    return run(() -> setGoalPosition(ShooterParameterCalculator.calculate(distance.getAsDouble()).hoodPosition()));
   }
 
   public Command currentHome() {
