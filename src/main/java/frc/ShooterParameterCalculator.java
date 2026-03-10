@@ -16,7 +16,10 @@ public class ShooterParameterCalculator {
     map.put(1.962, new ShooterParameters(20,45));//1 robot away from hub
     map.put(2.267, new ShooterParameters(22,45));
     map.put(2.572, new ShooterParameters(24,47));
-    map.put(4.096, new ShooterParameters(70,57));//test was limited by ceiling height
+    map.put(3.149, new ShooterParameters(25,50));//front of tower shop test
+    map.put(3.900, new ShooterParameters(35,54));
+    map.put(5.245, new ShooterParameters(67,57)); //Corner 
+    //map.put(4.096, new ShooterParameters(70,57));//test was limited by ceiling height
   
   }
 
