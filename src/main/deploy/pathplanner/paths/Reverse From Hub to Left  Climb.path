@@ -3,38 +3,59 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.922680901542112,
+        "x": 3.354,
         "y": 4.05
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2000769230769244,
-        "y": 4.779205128205128
+        "x": 2.8688849347568213,
+        "y": 4.728967971530249
+      },
+      "isLocked": false,
+      "linkedName": "Reverse From Hub End"
+    },
+    {
+      "anchor": {
+        "x": 2.1372597864768688,
+        "y": 4.793523131672598
+      },
+      "prevControl": {
+        "x": 2.463144019311721,
+        "y": 4.8231489710212205
+      },
+      "nextControl": {
+        "x": 1.7822064056939506,
+        "y": 4.761245551601424
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.1,
-        "y": 4.62803846154285
+        "x": 1.0,
+        "y": 4.628
       },
       "prevControl": {
-        "x": 1.4442435897435908,
-        "y": 4.523384615389005
+        "x": 1.5239857651245559,
+        "y": 4.656820877817319
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Left Climb"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 180.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.5,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 100.0,
     "maxAngularAcceleration": 100.0,
     "nominalVoltage": 12.0,

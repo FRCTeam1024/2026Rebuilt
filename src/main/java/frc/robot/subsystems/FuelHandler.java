@@ -53,7 +53,7 @@ public class FuelHandler {
 
   public Command feedIntoShooterHoodCommand() {
     return Commands.parallel(
-        intake.intakeCommand(), conveyor.oscillateCommand(), kicker.feedCommand(), hood.setPositionCommand(() -> 10));
+        intake.intakeCommand(), conveyor.oscillateCommand(), kicker.feedCommand(), hood.setPositionCommand(() -> 6));
   }
 
   public Command vomitCommand() {
