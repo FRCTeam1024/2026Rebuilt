@@ -307,6 +307,12 @@ public final class Constants {
     public static final double maxExtend = 142;
     public static final double autoClimbPosition = 28;
     public static final double positionTolerance = 5;
+
+    public static final Pose2d rightBlueClimbPose = new Pose2d(1.095,2.857, Rotation2d.fromDegrees(0));
+    public static final Pose2d leftBlueClimbPose = new Pose2d(1.137,4.579, Rotation2d.fromDegrees(180));
+    public static final Pose2d rightRedClimbPose = new Pose2d(15.447,5.215, Rotation2d.fromDegrees(180));
+    public static final Pose2d leftRedClimbPose = new Pose2d(15.399,3.423, Rotation2d.fromDegrees(0));
+
   }
 
   public static final
