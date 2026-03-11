@@ -30,6 +30,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.FieldPoses;
 import frc.robot.SwerveModule;
 import java.util.function.DoubleSupplier;
+import java.util.function.BooleanSupplier;
 import monologue.Logged;
 
 public class Swerve extends SubsystemBase implements Logged {
@@ -209,16 +210,23 @@ public void alignmentDrive(Pose2d theTarget) {
     }
   }
 
-  public Command driveFieldRelativeCmd(DoubleSupplier x, DoubleSupplier y, DoubleSupplier omega) {
+  public Command driveFieldRelativeCmd(DoubleSupplier x, DoubleSupplier y, DoubleSupplier omega, BooleanSupplier aim) {
     return run(
         () -> {
           double translationVal = x.getAsDouble();
           double strafeVal = y.getAsDouble();
           double rotationVal = omega.getAsDouble();
+          Pose2d hubPose = Constants.SwerveConstants.blueHubPose;
 
           if (shouldFlipPath()) {
               translationVal = translationVal * -1;
               strafeVal = strafeVal * -1;
+              hubPose = Constants.SwerveConstants.redHubPose;
+          }
+
+          if (aim.getAsBoolean()) {
+              Transform2d trans = getPose().minus(hubPose);
+              //TODO: use this to override rotationVal from controller to drive toward (maybe)
           }
 
           drive(

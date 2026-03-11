@@ -189,6 +189,10 @@ public final class Constants {
 
     /** The pose used to initialize the pose estimator */
     public static final Pose2d initialPose = Pose2d.kZero;
+
+    public static final Pose2d blueHubPose = new Pose2d(0,0, Rotation2d.fromDegrees(180)); //TODO: set hub pose
+    public static final Pose2d redHubPose = new Pose2d(0,0, Rotation2d.fromDegrees(0)); //TODO: Set hub pose
+
   }
 
   public static final class IntakeConstants {

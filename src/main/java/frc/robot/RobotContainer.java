@@ -61,7 +61,8 @@ public class RobotContainer implements Logged {
         swerve.driveFieldRelativeCmd(
             () -> applyDeadband(-driver.getLeftY(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getLeftX(), ControlConstants.stickDeadband),
-            () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband)));
+            () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband),
+            () -> false));
 
     hood.setDefaultCommand((
       hood.setPositionCommand(() -> 0)
