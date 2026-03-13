@@ -11,6 +11,8 @@ import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,6 +22,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,6 +41,8 @@ import monologue.Logged;
 public class Swerve extends SubsystemBase implements Logged {
   private SwerveDrivePoseEstimator poseEstimator;
   private SwerveModule[] swerveMods;
+  private ProfiledPIDController headingController;
+  private SimpleMotorFeedforward headingFeedforward;
   private Canandgyro gyro = new Canandgyro(gyroID);
   private AprilTagVision vision = new AprilTagVision();
 
@@ -84,6 +91,20 @@ public class Swerve extends SubsystemBase implements Logged {
         Swerve::shouldFlipPath,
         this // Reference to this subsystem to set requirements
         );
+
+    headingController =
+        new ProfiledPIDController(
+            Constants.SwerveConstants.headingkP,
+            Constants.SwerveConstants.headingkI,
+            Constants.SwerveConstants.headingkD,
+            new TrapezoidProfile.Constraints(
+                Constants.SwerveConstants.maxAngularVelocity, Constants.SwerveConstants.maxAngularAcceleration));
+
+    headingController.enableContinuousInput(-Math.PI, Math.PI);
+
+    headingFeedforward =
+        new SimpleMotorFeedforward(
+            Constants.SwerveConstants.headingkS, Constants.SwerveConstants.headingkV, Constants.SwerveConstants.headingkA);
   }
 
   private static boolean shouldFlipPath() {
@@ -216,19 +237,24 @@ public void alignmentDrive(Pose2d theTarget) {
           double translationVal = x.getAsDouble();
           double strafeVal = y.getAsDouble();
           double rotationVal = omega.getAsDouble();
-          Pose2d hubPose = Constants.SwerveConstants.blueHubPose;
 
           if (shouldFlipPath()) {
               translationVal = translationVal * -1;
               strafeVal = strafeVal * -1;
-              hubPose = Constants.SwerveConstants.redHubPose;
           }
 
           if (aim.getAsBoolean()) {
-              Transform2d trans = getPose().minus(hubPose);
-              //TODO: use this to override rotationVal from controller to drive toward (maybe)
+              Rotation2d goalHeading = getPose().getTranslation().minus(FieldPoses.getHubCenter()).getAngle();
+              if (Math.abs(goalHeading.minus(getHeading()).getRadians()) > Constants.SwerveConstants.headingGoalRange) {
+                  rotationVal = headingController.calculate(
+                    MathUtil.angleModulus(getHeading().getRadians()),
+                    MathUtil.angleModulus(goalHeading.getRadians()));
+                  rotationVal += headingFeedforward.calculate(headingController.getSetpoint().velocity);
+              }
+              else {
+                rotationVal = 0;
+              }
           }
-
           drive(
               new Translation2d(translationVal, strafeVal)
                   .times(Constants.SwerveConstants.maxSpeed),

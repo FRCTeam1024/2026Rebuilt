@@ -139,8 +139,23 @@ public final class Constants {
     public static final double maxSpeed = 4.5; // TODO: This must be tuned to specific robot
 
     /** Radians per Second */
-    public static final double maxAngularVelocity =
-        10.0; // TODO: This must be tuned to specific robot
+    public static final double maxAngularVelocity = 10.0; // TODO: This must be tuned to specific robot
+
+    /** Radians per Second per Second */
+    public static final double maxAngularAcceleration = 15;
+
+    /* Heading Control PID Values */
+    public static final double headingkP = 2;
+    public static final double headingkI = 0;
+    public static final double headingkD = 0;
+
+    /* Heading Feedforward Values */
+    public static final double headingkS = 0;
+    public static final double headingkV = 1;
+    public static final double headingkA = 0;
+
+    /* Heading Goal Range */
+    public static final double headingGoalRange = Units.degreesToRadians(1);
 
     /* Neutral Modes */
     public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
@@ -189,9 +204,6 @@ public final class Constants {
 
     /** The pose used to initialize the pose estimator */
     public static final Pose2d initialPose = Pose2d.kZero;
-
-    public static final Pose2d blueHubPose = new Pose2d(0,0, Rotation2d.fromDegrees(180)); //TODO: set hub pose
-    public static final Pose2d redHubPose = new Pose2d(0,0, Rotation2d.fromDegrees(0)); //TODO: Set hub pose
 
   }
 

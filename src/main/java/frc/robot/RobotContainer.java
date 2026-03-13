@@ -62,7 +62,7 @@ public class RobotContainer implements Logged {
             () -> applyDeadband(-driver.getLeftY(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getLeftX(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband),
-            () -> false));
+            driver.rightBumper()));
 
     hood.setDefaultCommand((
       hood.setPositionCommand(() -> 0)
