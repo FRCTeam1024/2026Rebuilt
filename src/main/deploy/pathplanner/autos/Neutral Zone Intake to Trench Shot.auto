@@ -13,7 +13,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.0
+            "waitTime": 0.5
           }
         },
         {
@@ -42,7 +42,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "shootFuelFromSide"
+                  "name": "shootFromAnywhere"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shooterFeed"
                 }
               },
               {
