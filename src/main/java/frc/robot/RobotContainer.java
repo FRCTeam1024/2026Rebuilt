@@ -61,7 +61,8 @@ public class RobotContainer implements Logged {
         swerve.driveFieldRelativeCmd(
             () -> applyDeadband(-driver.getLeftY(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getLeftX(), ControlConstants.stickDeadband),
-            () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband)));
+            () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband),
+            driver.rightBumper()));
 
     hood.setDefaultCommand((
       hood.setPositionCommand(() -> 0)
@@ -80,6 +81,10 @@ public class RobotContainer implements Logged {
     NamedCommands.registerCommand("shooterFeedWithHood", Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterHoodCommand()));
     NamedCommands.registerCommand(
         "retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
+    NamedCommands.registerCommand("alignForRightClimb", swerve.autoClimbAdjust(false));
+    NamedCommands.registerCommand("alignforLeftClimb", swerve.autoClimbAdjust(true));
+
+
 
 
     // Configure the button bindings

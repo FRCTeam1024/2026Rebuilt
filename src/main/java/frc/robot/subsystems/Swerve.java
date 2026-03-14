@@ -8,15 +8,23 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.reduxrobotics.sensors.canandgyro.Canandgyro;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,11 +35,14 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.FieldPoses;
 import frc.robot.SwerveModule;
 import java.util.function.DoubleSupplier;
+import java.util.function.BooleanSupplier;
 import monologue.Logged;
 
 public class Swerve extends SubsystemBase implements Logged {
   private SwerveDrivePoseEstimator poseEstimator;
   private SwerveModule[] swerveMods;
+  private ProfiledPIDController headingController;
+  private SimpleMotorFeedforward headingFeedforward;
   private Canandgyro gyro = new Canandgyro(gyroID);
   private AprilTagVision vision = new AprilTagVision();
 
@@ -80,6 +91,20 @@ public class Swerve extends SubsystemBase implements Logged {
         Swerve::shouldFlipPath,
         this // Reference to this subsystem to set requirements
         );
+
+    headingController =
+        new ProfiledPIDController(
+            Constants.SwerveConstants.headingkP,
+            Constants.SwerveConstants.headingkI,
+            Constants.SwerveConstants.headingkD,
+            new TrapezoidProfile.Constraints(
+                Constants.SwerveConstants.maxAngularVelocity, Constants.SwerveConstants.maxAngularAcceleration));
+
+    headingController.enableContinuousInput(-Math.PI, Math.PI);
+
+    headingFeedforward =
+        new SimpleMotorFeedforward(
+            Constants.SwerveConstants.headingkS, Constants.SwerveConstants.headingkV, Constants.SwerveConstants.headingkA);
   }
 
   private static boolean shouldFlipPath() {
@@ -107,6 +132,32 @@ public class Swerve extends SubsystemBase implements Logged {
         SwerveConstants.swerveKinematics.toSwerveModuleStates(robotRelativeChassisSpeeds);
 
     setModuleStates(swerveModuleStates, isOpenLoop);
+  }
+public void alignmentDrive(Pose2d theTarget) {
+    Pose2d current = getPose();
+    Transform2d transform = theTarget.minus(current);
+    double xError = transform.getX();
+    double yError = transform.getY();
+    double rotError = transform.getRotation().getRadians();
+    double pTrans = 1;
+    double pRot = 1;
+    double sGain = 0.01;
+
+    log("xError", xError);
+    log("yError", yError);
+    log("rotError", rotError);
+
+    double xDrive = MathUtil.clamp(sGain * Math.signum(xError) + xError * pTrans, -1, 1);
+    double yDrive = MathUtil.clamp(sGain * Math.signum(yError) + yError * pTrans, -1, 1);
+    double rotDrive = MathUtil.clamp(sGain * Math.signum(rotError) + rotError * pRot, -1, 1);
+
+    if (Math.sqrt(xError*xError + yError*yError) < 0.7 && Math.abs(rotError) < 1 ) {
+      drive(
+        new Translation2d(xDrive, yDrive).times(Constants.SwerveConstants.maxSpeed),
+        rotDrive * Constants.SwerveConstants.maxAngularVelocity,
+        false,
+        true);
+    }
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
@@ -180,7 +231,7 @@ public class Swerve extends SubsystemBase implements Logged {
     }
   }
 
-  public Command driveFieldRelativeCmd(DoubleSupplier x, DoubleSupplier y, DoubleSupplier omega) {
+  public Command driveFieldRelativeCmd(DoubleSupplier x, DoubleSupplier y, DoubleSupplier omega, BooleanSupplier aim) {
     return run(
         () -> {
           double translationVal = x.getAsDouble();
@@ -192,6 +243,18 @@ public class Swerve extends SubsystemBase implements Logged {
               strafeVal = strafeVal * -1;
           }
 
+          if (aim.getAsBoolean()) {
+              Rotation2d goalHeading = getPose().getTranslation().minus(FieldPoses.getHubCenter()).getAngle();
+              if (Math.abs(goalHeading.minus(getHeading()).getRadians()) > Constants.SwerveConstants.headingGoalRange) {
+                  rotationVal = headingController.calculate(
+                    MathUtil.angleModulus(getHeading().getRadians()),
+                    MathUtil.angleModulus(goalHeading.getRadians()));
+                  rotationVal += headingFeedforward.calculate(headingController.getSetpoint().velocity);
+              }
+              else {
+                rotationVal = 0;
+              }
+          }
           drive(
               new Translation2d(translationVal, strafeVal)
                   .times(Constants.SwerveConstants.maxSpeed),
@@ -199,6 +262,27 @@ public class Swerve extends SubsystemBase implements Logged {
               true,
               true);
         });
+  }
+
+  public Command autoClimbAdjust(boolean goLeft) {
+    Pose2d target;
+    if (shouldFlipPath()) {
+      if (goLeft) {
+        target = Constants.ClimberConstants.leftRedClimbPose;
+      }
+      else {
+        target = Constants.ClimberConstants.rightRedClimbPose;
+      }
+    }
+    else {
+      if (goLeft) {
+        target = Constants.ClimberConstants.leftBlueClimbPose;
+      }
+      else {
+        target = Constants.ClimberConstants.rightBlueClimbPose;
+      }
+    }
+    return run(() -> alignmentDrive(target));
   }
 
   public DoubleSupplier getDistanceToHub() {

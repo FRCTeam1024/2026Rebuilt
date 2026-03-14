@@ -139,8 +139,23 @@ public final class Constants {
     public static final double maxSpeed = 4.5; // TODO: This must be tuned to specific robot
 
     /** Radians per Second */
-    public static final double maxAngularVelocity =
-        10.0; // TODO: This must be tuned to specific robot
+    public static final double maxAngularVelocity = 10.0; // TODO: This must be tuned to specific robot
+
+    /** Radians per Second per Second */
+    public static final double maxAngularAcceleration = 15;
+
+    /* Heading Control PID Values */
+    public static final double headingkP = 2;
+    public static final double headingkI = 0;
+    public static final double headingkD = 0;
+
+    /* Heading Feedforward Values */
+    public static final double headingkS = 0;
+    public static final double headingkV = 1;
+    public static final double headingkA = 0;
+
+    /* Heading Goal Range */
+    public static final double headingGoalRange = Units.degreesToRadians(1);
 
     /* Neutral Modes */
     public static final NeutralModeValue angleNeutralMode = NeutralModeValue.Coast;
@@ -189,6 +204,7 @@ public final class Constants {
 
     /** The pose used to initialize the pose estimator */
     public static final Pose2d initialPose = Pose2d.kZero;
+
   }
 
   public static final class IntakeConstants {
@@ -307,6 +323,12 @@ public final class Constants {
     public static final double maxExtend = 142;
     public static final double autoClimbPosition = 28;
     public static final double positionTolerance = 5;
+
+    public static final Pose2d rightBlueClimbPose = new Pose2d(1.095,2.857, Rotation2d.fromDegrees(0));
+    public static final Pose2d leftBlueClimbPose = new Pose2d(1.137,4.579, Rotation2d.fromDegrees(180));
+    public static final Pose2d rightRedClimbPose = new Pose2d(15.447,5.215, Rotation2d.fromDegrees(180));
+    public static final Pose2d leftRedClimbPose = new Pose2d(15.399,3.423, Rotation2d.fromDegrees(0));
+
   }
 
   public static final
