@@ -11,9 +11,28 @@
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "Fuel Intake from Neutral Through Trench"
+            "waitTime": 0.0
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "runIntake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Fuel Intake from Neutral Through Trench"
+                }
+              }
+            ]
           }
         },
         {

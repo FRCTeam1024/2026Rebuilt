@@ -2,12 +2,17 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.ConveyorConstants.*;
 
+import java.io.ObjectInputFilter.Status;
+
 import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import monologue.Logged;
@@ -89,6 +94,7 @@ public class Conveyor extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
+
     log("Output Voltage", motor.getMotorVoltage().getValueAsDouble());
     log("Stator Current", motor.getStatorCurrent().getValueAsDouble());
     log("Supply Current", motor.getSupplyCurrent().getValueAsDouble());

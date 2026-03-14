@@ -37,9 +37,11 @@ import frc.robot.SwerveModule;
 import java.util.function.DoubleSupplier;
 import java.util.function.BooleanSupplier;
 import monologue.Logged;
+import monologue.Annotations.Log;
 
 public class Swerve extends SubsystemBase implements Logged {
   private SwerveDrivePoseEstimator poseEstimator;
+  @Log(key = "Modules")
   private SwerveModule[] swerveMods;
   private ProfiledPIDController headingController;
   private SimpleMotorFeedforward headingFeedforward;
@@ -171,12 +173,13 @@ public void alignmentDrive(Pose2d theTarget) {
 
   public void setModuleStates(SwerveModuleState[] desiredStates, boolean isOpenLoop) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.SwerveConstants.maxSpeed);
-
+    log("Desired Module States", desiredStates);
     for (SwerveModule mod : swerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], isOpenLoop);
     }
   }
 
+  @Log(key = "Actual Module States")
   public SwerveModuleState[] getModuleStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
     for (SwerveModule mod : swerveMods) {
@@ -244,13 +247,14 @@ public void alignmentDrive(Pose2d theTarget) {
           }
 
           if (aim.getAsBoolean()) {
-              Rotation2d goalHeading = getPose().getTranslation().minus(FieldPoses.getHubCenter()).getAngle();
+              Rotation2d goalHeading = FieldPoses.getHubCenter().minus(getPose().getTranslation()).getAngle();
               if (Math.abs(goalHeading.minus(getHeading()).getRadians()) > Constants.SwerveConstants.headingGoalRange) {
-                  rotationVal = headingController.calculate(
+                rotationVal = headingController.calculate(
                     MathUtil.angleModulus(getHeading().getRadians()),
                     MathUtil.angleModulus(goalHeading.getRadians()));
                   rotationVal += headingFeedforward.calculate(headingController.getSetpoint().velocity);
-              }
+                  rotationVal = rotationVal / Constants.SwerveConstants.maxAngularVelocity;
+                }
               else {
                 rotationVal = 0;
               }
@@ -292,11 +296,12 @@ public void alignmentDrive(Pose2d theTarget) {
   @Override
   public void periodic() {
     for (SwerveModule mod : swerveMods) {
-      mod.refresh();
+      mod.refreshAndLog();
       log("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
       log("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
       log("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
     }
+
     poseEstimator.update(getGyroYaw(), getModulePositions());
     vision.processVisionUpdates(
         (estimatedPose) -> {
@@ -315,5 +320,6 @@ public void alignmentDrive(Pose2d theTarget) {
             : FieldPoses.redHubCenter;
     hubDistance = getPose().getTranslation().getDistance((hubCenter));
     log("Distance to center of hub", hubDistance);
+    log("Heading Setpoint", headingController.getSetpoint());
   }
 }

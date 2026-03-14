@@ -139,19 +139,19 @@ public final class Constants {
     public static final double maxSpeed = 4.5; // TODO: This must be tuned to specific robot
 
     /** Radians per Second */
-    public static final double maxAngularVelocity = 10.0; // TODO: This must be tuned to specific robot
+    public static final double maxAngularVelocity = 10; // TODO: This must be tuned to specific robot
 
     /** Radians per Second per Second */
-    public static final double maxAngularAcceleration = 15;
+    public static final double maxAngularAcceleration = 1;
 
     /* Heading Control PID Values */
-    public static final double headingkP = 2;
+    public static final double headingkP = 100;
     public static final double headingkI = 0;
-    public static final double headingkD = 0;
+    public static final double headingkD = 5;
 
     /* Heading Feedforward Values */
     public static final double headingkS = 0;
-    public static final double headingkV = 1;
+    public static final double headingkV = 0;
     public static final double headingkA = 0;
 
     /* Heading Goal Range */

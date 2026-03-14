@@ -83,7 +83,7 @@ public class RobotContainer implements Logged {
         "retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
     NamedCommands.registerCommand("alignForRightClimb", swerve.autoClimbAdjust(false));
     NamedCommands.registerCommand("alignforLeftClimb", swerve.autoClimbAdjust(true));
-    NamedCommands.registerCommand("shootFromAnywhere", new ParallelCommandGroup(shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
+    NamedCommands.registerCommand("runIntake", intake.intakeCommand());    NamedCommands.registerCommand("shootFromAnywhere", new ParallelCommandGroup(shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
                                           hood.distanceCommand(swerve.getDistanceToHub())));
     NamedCommands.registerCommand("ballFeed", conveyor.oscillateCommand());
 

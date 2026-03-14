@@ -1,7 +1,5 @@
 package frc.robot;
 
-import static frc.robot.Constants.SwerveConstants;
-
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.StatusSignalCollection;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -17,11 +15,14 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
+import frc.robot.Constants.SwerveConstants;
+import monologue.Logged;
 
-public class SwerveModule {
+public class SwerveModule implements Logged{
   public int moduleNumber;
   private Rotation2d angleOffset;
 
@@ -40,6 +41,8 @@ public class SwerveModule {
   private final StatusSignal<Angle> drivePosition;
   private final StatusSignal<AngularVelocity> driveVelocity;
   private final StatusSignal<Voltage> driveVoltage;
+  private final StatusSignal<Temperature> driveTemperature;
+
   private final StatusSignal<Angle> anglePosition;
   private final StatusSignal<AngularVelocity> angleVelocity;
   private final StatusSignal<Angle> cancoderAbsolutePosition;
@@ -68,6 +71,7 @@ public class SwerveModule {
     drivePosition = mDriveMotor.getPosition();
     driveVelocity = mDriveMotor.getVelocity();
     driveVoltage = mDriveMotor.getMotorVoltage();
+    driveTemperature = mDriveMotor.getDeviceTemp();
     anglePosition = mAngleMotor.getPosition();
     angleVelocity = mAngleMotor.getVelocity();
     cancoderAbsolutePosition = angleEncoder.getAbsolutePosition();
@@ -85,6 +89,8 @@ public class SwerveModule {
     /* Configure update frequencies */
     signals.setUpdateFrequencyForAll(100);
 
+    signals.addSignals(mDriveMotor.getDeviceTemp());
+    
     angleEncoder.optimizeBusUtilization();
     mDriveMotor.optimizeBusUtilization();
     mAngleMotor.optimizeBusUtilization();
@@ -252,8 +258,13 @@ public class SwerveModule {
     return new SwerveModulePosition(motorRotToWheelMeter(trueDriveRotations), getAngle());
   }
 
-  public void refresh() {
+  public void refreshAndLog() {
     signals.refreshAll();
+      log("CANcoder", getCANcoder().getDegrees());
+      log("Angle", getPosition().angle.getDegrees());
+      log("Velocity", getState().speedMetersPerSecond);
+      log("Drive Output Voltage", getVoltage());
+      log("Drive Temperature", driveTemperature.getValueAsDouble());
   }
 
   public static double wheelMeterToMotorRot(double wheelMeters) {
