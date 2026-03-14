@@ -23,7 +23,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": null
+                  "name": "shootFuelFromSide"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 7.0
                 }
               }
             ]
