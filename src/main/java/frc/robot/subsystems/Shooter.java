@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.ShooterParameterCalculator;
-
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
 import monologue.Logged;
@@ -37,7 +36,6 @@ public class Shooter extends SubsystemBase implements Logged {
 
   private final CoastOut coastRequest = new CoastOut();
   private final StaticBrake estopRequest = new StaticBrake();
-
 
   public Shooter() {
     var config = new TalonFXConfiguration();
@@ -61,6 +59,9 @@ public class Shooter extends SubsystemBase implements Logged {
     resetStatusFrequencies();
     left.optimizeBusUtilization();
     right.optimizeBusUtilization();
+
+    voltageRequest.UpdateFreqHz = 50;
+    velocityRequest.UpdateFreqHz = 50;
     stop();
   }
 
@@ -145,7 +146,8 @@ public class Shooter extends SubsystemBase implements Logged {
   public Command distanceCommand(DoubleSupplier distance) {
     return runEnd(
         () -> {
-          setVelocity(ShooterParameterCalculator.calculate(distance.getAsDouble()).shooterVelocity());
+          setVelocity(
+              ShooterParameterCalculator.calculate(distance.getAsDouble()).shooterVelocity());
         },
         () -> {
           stop();

@@ -2,10 +2,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.ShooterParameterCalculator;
 import frc.lib.util.TunableNumber;
 import frc.robot.Constants;
-import java.util.function.DoubleSupplier;
 
 public class FuelHandler {
 
@@ -47,13 +45,15 @@ public class FuelHandler {
   }
 
   public Command feedIntoShooterCommand() {
-    return Commands.parallel(
-        intake.intakeCommand(), conveyor.oscillateCommand(), kicker.feedCommand());
+    return Commands.parallel(intake.intakeCommand(), conveyor.feedCommand(), kicker.feedCommand());
   }
 
   public Command feedIntoShooterHoodCommand() {
     return Commands.parallel(
-        intake.intakeCommand(), conveyor.oscillateCommand(), kicker.feedCommand(), hood.setPositionCommand(() -> 6));
+        intake.intakeCommand(),
+        conveyor.feedCommand(),
+        kicker.feedCommand(),
+        hood.setPositionCommand(() -> 6));
   }
 
   public Command vomitCommand() {

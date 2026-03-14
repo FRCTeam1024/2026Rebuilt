@@ -2,17 +2,12 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.ConveyorConstants.*;
 
-import java.io.ObjectInputFilter.Status;
-
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import monologue.Logged;
@@ -39,27 +34,29 @@ public class Conveyor extends SubsystemBase implements Logged {
         motor.getVelocity());
     BaseStatusSignal.setUpdateFrequencyForAll(4, motor.getDeviceTemp());
     motor.optimizeBusUtilization();
-    setOutput(0);
+
+    voltageRequest.UpdateFreqHz = 50;
+    setOutputVolts(0);
   }
 
   /**
-   * Sets the output voltage of the climber as a proportion of the max output.
+   * Sets the output voltage of the conveyer.
    *
-   * @param output the proportion of max output [-1, 1]
+   * @param output output voltage
    */
-  public void setOutput(double output) {
-    voltageRequest.Output = maxOutputVoltage * output;
+  public void setOutputVolts(double output) {
+    voltageRequest.Output = output;
     motor.setControl(voltageRequest);
   }
 
   public void stop() {
-    setOutput(0);
+    setOutputVolts(0);
   }
 
   public Command feedCommand() {
     return runEnd(
         () -> {
-          setOutput(0.25);
+          setOutputVolts(feedVolts);
         },
         () -> {
           stop();
@@ -69,7 +66,7 @@ public class Conveyor extends SubsystemBase implements Logged {
   public Command ejectCommand() {
     return runEnd(
         () -> {
-          setOutput(-0.3);
+          setOutputVolts(ejectVolts);
         },
         () -> {
           stop();
@@ -83,10 +80,10 @@ public class Conveyor extends SubsystemBase implements Logged {
    * @return a command that repeatedly oscillates the conveyor
    */
   public Command oscillateCommand() {
-    return run(() -> setOutput(oscillateForwardSpeed))
+    return run(() -> setOutputVolts(oscillateForwardVolts))
         .withTimeout(oscillateForwardTime)
         .andThen(run(() -> stop()).withTimeout(oscillateOffTime1))
-        .andThen(run(() -> setOutput(oscillateReverseSpeed)).withTimeout(oscillateReverseTime))
+        .andThen(run(() -> setOutputVolts(oscillateReverseVolts)).withTimeout(oscillateReverseTime))
         .andThen(run(() -> stop()).withTimeout(oscillateOffTime2))
         .repeatedly()
         .finallyDo(() -> stop());

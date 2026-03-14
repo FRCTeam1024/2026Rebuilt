@@ -8,7 +8,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.reduxrobotics.sensors.canandgyro.Canandgyro;
-
+import com.reduxrobotics.sensors.canandgyro.CanandgyroSettings;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -23,26 +23,27 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.TunableNumber;
 import frc.robot.AprilTagVision;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.FieldPoses;
 import frc.robot.SwerveModule;
-import java.util.function.DoubleSupplier;
 import java.util.function.BooleanSupplier;
-import monologue.Logged;
+import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
+import monologue.Logged;
 
 public class Swerve extends SubsystemBase implements Logged {
   private SwerveDrivePoseEstimator poseEstimator;
+
   @Log(key = "Modules")
   private SwerveModule[] swerveMods;
+
   private ProfiledPIDController headingController;
   private SimpleMotorFeedforward headingFeedforward;
   private Canandgyro gyro = new Canandgyro(gyroID);
@@ -50,10 +51,25 @@ public class Swerve extends SubsystemBase implements Logged {
 
   private double hubDistance;
 
+  private TunableNumber headingKpTuner = new TunableNumber("Tuning/Swerve/headingKp", headingkP);
+  private TunableNumber headingKdTuner = new TunableNumber("Tuning/Swerve/headingKd", headingkD);
+  private TunableNumber headingKvTuner = new TunableNumber("Tuning/Swerve/headingKv", headingkV);
+  private TunableNumber headingKaTuner = new TunableNumber("Tuning/Swerve/headingKa", headingkA);
+
+  private boolean aiming = false;
+
   public Swerve() {
     gyro.setYaw(0);
 
-    gyro.resetFactoryDefaults(0.02);
+    System.out.println(
+        "gyro Reset factory defaults:" + gyro.resetFactoryDefaults(0.02).allSettingsReceived());
+    System.out.println(
+        "gyro setSettings:"
+            + gyro.setSettings(
+                new CanandgyroSettings()
+                    .setAngularVelocityFramePeriod(0.017)
+                    .setYawFramePeriod(0.009)));
+    gyro.clearStickyFaults();
 
     swerveMods =
         new SwerveModule[] {
@@ -100,13 +116,16 @@ public class Swerve extends SubsystemBase implements Logged {
             Constants.SwerveConstants.headingkI,
             Constants.SwerveConstants.headingkD,
             new TrapezoidProfile.Constraints(
-                Constants.SwerveConstants.maxAngularVelocity, Constants.SwerveConstants.maxAngularAcceleration));
+                Constants.SwerveConstants.maxAngularVelocity,
+                Constants.SwerveConstants.maxAngularAcceleration));
 
     headingController.enableContinuousInput(-Math.PI, Math.PI);
 
     headingFeedforward =
         new SimpleMotorFeedforward(
-            Constants.SwerveConstants.headingkS, Constants.SwerveConstants.headingkV, Constants.SwerveConstants.headingkA);
+            Constants.SwerveConstants.headingkS,
+            Constants.SwerveConstants.headingkV,
+            Constants.SwerveConstants.headingkA);
   }
 
   private static boolean shouldFlipPath() {
@@ -130,12 +149,15 @@ public class Swerve extends SubsystemBase implements Logged {
           new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
     }
 
+    log("Desired Speed", robotRelativeChassisSpeeds);
+
     SwerveModuleState[] swerveModuleStates =
         SwerveConstants.swerveKinematics.toSwerveModuleStates(robotRelativeChassisSpeeds);
 
     setModuleStates(swerveModuleStates, isOpenLoop);
   }
-public void alignmentDrive(Pose2d theTarget) {
+
+  public void alignmentDrive(Pose2d theTarget) {
     Pose2d current = getPose();
     Transform2d transform = theTarget.minus(current);
     double xError = transform.getX();
@@ -149,16 +171,20 @@ public void alignmentDrive(Pose2d theTarget) {
     log("yError", yError);
     log("rotError", rotError);
 
+    if (Math.abs(xError) < .013) xError = 0;
+    if (Math.abs(yError) < .013) yError = 0;
+    if (Math.abs(rotError) < .017) rotError = 0;
+
     double xDrive = MathUtil.clamp(sGain * Math.signum(xError) + xError * pTrans, -1, 1);
     double yDrive = MathUtil.clamp(sGain * Math.signum(yError) + yError * pTrans, -1, 1);
     double rotDrive = MathUtil.clamp(sGain * Math.signum(rotError) + rotError * pRot, -1, 1);
 
-    if (Math.sqrt(xError*xError + yError*yError) < 0.7 && Math.abs(rotError) < 1 ) {
+    if (Math.sqrt(xError * xError + yError * yError) < 0.7 && Math.abs(rotError) < 1) {
       drive(
-        new Translation2d(xDrive, yDrive).times(Constants.SwerveConstants.maxSpeed),
-        rotDrive * Constants.SwerveConstants.maxAngularVelocity,
-        false,
-        true);
+          new Translation2d(xDrive, yDrive).times(Constants.SwerveConstants.maxSpeed),
+          rotDrive * Constants.SwerveConstants.maxAngularVelocity,
+          false,
+          true);
     }
   }
 
@@ -167,12 +193,11 @@ public void alignmentDrive(Pose2d theTarget) {
     setModuleStates(swerveModuleStates, false);
   }
 
-  public void teleopDriveCommand() {
-
-  }
+  public void teleopDriveCommand() {}
 
   public void setModuleStates(SwerveModuleState[] desiredStates, boolean isOpenLoop) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.SwerveConstants.maxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        desiredStates, Constants.SwerveConstants.feedforwardMaxSpeed);
     log("Desired Module States", desiredStates);
     for (SwerveModule mod : swerveMods) {
       mod.setDesiredState(desiredStates[mod.moduleNumber], isOpenLoop);
@@ -196,6 +221,7 @@ public void alignmentDrive(Pose2d theTarget) {
     return positions;
   }
 
+  @Log(key = "Actual Chassis Speeds")
   public ChassisSpeeds getRobotRelativeChassisSpeeds() {
     return swerveKinematics.toChassisSpeeds(getModuleStates());
   }
@@ -234,7 +260,8 @@ public void alignmentDrive(Pose2d theTarget) {
     }
   }
 
-  public Command driveFieldRelativeCmd(DoubleSupplier x, DoubleSupplier y, DoubleSupplier omega, BooleanSupplier aim) {
+  public Command driveFieldRelativeCmd(
+      DoubleSupplier x, DoubleSupplier y, DoubleSupplier omega, BooleanSupplier aim) {
     return run(
         () -> {
           double translationVal = x.getAsDouble();
@@ -242,23 +269,37 @@ public void alignmentDrive(Pose2d theTarget) {
           double rotationVal = omega.getAsDouble();
 
           if (shouldFlipPath()) {
-              translationVal = translationVal * -1;
-              strafeVal = strafeVal * -1;
+            translationVal = translationVal * -1;
+            strafeVal = strafeVal * -1;
           }
 
-          if (aim.getAsBoolean()) {
-              Rotation2d goalHeading = FieldPoses.getHubCenter().minus(getPose().getTranslation()).getAngle();
-              if (Math.abs(goalHeading.minus(getHeading()).getRadians()) > Constants.SwerveConstants.headingGoalRange) {
-                rotationVal = headingController.calculate(
-                    MathUtil.angleModulus(getHeading().getRadians()),
-                    MathUtil.angleModulus(goalHeading.getRadians()));
-                  rotationVal += headingFeedforward.calculate(headingController.getSetpoint().velocity);
-                  rotationVal = rotationVal / Constants.SwerveConstants.maxAngularVelocity;
-                }
-              else {
-                rotationVal = 0;
-              }
+          var shouldAim = aim.getAsBoolean();
+          if (shouldAim) {
+            // If we were not previously aiming, reset
+            if (!aiming) {
+              headingController.reset(getHeading().getRadians());
+            }
+            Rotation2d goalHeading =
+                FieldPoses.getHubCenter().minus(getPose().getTranslation()).getAngle();
+            var prevSetpoint = headingController.getSetpoint();
+            if (Math.abs(goalHeading.minus(getHeading()).getRadians())
+                > Constants.SwerveConstants.headingGoalRange) {
+
+              rotationVal =
+                  headingController.calculate(
+                      MathUtil.angleModulus(getHeading().getRadians()),
+                      MathUtil.angleModulus(goalHeading.getRadians()));
+              var ff =
+                  headingFeedforward.calculateWithVelocities(
+                      prevSetpoint.velocity, headingController.getSetpoint().velocity);
+              log("heading ff output", ff);
+              rotationVal += ff;
+              rotationVal = rotationVal / Constants.SwerveConstants.maxAngularVelocity;
+            } else {
+              rotationVal = 0;
+            }
           }
+          aiming = shouldAim;
           drive(
               new Translation2d(translationVal, strafeVal)
                   .times(Constants.SwerveConstants.maxSpeed),
@@ -273,16 +314,13 @@ public void alignmentDrive(Pose2d theTarget) {
     if (shouldFlipPath()) {
       if (goLeft) {
         target = Constants.ClimberConstants.leftRedClimbPose;
-      }
-      else {
+      } else {
         target = Constants.ClimberConstants.rightRedClimbPose;
       }
-    }
-    else {
+    } else {
       if (goLeft) {
         target = Constants.ClimberConstants.leftBlueClimbPose;
-      }
-      else {
+      } else {
         target = Constants.ClimberConstants.rightBlueClimbPose;
       }
     }
@@ -301,7 +339,7 @@ public void alignmentDrive(Pose2d theTarget) {
       log("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
       log("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
     }
-
+    log("Gyro Yaw", getGyroYaw());
     poseEstimator.update(getGyroYaw(), getModulePositions());
     vision.processVisionUpdates(
         (estimatedPose) -> {
@@ -321,5 +359,21 @@ public void alignmentDrive(Pose2d theTarget) {
     hubDistance = getPose().getTranslation().getDistance((hubCenter));
     log("Distance to center of hub", hubDistance);
     log("Heading Setpoint", headingController.getSetpoint());
+    log("Gyro Angular Velocity", Units.rotationsToRadians(-gyro.getAngularVelocityYaw()));
+    headingController.setP(headingKpTuner.get());
+    headingController.setD(headingKdTuner.get());
+    headingFeedforward.setKv(headingKvTuner.get());
+
+    headingFeedforward.setKa(headingKaTuner.get());
+
+    log("foobar ff", headingFeedforward.getKa());
+    // Gyro timing diagnostics
+    var yawFrame = gyro.getYawFrame();
+    var angVeloFrame = gyro.getAngularVelocityFrame();
+
+    log("GyroFrames/Yaw/Data", yawFrame.getData());
+    log("GyroFrames/Yaw/Timestamp", yawFrame.getTimestamp());
+    log("GyroFrames/AngularVelocity/Data", angVeloFrame.getZ());
+    log("GyroFrames/AngularVelocity/Timestamp", angVeloFrame.getTimestamp());
   }
 }

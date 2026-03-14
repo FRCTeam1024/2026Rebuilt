@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -61,6 +62,8 @@ public class Robot extends TimedRobot {
     if (isReal()) {
       WebServer.start(5800, Filesystem.getDeployDirectory().toString());
     }
+
+    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
     initTimer.stop();
     m_robotContainer.log("Timing/Robot Init ms", initTimer.get() * 1000);
     dtTimer.start();

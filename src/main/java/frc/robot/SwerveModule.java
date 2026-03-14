@@ -1,12 +1,14 @@
 package frc.robot;
 
+import static frc.robot.Constants.SwerveConstants.feedforwardMaxSpeed;
+
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.StatusSignalCollection;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
@@ -22,7 +24,7 @@ import frc.lib.util.SwerveModuleConstants;
 import frc.robot.Constants.SwerveConstants;
 import monologue.Logged;
 
-public class SwerveModule implements Logged{
+public class SwerveModule implements Logged {
   public int moduleNumber;
   private Rotation2d angleOffset;
 
@@ -31,7 +33,7 @@ public class SwerveModule implements Logged{
   private CANcoder angleEncoder;
 
   /* drive motor control requests */
-  private final DutyCycleOut driveDutyCycleRequest = new DutyCycleOut(0);
+  private final VoltageOut driveVoltageRequest = new VoltageOut(0);
   private final VelocityVoltage driveVelocityRequest = new VelocityVoltage(0);
 
   /* angle motor control requests */
@@ -90,7 +92,7 @@ public class SwerveModule implements Logged{
     signals.setUpdateFrequencyForAll(100);
 
     signals.addSignals(mDriveMotor.getDeviceTemp());
-    
+
     angleEncoder.optimizeBusUtilization();
     mDriveMotor.optimizeBusUtilization();
     mAngleMotor.optimizeBusUtilization();
@@ -204,9 +206,9 @@ public class SwerveModule implements Logged{
     var outputVelocity = requestedVelocityRPS + compensationVelocity;
 
     if (isOpenLoop) {
-      driveDutyCycleRequest.Output =
-          outputVelocity / wheelMeterToMotorRot(SwerveConstants.maxSpeed);
-      mDriveMotor.setControl(driveDutyCycleRequest);
+      driveVoltageRequest.Output =
+          (outputVelocity / wheelMeterToMotorRot(feedforwardMaxSpeed)) * 12.0; // volts
+      mDriveMotor.setControl(driveVoltageRequest);
     } else {
       driveVelocityRequest.Velocity = outputVelocity;
       mDriveMotor.setControl(driveVelocityRequest);
@@ -260,11 +262,11 @@ public class SwerveModule implements Logged{
 
   public void refreshAndLog() {
     signals.refreshAll();
-      log("CANcoder", getCANcoder().getDegrees());
-      log("Angle", getPosition().angle.getDegrees());
-      log("Velocity", getState().speedMetersPerSecond);
-      log("Drive Output Voltage", getVoltage());
-      log("Drive Temperature", driveTemperature.getValueAsDouble());
+    log("CANcoder", getCANcoder().getDegrees());
+    log("Angle", getPosition().angle.getDegrees());
+    log("Velocity", getState().speedMetersPerSecond);
+    log("Drive Output Voltage", getVoltage());
+    log("Drive Temperature", driveTemperature.getValueAsDouble());
   }
 
   public static double wheelMeterToMotorRot(double wheelMeters) {

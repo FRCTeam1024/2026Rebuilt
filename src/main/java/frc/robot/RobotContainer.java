@@ -64,9 +64,7 @@ public class RobotContainer implements Logged {
             () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband),
             driver.rightBumper()));
 
-    hood.setDefaultCommand((
-      hood.setPositionCommand(() -> 0)
-    ));
+    hood.setDefaultCommand((hood.setPositionCommand(() -> 0)));
 
     NamedCommands.registerCommand(
         "shootFuelFromHub", shooter.velocityCommand(() -> ShooterConstants.hubShotRPS));
@@ -82,12 +80,13 @@ public class RobotContainer implements Logged {
     NamedCommands.registerCommand(
         "retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
     NamedCommands.registerCommand("alignForRightClimb", swerve.autoClimbAdjust(false));
-    NamedCommands.registerCommand("alignforLeftClimb", swerve.autoClimbAdjust(true));
-    NamedCommands.registerCommand("runIntake", intake.intakeCommand());    NamedCommands.registerCommand("shootFromAnywhere", new ParallelCommandGroup(shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
+    NamedCommands.registerCommand("alignForLeftClimb", swerve.autoClimbAdjust(true));
+    NamedCommands.registerCommand("runIntake", intake.intakeCommand());
+    NamedCommands.registerCommand(
+        "shootFromAnywhere",
+        new ParallelCommandGroup(
+            shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
                                           hood.distanceCommand(swerve.getDistanceToHub())));
-    NamedCommands.registerCommand("ballFeed", conveyor.oscillateCommand());
-
-
 
     // Configure the button bindings
     configureBindings();

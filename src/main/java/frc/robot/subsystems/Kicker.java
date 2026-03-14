@@ -46,6 +46,7 @@ public class Kicker extends SubsystemBase implements Logged {
     upper.optimizeBusUtilization();
     lower.optimizeBusUtilization();
     setOutputVolts(0);
+    voltageRequest.UpdateFreqHz = 50;
   }
 
   public void setControl(ControlRequest req) {

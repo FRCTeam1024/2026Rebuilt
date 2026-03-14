@@ -111,7 +111,7 @@ public final class Constants {
 
     /* These values are used by the drive motor controller to ramp in open loop and closed loop driving.
      * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
-    public static final double openLoopRamp = 0.25;
+    public static final double openLoopRamp = 0.1;
     public static final double closedLoopRamp = 0.0;
 
     /*
@@ -130,29 +130,32 @@ public final class Constants {
     public static final double driveKF = 0.0;
 
     /* Drive Motor Characterization Values From SYSID */
-    public static final double driveKS = 0.32; // TODO: This must be tuned to specific robot
-    public static final double driveKV = 1.51;
-    public static final double driveKA = 0.27;
+    public static final double driveKS = 0.128; // TODO: This must be tuned to specific robot
+    public static final double driveKV = 2.319;
+    public static final double driveKA = 0;
 
     /* Swerve Profiling Values */
     /** Meters per Second */
     public static final double maxSpeed = 4.5; // TODO: This must be tuned to specific robot
 
+    public static final double feedforwardMaxSpeed = 12.0 / SwerveConstants.driveKV;
+
     /** Radians per Second */
-    public static final double maxAngularVelocity = 10; // TODO: This must be tuned to specific robot
+    public static final double maxAngularVelocity =
+        10; // TODO: This must be tuned to specific robot
 
     /** Radians per Second per Second */
-    public static final double maxAngularAcceleration = 1;
+    public static final double maxAngularAcceleration = 10;
 
     /* Heading Control PID Values */
-    public static final double headingkP = 100;
+    public static final double headingkP = 1; // Rad/s per rad
     public static final double headingkI = 0;
-    public static final double headingkD = 5;
+    public static final double headingkD = 0.1; // Rad/s per rad/s
 
     /* Heading Feedforward Values */
     public static final double headingkS = 0;
-    public static final double headingkV = 0;
-    public static final double headingkA = 0;
+    public static final double headingkV = 1; // Rad/s per rad/s
+    public static final double headingkA = 0.1; // Rad/s per rad/s^2
 
     /* Heading Goal Range */
     public static final double headingGoalRange = Units.degreesToRadians(1);
@@ -204,7 +207,6 @@ public final class Constants {
 
     /** The pose used to initialize the pose estimator */
     public static final Pose2d initialPose = Pose2d.kZero;
-
   }
 
   public static final class IntakeConstants {
@@ -214,14 +216,16 @@ public final class Constants {
 
   public static final class ConveyorConstants {
     public static final int motorID = 41;
-    public static final double maxOutputVoltage = 10;
 
-    public static final double oscillateForwardSpeed = 0.3;
-    public static final double oscillateReverseSpeed = -0.1;
+    public static final double feedVolts = 3;
+    public static final double ejectVolts = -3;
+
+    public static final double oscillateForwardVolts = 3;
+    public static final double oscillateReverseVolts = -1;
 
     public static final double oscillateForwardTime = 0.3;
-    public static final double oscillateOffTime1 = 0.1;
-    public static final double oscillateReverseTime = 0.1;
+    public static final double oscillateOffTime1 = 0.05;
+    public static final double oscillateReverseTime = 0.05;
     public static final double oscillateOffTime2 = 0.05;
   }
 
@@ -324,11 +328,14 @@ public final class Constants {
     public static final double autoClimbPosition = 28;
     public static final double positionTolerance = 5;
 
-    public static final Pose2d rightBlueClimbPose = new Pose2d(1.095,2.857, Rotation2d.fromDegrees(0));
-    public static final Pose2d leftBlueClimbPose = new Pose2d(1.137,4.579, Rotation2d.fromDegrees(180));
-    public static final Pose2d rightRedClimbPose = new Pose2d(15.447,5.215, Rotation2d.fromDegrees(180));
-    public static final Pose2d leftRedClimbPose = new Pose2d(15.399,3.423, Rotation2d.fromDegrees(0));
-
+    public static final Pose2d rightBlueClimbPose =
+        new Pose2d(1.066, 2.881, Rotation2d.fromDegrees(0));
+    public static final Pose2d leftBlueClimbPose =
+        new Pose2d(1.130, 4.696, Rotation2d.fromDegrees(180));
+    public static final Pose2d rightRedClimbPose =
+        new Pose2d(15.447, 5.215, Rotation2d.fromDegrees(180));
+    public static final Pose2d leftRedClimbPose =
+        new Pose2d(15.399, 3.423, Rotation2d.fromDegrees(0));
   }
 
   public static final

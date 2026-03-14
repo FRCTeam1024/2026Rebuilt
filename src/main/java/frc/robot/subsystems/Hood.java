@@ -18,10 +18,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.ShooterParameterCalculator;
 import java.util.function.DoubleSupplier;
 import monologue.Annotations.Log;
 import monologue.Logged;
-import frc.ShooterParameterCalculator;
 
 public class Hood extends SubsystemBase implements Logged {
 
@@ -70,6 +70,7 @@ public class Hood extends SubsystemBase implements Logged {
 
     BaseStatusSignal.setUpdateFrequencyForAll(4, motor.getDeviceTemp());
     motor.optimizeBusUtilization();
+    positionRequest.UpdateFreqHz = 50;
     // TODO: current homing
     motor.setPosition(0);
   }
@@ -108,7 +109,10 @@ public class Hood extends SubsystemBase implements Logged {
   }
 
   public Command distanceCommand(DoubleSupplier distance) {
-    return run(() -> setGoalPosition(ShooterParameterCalculator.calculate(distance.getAsDouble()).hoodPosition()));
+    return run(
+        () ->
+            setGoalPosition(
+                ShooterParameterCalculator.calculate(distance.getAsDouble()).hoodPosition()));
   }
 
   public Command currentHome() {
