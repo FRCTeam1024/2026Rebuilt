@@ -10,12 +10,16 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.function.BooleanSupplier;
 import monologue.Logged;
 
 public class Conveyor extends SubsystemBase implements Logged {
@@ -83,6 +87,35 @@ public class Conveyor extends SubsystemBase implements Logged {
         () -> {
           stop();
         });
+  }
+
+  private Command clearJam() {
+    return Commands.sequence(
+        // Briefly hold
+        idle().withTimeout(jamClearHoldTimeSeconds),
+        // Clear the jam
+        runEnd(() -> setOutputVolts(jamClearVolts), this::stop)
+            .withTimeout(jamClearDurationSeconds));
+  }
+
+  /**
+   * Continuously feeds the conveyor and automatically backdrives when a jam is detected via
+   * sustained overcurrent.
+   */
+  public Command feedAutoJamClear() {
+    // TODO: This may be better as a linear filter on the current itself depending on how noisy the
+    // current is during a jam. It may also be worth making this a subsystem-wide value.
+    Debouncer jamDetectionFilter = new Debouncer(jamThresholdDurationSeconds, DebounceType.kRising);
+    BooleanSupplier jamDetected =
+        () -> jamDetectionFilter.calculate(statorCurrent.getValueAsDouble() >= jamThresholdAmps);
+
+    return Commands.sequence(
+            // Continuously feed until a jam is detected.
+            runEnd(() -> setOutputVolts(continuousFeedVolts), this::stop).until(jamDetected),
+            clearJam())
+        // rinse and repeat
+        .repeatedly()
+        .finallyDo(() -> stop());
   }
 
   /**
