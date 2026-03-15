@@ -76,7 +76,9 @@ public class RobotContainer implements Logged {
     NamedCommands.registerCommand(
         "shooterFeed",
         Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterCommand()));
-    NamedCommands.registerCommand("shooterFeedWithHood", Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterHoodCommand()));
+    NamedCommands.registerCommand(
+        "shooterFeedWithHood",
+        Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterHoodCommand()));
     NamedCommands.registerCommand(
         "retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
     NamedCommands.registerCommand("alignForRightClimb", swerve.autoClimbAdjust(false));
@@ -86,7 +88,7 @@ public class RobotContainer implements Logged {
         "shootFromAnywhere",
         new ParallelCommandGroup(
             shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
-                                          hood.distanceCommand(swerve.getDistanceToHub())));
+            hood.distanceCommand(swerve.getDistanceToHub())));
 
     // Configure the button bindings
     configureBindings();
@@ -125,7 +127,6 @@ public class RobotContainer implements Logged {
 
     operator.rightBumper().and(shooter::atSetpoint).whileTrue(fuelHandler.feedIntoShooterCommand());
 
-
     operator.leftBumper().whileTrue(fuelHandler.vomitCommand());
 
     operator.leftTrigger(0.1).or(driver.leftTrigger(0.1)).whileTrue(fuelHandler.intakeCommand());
@@ -142,9 +143,13 @@ public class RobotContainer implements Logged {
     operator.back().whileTrue(intakePivot.currentHome());
     operator.start().whileTrue(hood.currentHome());
 
-    operator.x().whileTrue(new ParallelCommandGroup(shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
-                                          hood.distanceCommand(swerve.getDistanceToHub())));
-    //operator.x().whileTrue(fuelHandler.tuningModeCommand());
+    operator
+        .x()
+        .whileTrue(
+            new ParallelCommandGroup(
+                shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
+                hood.distanceCommand(swerve.getDistanceToHub())));
+    // operator.x().whileTrue(fuelHandler.tuningModeCommand());
 
     // shooter.setDefaultCommand(shooter.runIdleCommand(() -> 20));
 
