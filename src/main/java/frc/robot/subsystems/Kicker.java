@@ -86,17 +86,17 @@ public class Kicker extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     log("Requested Voltage", voltageRequest.Output);
-    log("Left Supply Current", upper.getSupplyCurrent().getValueAsDouble());
-    log("Left Stator Current", upper.getStatorCurrent().getValueAsDouble());
-    log("Left Velocity", upper.getVelocity().getValueAsDouble());
-    log("Left Applied Voltage", upper.getMotorVoltage().getValueAsDouble());
-    log("Left Supply Voltage", upper.getSupplyVoltage().getValueAsDouble());
-    log("Left Temperature", upper.getDeviceTemp().getValueAsDouble());
-    log("Right Supply Current", lower.getSupplyCurrent().getValueAsDouble());
-    log("Right Stator Current", lower.getStatorCurrent().getValueAsDouble());
-    log("Right Velocity", lower.getVelocity().getValueAsDouble());
-    log("Right Applied Voltage", lower.getMotorVoltage().getValueAsDouble());
-    log("Right Supply Voltage", lower.getSupplyVoltage().getValueAsDouble());
-    log("Right Temperature", lower.getDeviceTemp().getValueAsDouble());
+    log("Upper Supply Current", upper.getSupplyCurrent().getValueAsDouble());
+    log("Upper Stator Current", upper.getStatorCurrent().getValueAsDouble());
+    log("Upper Velocity", upper.getVelocity().getValueAsDouble());
+    log("Upper Applied Voltage", upper.getMotorVoltage().getValueAsDouble());
+    log("Upper Supply Voltage", upper.getSupplyVoltage().getValueAsDouble());
+    log("Upper Temperature", upper.getDeviceTemp().getValueAsDouble());
+    log("Lower Supply Current", lower.getSupplyCurrent().getValueAsDouble());
+    log("Lower Stator Current", lower.getStatorCurrent().getValueAsDouble());
+    log("Lower Velocity", lower.getVelocity().getValueAsDouble());
+    log("Lower Applied Voltage", lower.getMotorVoltage().getValueAsDouble());
+    log("Lower Supply Voltage", lower.getSupplyVoltage().getValueAsDouble());
+    log("Lower Temperature", lower.getDeviceTemp().getValueAsDouble());
   }
 }
