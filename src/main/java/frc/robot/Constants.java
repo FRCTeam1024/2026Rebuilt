@@ -217,6 +217,8 @@ public final class Constants {
   public static final class ConveyorConstants {
     public static final int motorID = 41;
 
+    public static final double statorCurrentLimitAmps = 40;
+
     public static final double feedVolts = 3;
     public static final double ejectVolts = -3;
 

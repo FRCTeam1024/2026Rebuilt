@@ -11,7 +11,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
@@ -19,7 +18,6 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.function.BooleanSupplier;
 import monologue.Logged;
 
 public class Conveyor extends SubsystemBase implements Logged {
@@ -37,11 +35,16 @@ public class Conveyor extends SubsystemBase implements Logged {
       new StatusSignalCollection(
           motorVoltage, supplyVoltage, statorCurrent, supplyCurrent, velocity);
 
+  // TODO: This may be better as a linear filter on the current itself depending on how noisy the
+  // current is during a jam.
+  private Debouncer jamDetectionFilter = new Debouncer(jamThresholdDurationSeconds);
+  private boolean jamDetected;
+
   public Conveyor() {
     var config = new TalonFXConfiguration();
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    config.CurrentLimits.StatorCurrentLimit = 40;
+    config.CurrentLimits.StatorCurrentLimit = statorCurrentLimitAmps;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     motor.getConfigurator().apply(config);
@@ -103,15 +106,9 @@ public class Conveyor extends SubsystemBase implements Logged {
    * sustained overcurrent.
    */
   public Command feedAutoJamClear() {
-    // TODO: This may be better as a linear filter on the current itself depending on how noisy the
-    // current is during a jam. It may also be worth making this a subsystem-wide value.
-    Debouncer jamDetectionFilter = new Debouncer(jamThresholdDurationSeconds, DebounceType.kRising);
-    BooleanSupplier jamDetected =
-        () -> jamDetectionFilter.calculate(statorCurrent.getValueAsDouble() >= jamThresholdAmps);
-
     return Commands.sequence(
             // Continuously feed until a jam is detected.
-            runEnd(() -> setOutputVolts(continuousFeedVolts), this::stop).until(jamDetected),
+            runEnd(() -> setOutputVolts(continuousFeedVolts), this::stop).until(() -> jamDetected),
             clearJam())
         // rinse and repeat
         .repeatedly()
@@ -137,6 +134,10 @@ public class Conveyor extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     signals.refreshAll();
+
+    jamDetected =
+        jamDetectionFilter.calculate(statorCurrent.getValueAsDouble() >= jamThresholdAmps);
+    log("Jam Detected", jamDetected);
     log("Output Voltage", motorVoltage.getValueAsDouble());
     log("Stator Current", statorCurrent.getValueAsDouble());
     log("Supply Current", supplyCurrent.getValueAsDouble());
