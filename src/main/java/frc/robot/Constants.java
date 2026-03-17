@@ -232,7 +232,7 @@ public final class Constants {
 
     public static final double continuousFeedVolts = 3;
 
-    public static final double jamThresholdAmps = 55.0;
+    public static final double jamThresholdAmps = 30.0;
     public static final double jamThresholdDurationSeconds = 0.15;
 
     public static final double jamClearVolts = -3;
