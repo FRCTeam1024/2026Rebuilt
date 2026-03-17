@@ -11,12 +11,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
           "type": "race",
           "data": {
             "commands": [
@@ -29,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Fuel Intake from Neutral Through Trench"
+                  "pathName": "Right Fuel Intake from Neutral Through Trench"
                 }
               }
             ]
@@ -58,6 +52,31 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "climbExtend"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right Fuel Intake from Neutral to Climb"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "climbRetract"
           }
         }
       ]
