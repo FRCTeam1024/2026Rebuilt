@@ -235,7 +235,7 @@ public final class Constants {
     public static final double jamThresholdAmps = 30.0;
     public static final double jamThresholdDurationSeconds = 0.15;
 
-    public static final double jamClearVolts = -3;
+    public static final double jamClearVolts = -1;
     public static final double jamClearDurationSeconds = 0.1;
     public static final double jamClearHoldTimeSeconds = 0.05;
   }
