@@ -45,7 +45,8 @@ public class FuelHandler {
   }
 
   public Command feedIntoShooterCommand() {
-    return Commands.parallel(intake.intakeCommand(), conveyor.feedCommand(), kicker.feedCommand());
+    return Commands.parallel(
+        intake.intakeCommand(), conveyor.feedAutoJamClear(), kicker.feedCommand());
   }
 
   public Command feedIntoShooterHoodCommand() {
