@@ -50,6 +50,12 @@
                 "data": {
                   "waitTime": 7.0
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "climbExtend"
+                }
               }
             ]
           }
@@ -58,12 +64,6 @@
           "type": "race",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "climbExtend"
-                }
-              },
               {
                 "type": "path",
                 "data": {
