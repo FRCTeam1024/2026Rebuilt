@@ -331,6 +331,10 @@ public class Swerve extends SubsystemBase implements Logged {
     return () -> hubDistance;
   }
 
+  public void dumpVisionQueue() {
+    vision.dumpUpdateQueue();
+  }
+
   @Override
   public void periodic() {
     for (SwerveModule mod : swerveMods) {

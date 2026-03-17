@@ -50,6 +50,12 @@ public class AprilTagVision implements Logged {
     }
   }
 
+  public void dumpUpdateQueue() {
+    for (var camera : cameras) {
+      camera.camera().getAllUnreadResults();
+    }
+  }
+
   private static final Set<Integer> allowedTags = Set.of();
 
   private static final boolean limitTags = false;

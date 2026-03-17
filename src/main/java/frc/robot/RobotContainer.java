@@ -1,7 +1,6 @@
 package frc.robot;
 
 import static edu.wpi.first.math.MathUtil.applyDeadband;
-import static frc.robot.Constants.*;
 import static frc.robot.Constants.ShooterConstants.hubShotRPS;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -156,6 +155,10 @@ public class RobotContainer implements Logged {
     // operator.start().onTrue(shooter.sysIdRoutine());
 
     SmartDashboard.putNumber("Shooter velocity", hubShotRPS);
+  }
+
+  public void dumpVisionQueue() {
+    swerve.dumpVisionQueue();
   }
 
   public void emergencyStop() {
