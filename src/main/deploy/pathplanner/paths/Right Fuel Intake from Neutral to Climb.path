@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5256410256410273,
-        "y": 1.1628333333333343
+        "x": 2.0256538461538476,
+        "y": 1.8372692307692309
       },
       "isLocked": false,
       "linkedName": "Right Fuel Intake from Neutral End"
@@ -20,8 +20,8 @@
         "y": 2.95
       },
       "prevControl": {
-        "x": 0.8977179487179501,
-        "y": 2.6163589743589752
+        "x": 1.4791282051282062,
+        "y": 2.7093846153846153
       },
       "nextControl": null,
       "isLocked": false,
