@@ -36,13 +36,17 @@ public class AprilTagVision implements Logged {
       var results = camera.camera().getAllUnreadResults();
       log(camera.name() + " Num Targets", results.size());
       if (!results.isEmpty()) {
-        var result = results.get(results.size() - 1);
-        var estimatedPose = camera.estimator().estimateCoprocMultiTagPose(result);
-        if (estimatedPose.isPresent()) {
-          log(camera.name() + "EstimatedPoseRaw", estimatedPose.get().estimatedPose);
-          if (shouldAcceptUpdate(result, estimatedPose.get(), curPose)) {
-            poseConsumer.accept(estimatedPose.get());
-            log(camera.name() + "EstimatedPoseAccepted", estimatedPose.get().estimatedPose);
+        // Only process the 3 newest results to avoid spending cycles on stale frames.
+        int startIdx = Math.max(0, results.size() - 5);
+        for (int i = startIdx; i < results.size(); i++) {
+          var result = results.get(i);
+          var estimatedPose = camera.estimator().estimateCoprocMultiTagPose(result);
+          if (estimatedPose.isPresent()) {
+            log(camera.name() + "EstimatedPoseRaw", estimatedPose.get().estimatedPose);
+            if (shouldAcceptUpdate(result, estimatedPose.get(), curPose)) {
+              poseConsumer.accept(estimatedPose.get());
+              log(camera.name() + "EstimatedPoseAccepted", estimatedPose.get().estimatedPose);
+            }
           }
         }
       }
