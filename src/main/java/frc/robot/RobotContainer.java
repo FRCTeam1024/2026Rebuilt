@@ -88,7 +88,7 @@ public class RobotContainer implements Logged {
         new ParallelCommandGroup(
             shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
             hood.distanceCommand(swerve.getDistanceToHub())));
-
+    NamedCommands.registerCommand("aimAtHub", swerve.driveFieldRelativeCmd(()->0,()->0,()->0,()->true));
     // Configure the button bindings
     configureBindings();
 
