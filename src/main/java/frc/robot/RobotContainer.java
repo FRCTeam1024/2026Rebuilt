@@ -142,6 +142,11 @@ public class RobotContainer implements Logged {
     operator.back().whileTrue(intakePivot.currentHome());
     operator.start().whileTrue(hood.currentHome());
 
+    driver.leftBumper().whileTrue(swerve.xLock());
+
+    driver.a().whileTrue(fuelHandler.passingSetpointCommand());
+    driver.a().whileTrue(Commands.waitUntil(() -> shooter.atSetpoint() && hood.atGoal()).andThen(fuelHandler.feedIntoShooterCommand()));
+
     operator
         .x()
         .whileTrue(
@@ -151,6 +156,7 @@ public class RobotContainer implements Logged {
     // operator.x().whileTrue(fuelHandler.tuningModeCommand());
 
     // shooter.setDefaultCommand(shooter.runIdleCommand(() -> 20));
+    // driver.back().onTrue(shooter.runIdleCommand(() -> 0));
 
     // operator.start().onTrue(shooter.sysIdRoutine());
 

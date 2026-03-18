@@ -10,6 +10,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
@@ -186,6 +188,11 @@ public class Hood extends SubsystemBase implements Logged {
       case TimedOut:
         break;
     }
+  }
+
+  @Log(key = "At Goal")
+  public boolean atGoal() {
+    return MathUtil.isNear(positionRequest.Position, getPosition(), 0.5);
   }
 
   @Override

@@ -7,6 +7,10 @@ import frc.robot.Constants;
 
 public class FuelHandler {
 
+  
+  public static final double passingSpeedRPS = 60;
+  public static final double passingHoodSetpointRPS = 70;
+
   private final Intake intake;
   private final Conveyor conveyor;
   private final Kicker kicker;
@@ -64,6 +68,10 @@ public class FuelHandler {
         kicker.retractCommand(),
         shooter.velocityCommand(() -> -30),
         intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition));
+  }
+
+  public Command passingSetpointCommand() {
+    return Commands.parallel(shooter.velocityCommand(()->passingSpeedRPS), hood.setPositionCommand(()->passingHoodSetpointRPS));
   }
 
   public Command tuningModeCommand() {
