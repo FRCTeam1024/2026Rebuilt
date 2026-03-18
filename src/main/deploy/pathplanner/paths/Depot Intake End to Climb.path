@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5891459074733105,
-        "y": 7.3434519572953745
+        "x": 1.7349487179429048,
+        "y": 5.035025641025641
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.922680901542112,
-        "y": 6.407402135231316
+        "x": 1.3628461538461552,
+        "y": 5.348987179487179
       },
       "isLocked": false,
-      "linkedName": "Left Fuel Intake From Neutral End"
+      "linkedName": "Depot Collect End"
     },
     {
       "anchor": {
@@ -20,15 +20,20 @@
         "y": 4.628
       },
       "prevControl": {
-        "x": 2.3416844602609723,
-        "y": 4.718208778173191
+        "x": 1.072141025641027,
+        "y": 5.069910256410256
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Left Climb"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7186061801446412,
+      "rotationDegrees": 140.2576304819633
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -48,7 +53,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -63.0
+    "rotation": -8.94538183355589
   },
   "useDefaultConstraints": true
 }
