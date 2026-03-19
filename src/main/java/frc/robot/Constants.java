@@ -212,6 +212,10 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int motorID = 40;
     public static final double maxOutputVoltage = 10;
+
+    public static final double jamCurrentThresholdAmps = 40.0;
+    public static final double jamCurrentThresholdDurationSeconds = 0.25;
+    public static final double jamVelocityThresholdRPS = 10;
   }
 
   public static final class ConveyorConstants {

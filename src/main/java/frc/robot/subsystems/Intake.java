@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import monologue.Logged;
@@ -16,6 +17,9 @@ public class Intake extends SubsystemBase implements Logged {
 
   private final TalonFX motor = new TalonFX(motorID);
   private final VoltageOut voltageRequest = new VoltageOut(0);
+
+  private Debouncer jamDetectionFilter = new Debouncer(jamCurrentThresholdDurationSeconds);
+  private boolean jamDetected;
 
   public Intake() {
     var config = new TalonFXConfiguration();
@@ -73,8 +77,20 @@ public class Intake extends SubsystemBase implements Logged {
         });
   }
 
+  public boolean jamDetected() {
+    return jamDetected;
+  }
+
   @Override
   public void periodic() {
+
+    jamDetected =
+        voltageRequest.Output != 0
+            && jamDetectionFilter.calculate(
+                motor.getStatorCurrent().getValueAsDouble() >= jamCurrentThresholdAmps)
+            && Math.abs(motor.getVelocity().getValueAsDouble()) < jamVelocityThresholdRPS;
+
+    log("Jam Detected", jamDetected);
     log("Output Voltage", motor.getMotorVoltage().getValueAsDouble());
     log("Stator Current", motor.getStatorCurrent().getValueAsDouble());
     log("Supply Current", motor.getSupplyCurrent().getValueAsDouble());
