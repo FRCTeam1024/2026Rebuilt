@@ -58,16 +58,17 @@ public class Swerve extends SubsystemBase implements Logged {
 
   private boolean aiming = false;
 
-  private final SwerveModuleState[] kXLockStates = new SwerveModuleState[] {
-    // FL
-    new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
-    // FR
-    new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),
-    // RL
-    new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),
-    // RR
-    new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
-  };
+  private final SwerveModuleState[] kXLockStates =
+      new SwerveModuleState[] {
+        // FL
+        new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
+        // FR
+        new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),
+        // RL
+        new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),
+        // RR
+        new SwerveModuleState(0, Rotation2d.fromDegrees(45)),
+      };
 
   public Swerve() {
     gyro.setYaw(0);
@@ -339,9 +340,10 @@ public class Swerve extends SubsystemBase implements Logged {
   }
 
   public Command xLock() {
-    return run(() -> {
-      setModuleStates(kXLockStates, false);
-    });
+    return run(
+        () -> {
+          setModuleStates(kXLockStates, false);
+        });
   }
 
   public DoubleSupplier getDistanceToHub() {

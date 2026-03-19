@@ -7,7 +7,6 @@ import frc.robot.Constants;
 
 public class FuelHandler {
 
-  
   public static final double passingSpeedRPS = 60;
   public static final double passingHoodSetpointRPS = 70;
 
@@ -71,7 +70,9 @@ public class FuelHandler {
   }
 
   public Command passingSetpointCommand() {
-    return Commands.parallel(shooter.velocityCommand(()->passingSpeedRPS), hood.setPositionCommand(()->passingHoodSetpointRPS));
+    return Commands.parallel(
+        shooter.velocityCommand(() -> passingSpeedRPS),
+        hood.setPositionCommand(() -> passingHoodSetpointRPS));
   }
 
   public Command tuningModeCommand() {

@@ -88,7 +88,8 @@ public class RobotContainer implements Logged {
         new ParallelCommandGroup(
             shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
             hood.distanceCommand(swerve.getDistanceToHub())));
-    NamedCommands.registerCommand("aimAtHub", swerve.driveFieldRelativeCmd(()->0,()->0,()->0,()->true));
+    NamedCommands.registerCommand(
+        "aimAtHub", swerve.driveFieldRelativeCmd(() -> 0, () -> 0, () -> 0, () -> true));
     // Configure the button bindings
     configureBindings();
 
@@ -145,7 +146,11 @@ public class RobotContainer implements Logged {
     driver.leftBumper().whileTrue(swerve.xLock());
 
     driver.a().whileTrue(fuelHandler.passingSetpointCommand());
-    driver.a().whileTrue(Commands.waitUntil(() -> shooter.atSetpoint() && hood.atGoal()).andThen(fuelHandler.feedIntoShooterCommand()));
+    driver
+        .a()
+        .whileTrue(
+            Commands.waitUntil(() -> shooter.atSetpoint() && hood.atGoal())
+                .andThen(fuelHandler.feedIntoShooterCommand()));
 
     operator
         .x()
