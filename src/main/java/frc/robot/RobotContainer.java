@@ -158,7 +158,7 @@ public class RobotContainer implements Logged {
             new ParallelCommandGroup(
                 shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
                 hood.distanceCommand(swerve.getDistanceToHub())));
-    // operator.x().whileTrue(fuelHandler.tuningModeCommand());
+    //operator.x().whileTrue(fuelHandler.tuningModeCommand());
 
     // shooter.setDefaultCommand(shooter.runIdleCommand(() -> 20));
     // driver.back().onTrue(shooter.runIdleCommand(() -> 0));

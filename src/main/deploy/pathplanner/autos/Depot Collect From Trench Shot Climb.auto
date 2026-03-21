@@ -67,6 +67,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "retractIntake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Depot Intake End to Climb"
