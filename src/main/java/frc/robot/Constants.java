@@ -267,9 +267,6 @@ public final class Constants {
   public static final class HoodConstants {
     public static final int motorID = 46;
 
-    public static final double motorToHoodRatio =
-        3.0 * (48.0 / 24.0); // 3:1 MP, 24T:48T belt reduction
-
     /* Hood position limits in degrees */
     public static final double minPosition = 0.0; // TODO: retune
     public static final double maxPosition = 90.0;
