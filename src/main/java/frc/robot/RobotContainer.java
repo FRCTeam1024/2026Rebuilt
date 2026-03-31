@@ -73,6 +73,7 @@ public class RobotContainer implements Logged {
     NamedCommands.registerCommand("climbRetract", climber.autoClimbCommand());
     NamedCommands.registerCommand("extendIntake", fuelHandler.extendIntake());
     NamedCommands.registerCommand(
+        
         "shooterFeed",
         Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterCommand()));
     NamedCommands.registerCommand(

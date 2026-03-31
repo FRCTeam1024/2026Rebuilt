@@ -17,26 +17,31 @@
     {
       "anchor": {
         "x": 1.0,
-        "y": 4.628
+        "y": 4.6
       },
       "prevControl": {
-        "x": 2.3416844602609723,
-        "y": 4.718208778173191
+        "x": 1.5670225385527887,
+        "y": 4.58261684460261
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Left Climb"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3323100537221826,
+      "rotationDegrees": -157.74530224970334
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 2.0,
-    "maxAngularVelocity": 573.0,
-    "maxAngularAcceleration": 859.0,
+    "maxAngularVelocity": 300.0,
+    "maxAngularAcceleration": 300.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -50,5 +55,5 @@
     "velocity": 0,
     "rotation": -63.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
