@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.708102016607355,
-        "y": 7.429525504151838
+        "x": 4.45,
+        "y": 7.453692307692307
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.708102016607357,
-        "y": 7.429525504151838
+        "x": 5.450000000000002,
+        "y": 7.453692307692307
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Trench Start"
     },
     {
       "anchor": {
@@ -36,8 +36,8 @@
         "y": 4.430358974358975
       },
       "prevControl": {
-        "x": 7.7614127234989825,
-        "y": 4.6271229531468006
+        "x": 7.761412723498983,
+        "y": 4.627122953146801
       },
       "nextControl": {
         "x": 7.269974358974361,
@@ -78,10 +78,6 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.37192982456140417,
-      "rotationDegrees": 0.0
-    },
-    {
       "waypointRelativePos": 0.9052631578947312,
       "rotationDegrees": -90.0
     }
@@ -119,7 +115,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": false
 }
