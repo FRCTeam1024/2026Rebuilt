@@ -26,7 +26,8 @@ public final class Constants {
 
     public static final String leftCameraName = "Arducam_OV9281_6";
     public static final String rightCameraName = "Arducam_OV9281_2";
-    public static final String rearCameraName = "Arducam_OV9281_3";
+    public static final String rearCameraName = "Arducam_OV9281_4";
+    public static final String frontCameraName = "Arducam_OV9281_1";
 
     public static final Transform3d robotToLeftCamera =
         new Transform3d(
@@ -210,7 +211,9 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final int motorID = 40;
+    public static final int rightMotorID = 40;
+    public static final int leftMotorID = 51;
+
     public static final double maxOutputVoltage = 10;
 
     public static final double jamCurrentThresholdAmps = 40.0;
@@ -234,7 +237,7 @@ public final class Constants {
     public static final double oscillateReverseTime = 0.05;
     public static final double oscillateOffTime2 = 0.05;
 
-    public static final double continuousFeedVolts = 6;
+    public static final double continuousFeedVolts = 3;
 
     public static final double jamThresholdAmps = 30.0;
     public static final double jamThresholdDurationSeconds = 0.15;
@@ -324,7 +327,7 @@ public final class Constants {
     public static final double homePosition = 0;
     public static final double stowPosition = 0;
     public static final double insideBumperPosition = 0.089;
-    public static final double intakePosition = 0.201;
+    public static final double intakePosition = 0.224;
   }
 
   public static final class ClimberConstants {
