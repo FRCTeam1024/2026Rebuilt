@@ -73,7 +73,6 @@ public class RobotContainer implements Logged {
     NamedCommands.registerCommand("climbRetract", climber.autoClimbCommand());
     NamedCommands.registerCommand("extendIntake", fuelHandler.extendIntake());
     NamedCommands.registerCommand(
-        
         "shooterFeed",
         Commands.waitUntil(shooter::atSetpoint).andThen(fuelHandler.feedIntoShooterCommand()));
     NamedCommands.registerCommand(
@@ -159,7 +158,7 @@ public class RobotContainer implements Logged {
             new ParallelCommandGroup(
                 shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
                 hood.distanceCommand(swerve.getDistanceToHub())));
-    //operator.x().whileTrue(fuelHandler.tuningModeCommand());
+    // operator.x().whileTrue(fuelHandler.tuningModeCommand());
 
     // shooter.setDefaultCommand(shooter.runIdleCommand(() -> 20));
     // driver.back().onTrue(shooter.runIdleCommand(() -> 0));

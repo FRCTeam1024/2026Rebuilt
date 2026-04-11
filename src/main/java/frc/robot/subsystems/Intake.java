@@ -4,9 +4,11 @@ import static frc.robot.Constants.IntakeConstants.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,7 +17,9 @@ import monologue.Logged;
 
 public class Intake extends SubsystemBase implements Logged {
 
-  private final TalonFX motor = new TalonFX(motorID);
+  private final TalonFX rightMotor = new TalonFX(rightMotorID);
+  private final TalonFX leftMotor = new TalonFX(leftMotorID);
+
   private final VoltageOut voltageRequest = new VoltageOut(0);
 
   private Debouncer jamDetectionFilter = new Debouncer(jamCurrentThresholdDurationSeconds);
@@ -34,23 +38,31 @@ public class Intake extends SubsystemBase implements Logged {
     config.CurrentLimits.SupplyCurrentLowerLimit = 40;
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-    motor.getConfigurator().apply(config);
+    rightMotor.getConfigurator().apply(config);
+
+    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    leftMotor.getConfigurator().apply(config);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         50,
-        motor.getMotorVoltage(),
-        motor.getStatorCurrent(),
-        motor.getSupplyCurrent(),
-        motor.getSupplyVoltage(),
-        motor.getVelocity());
-    BaseStatusSignal.setUpdateFrequencyForAll(4, motor.getDeviceTemp());
+        rightMotor.getMotorVoltage(),
+        rightMotor.getStatorCurrent(),
+        rightMotor.getSupplyCurrent(),
+        rightMotor.getSupplyVoltage(),
+        rightMotor.getVelocity());
+    BaseStatusSignal.setUpdateFrequencyForAll(4, rightMotor.getDeviceTemp());
+    rightMotor.optimizeBusUtilization();
+
+    leftMotor.optimizeBusUtilization();
+
     voltageRequest.UpdateFreqHz = 50;
-    motor.optimizeBusUtilization();
+    leftMotor.setControl(new Follower(rightMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+    rightMotor.setControl(voltageRequest);
   }
 
   public void setOutput(double output) {
     voltageRequest.Output = maxOutputVoltage * output;
-    motor.setControl(voltageRequest);
+    rightMotor.setControl(voltageRequest);
   }
 
   public void stop() {
@@ -87,16 +99,16 @@ public class Intake extends SubsystemBase implements Logged {
     jamDetected =
         voltageRequest.Output != 0
             && jamDetectionFilter.calculate(
-                motor.getStatorCurrent().getValueAsDouble() >= jamCurrentThresholdAmps)
-            && Math.abs(motor.getVelocity().getValueAsDouble()) < jamVelocityThresholdRPS;
+                rightMotor.getStatorCurrent().getValueAsDouble() >= jamCurrentThresholdAmps)
+            && Math.abs(rightMotor.getVelocity().getValueAsDouble()) < jamVelocityThresholdRPS;
 
     log("Jam Detected", jamDetected);
-    log("Output Voltage", motor.getMotorVoltage().getValueAsDouble());
-    log("Stator Current", motor.getStatorCurrent().getValueAsDouble());
-    log("Supply Current", motor.getSupplyCurrent().getValueAsDouble());
-    log("Supply Voltage", motor.getSupplyVoltage().getValueAsDouble());
-    log("Velocity", motor.getVelocity().getValueAsDouble());
+    log("Output Voltage", rightMotor.getMotorVoltage().getValueAsDouble());
+    log("Stator Current", rightMotor.getStatorCurrent().getValueAsDouble());
+    log("Supply Current", rightMotor.getSupplyCurrent().getValueAsDouble());
+    log("Supply Voltage", rightMotor.getSupplyVoltage().getValueAsDouble());
+    log("Velocity", rightMotor.getVelocity().getValueAsDouble());
     log("Requested Voltage", voltageRequest.Output);
-    log("Temperature", motor.getDeviceTemp().getValueAsDouble());
+    log("Temperature", rightMotor.getDeviceTemp().getValueAsDouble());
   }
 }
