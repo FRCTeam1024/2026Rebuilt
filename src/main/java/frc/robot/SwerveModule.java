@@ -91,11 +91,12 @@ public class SwerveModule implements Logged {
     /* Configure update frequencies */
     signals.setUpdateFrequencyForAll(100);
 
-    signals.addSignals(mDriveMotor.getDeviceTemp());
+    driveTemperature.setUpdateFrequency(4);
+    signals.addSignals(driveTemperature);
 
-    angleEncoder.optimizeBusUtilization();
-    mDriveMotor.optimizeBusUtilization();
-    mAngleMotor.optimizeBusUtilization();
+    angleEncoder.optimizeBusUtilization(0);
+    mDriveMotor.optimizeBusUtilization(0);
+    mAngleMotor.optimizeBusUtilization(0);
 
     resetToAbsolute();
   }

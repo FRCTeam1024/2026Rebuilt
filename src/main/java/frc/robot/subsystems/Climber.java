@@ -49,7 +49,7 @@ public class Climber extends SubsystemBase implements Logged {
         motor.getVelocity());
 
     BaseStatusSignal.setUpdateFrequencyForAll(4, motor.getDeviceTemp());
-    motor.optimizeBusUtilization();
+    motor.optimizeBusUtilization(0);
     motor.setPosition(0);
 
     voltageRequest.UpdateFreqHz = 50;

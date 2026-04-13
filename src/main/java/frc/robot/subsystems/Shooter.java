@@ -57,8 +57,8 @@ public class Shooter extends SubsystemBase implements Logged {
     right.getConfigurator().apply(config);
 
     resetStatusFrequencies();
-    left.optimizeBusUtilization();
-    right.optimizeBusUtilization();
+    left.optimizeBusUtilization(0);
+    right.optimizeBusUtilization(0);
 
     voltageRequest.UpdateFreqHz = 50;
     velocityRequest.UpdateFreqHz = 50;
@@ -259,6 +259,8 @@ public class Shooter extends SubsystemBase implements Logged {
         4,
         left.getDeviceTemp(),
         right.getDeviceTemp(),
+        left.getFaultField(),
+        right.getFaultField(),
         left.getBridgeOutput(),
         right.getBridgeOutput(),
         left.getMotorOutputStatus(),

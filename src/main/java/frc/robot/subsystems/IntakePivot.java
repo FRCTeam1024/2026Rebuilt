@@ -62,7 +62,7 @@ public class IntakePivot extends SubsystemBase implements Logged {
         motor.getSupplyCurrent(),
         motor.getSupplyVoltage());
     BaseStatusSignal.setUpdateFrequencyForAll(4, motor.getDeviceTemp());
-    motor.optimizeBusUtilization();
+    motor.optimizeBusUtilization(0);
     setZero();
     positionRequest.UpdateFreqHz = 50;
     setGoal(0);

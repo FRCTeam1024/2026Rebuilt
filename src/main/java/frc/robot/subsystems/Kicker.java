@@ -43,8 +43,8 @@ public class Kicker extends SubsystemBase implements Logged {
         upper.getSupplyVoltage(),
         lower.getSupplyVoltage());
     BaseStatusSignal.setUpdateFrequencyForAll(4, upper.getDeviceTemp(), lower.getDeviceTemp());
-    upper.optimizeBusUtilization();
-    lower.optimizeBusUtilization();
+    upper.optimizeBusUtilization(0);
+    lower.optimizeBusUtilization(0);
     setOutputVolts(0);
     voltageRequest.UpdateFreqHz = 50;
   }

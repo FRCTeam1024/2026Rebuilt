@@ -51,9 +51,9 @@ public class Intake extends SubsystemBase implements Logged {
         rightMotor.getSupplyVoltage(),
         rightMotor.getVelocity());
     BaseStatusSignal.setUpdateFrequencyForAll(4, rightMotor.getDeviceTemp());
-    rightMotor.optimizeBusUtilization();
+    rightMotor.optimizeBusUtilization(0);
 
-    leftMotor.optimizeBusUtilization();
+    leftMotor.optimizeBusUtilization(0);
 
     voltageRequest.UpdateFreqHz = 50;
     leftMotor.setControl(new Follower(rightMotor.getDeviceID(), MotorAlignmentValue.Opposed));
