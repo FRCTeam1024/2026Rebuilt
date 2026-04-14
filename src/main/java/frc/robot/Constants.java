@@ -27,7 +27,6 @@ public final class Constants {
     public static final String leftCameraName = "Arducam_OV9281_6";
     public static final String rightCameraName = "Arducam_OV9281_2";
     public static final String rearCameraName = "Arducam_OV9281_4";
-    public static final String frontCameraName = "Arducam_OV9281_1";
 
     public static final Transform3d robotToLeftCamera =
         new Transform3d(
