@@ -34,7 +34,7 @@ public class AprilTagVision implements Logged {
   public void processVisionUpdates(Consumer<EstimatedRobotPose> poseConsumer, Pose2d curPose) {
     for (var camera : cameras) {
       var results = camera.camera().getAllUnreadResults();
-      log(camera.name() + " Num Targets", results.size());
+      log(camera.name() + " Num Results", results.size());
       if (!results.isEmpty()) {
         // Only process the 3 newest results to avoid spending cycles on stale frames.
         int startIdx = Math.max(0, results.size() - 5);
