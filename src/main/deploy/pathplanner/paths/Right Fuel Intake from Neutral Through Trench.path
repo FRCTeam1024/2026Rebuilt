@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.45,
-        "y": 0.546
+        "x": 4.353653618030843,
+        "y": 0.5759193357058121
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.396653846153847,
-        "y": 0.5232820512820513
+        "x": 5.30030746418469,
+        "y": 0.5532013869878634
       },
       "isLocked": false,
       "linkedName": "Right Trench Start"

@@ -3,83 +3,87 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.3660078023407,
-        "y": 7.453692307692307
+        "x": 3.021,
+        "y": 7.3434519572953745
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.060629171769129,
-        "y": 7.508964325663157
+        "x": 4.127601924824188,
+        "y": 7.4268770873254875
       },
       "isLocked": false,
-      "linkedName": "Left Trench Start"
+      "linkedName": "Double Neutral Intake Left"
     },
     {
       "anchor": {
-        "x": 7.6071923076923085,
-        "y": 6.8025128205128205
+        "x": 7.281602564102566,
+        "y": 7.000192307692307
       },
       "prevControl": {
-        "x": 7.429754416546257,
-        "y": 7.461072723843412
+        "x": 6.625764715074818,
+        "y": 7.593569409193602
       },
       "nextControl": {
-        "x": 7.818071634362988,
-        "y": 6.019835185596884
+        "x": 7.769987179487182,
+        "y": 6.558320512820512
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.409264531435351,
-        "y": 5.299205219454329
+        "x": 7.490910256410258,
+        "y": 4.988512820512821
       },
       "prevControl": {
-        "x": 7.37673126092604,
-        "y": 5.005447796928559
+        "x": 7.733523288134438,
+        "y": 5.048836255739946
       },
       "nextControl": {
-        "x": 7.444397435897437,
-        "y": 5.616435897435898
+        "x": 7.248297224686076,
+        "y": 4.9281893852856955
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.037384615384616,
-        "y": 7.453692307692307
-      },
-      "prevControl": {
-        "x": 6.700192307692308,
-        "y": 7.302525641025639
-      },
-      "nextControl": {
-        "x": 5.426734797564879,
-        "y": 7.592963318774004
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.5891459074733105,
+        "x": 6.374602564102565,
         "y": 7.3434519572953745
       },
       "prevControl": {
-        "x": 3.4681133750185142,
-        "y": 7.516991912163928
+        "x": 7.188576923076923,
+        "y": 7.09321794871795
+      },
+      "nextControl": {
+        "x": 5.896535346153463,
+        "y": 7.4904205626303115
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.021,
+        "y": 7.3434519572953745
+      },
+      "prevControl": {
+        "x": 3.729620403321471,
+        "y": 7.504839857651245
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Fuel Intake From Neutral End"
+      "linkedName": "Double Neutral Intake Left"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.37192982456140417,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 0.14274867122247498,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.4160971905846594,
+      "rotationDegrees": 0.0
     },
     {
       "waypointRelativePos": 1.015985790408523,
@@ -90,7 +94,7 @@
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 3.246772968868649,
+      "waypointRelativePos": 3.2832194381169315,
       "rotationDegrees": 0.0
     },
     {
@@ -101,7 +105,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8,
+      "minWaypointRelativePos": 1.1444444444444428,
       "maxWaypointRelativePos": 1.8177727784027027,
       "constraints": {
         "maxVelocity": 1.0,
@@ -131,7 +135,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -63.0
   },
   "useDefaultConstraints": false
 }
