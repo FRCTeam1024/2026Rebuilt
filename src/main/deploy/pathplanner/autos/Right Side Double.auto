@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "extendIntake"
-          }
-        },
-        {
           "type": "race",
           "data": {
             "commands": [
@@ -21,21 +15,28 @@
                 }
               },
               {
-                "type": "wait",
+                "type": "sequential",
                 "data": {
-                  "waitTime": 1.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "extendIntake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "runIntake"
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "extendIntake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "runIntake"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -77,15 +78,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "runIntake"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "Second Time Right Intake From Neutral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "runIntake"
                 }
               }
             ]
