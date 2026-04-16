@@ -27,6 +27,7 @@ public final class Constants {
     public static final String leftCameraName = "Arducam_OV9281_6";
     public static final String rightCameraName = "Arducam_OV9281_2";
     public static final String rearCameraName = "Arducam_OV9281_4";
+    public static final String frontCameraName = "Arducam_OV9281_1";
 
     public static final Transform3d robotToLeftCamera =
         new Transform3d(
@@ -236,7 +237,7 @@ public final class Constants {
     public static final double oscillateReverseTime = 0.05;
     public static final double oscillateOffTime2 = 0.05;
 
-    public static final double continuousFeedVolts = 7;
+    public static final double continuousFeedVolts = 4;
 
     public static final double jamThresholdAmps = 30.0;
     public static final double jamThresholdDurationSeconds = 0.15;

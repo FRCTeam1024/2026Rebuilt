@@ -87,7 +87,7 @@ public class RobotContainer implements Logged {
         "shootFromAnywhere",
         new ParallelCommandGroup(
             shooter.distanceCommand(swerve::getDistanceToHub).finallyDo(shooter::stop),
-            hood.distanceCommand(swerve::getDistanceToHub)));
+            hood.distanceCommand(swerve::getDistanceToHub).finallyDo(() -> hood.setGoalPosition(0))));
     NamedCommands.registerCommand(
         "aimAtHub", swerve.driveFieldRelativeCmd(() -> 0, () -> 0, () -> 0, () -> true));
     // Configure the button bindings
