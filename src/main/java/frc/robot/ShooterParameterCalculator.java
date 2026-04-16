@@ -1,4 +1,4 @@
-package frc;
+package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
@@ -11,9 +11,6 @@ public class ShooterParameterCalculator {
 
   public static InterpolatingTreeMap<Double, ShooterParameters> passMap =
       new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterParameters::interpolate);
-
-  private static ShooterParameters currentHubParameters = new ShooterParameters(0, 0);
-  private static ShooterParameters currentPassParameters = new ShooterParameters(0, 0);
 
   static {
     hubMap.put(0.5, new ShooterParameters(0, 42.0));
