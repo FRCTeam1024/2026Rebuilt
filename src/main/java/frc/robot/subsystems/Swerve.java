@@ -359,7 +359,7 @@ public class Swerve extends SubsystemBase implements Logged {
   public boolean facingAllianceWall() {
     double dsWallDirection =
         DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red ? 0 : 180;
-    return Math.abs(getPose().getRotation().getDegrees()) < 15;
+    return Math.abs(getHeading().getDegrees() - dsWallDirection) < 15;
   }
 
   public void dumpVisionQueue() {
