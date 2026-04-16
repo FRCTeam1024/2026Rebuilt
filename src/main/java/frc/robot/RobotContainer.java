@@ -146,13 +146,13 @@ public class RobotContainer implements Logged {
     driver.leftBumper().whileTrue(swerve.xLock());
 
     driver
-        .a()
+        .leftBumper()
         .whileTrue(
             Commands.waitUntil(() -> shooter.atSetpoint() && hood.atGoal())
                 .andThen(fuelHandler.feedIntoShooterCommand()));
 
     driver
-        .a()
+        .leftBumper()
         .and(() -> swerve.facingAllianceWall())
         .whileTrue(fuelHandler.passingSetpointCommand(swerve::getDistanceToPassingLine));
     // operator
