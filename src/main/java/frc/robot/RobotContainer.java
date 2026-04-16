@@ -86,8 +86,8 @@ public class RobotContainer implements Logged {
     NamedCommands.registerCommand(
         "shootFromAnywhere",
         new ParallelCommandGroup(
-            shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
-            hood.distanceCommand(swerve.getDistanceToHub())));
+            shooter.distanceCommand(swerve::getDistanceToHub).finallyDo(shooter::stop),
+            hood.distanceCommand(swerve::getDistanceToHub)));
     NamedCommands.registerCommand(
         "aimAtHub", swerve.driveFieldRelativeCmd(() -> 0, () -> 0, () -> 0, () -> true));
     // Configure the button bindings
@@ -145,20 +145,26 @@ public class RobotContainer implements Logged {
 
     driver.leftBumper().whileTrue(swerve.xLock());
 
-    driver.a().whileTrue(fuelHandler.passingSetpointCommand());
     driver
         .a()
         .whileTrue(
             Commands.waitUntil(() -> shooter.atSetpoint() && hood.atGoal())
                 .andThen(fuelHandler.feedIntoShooterCommand()));
 
-    operator
-        .x()
-        .whileTrue(
-            new ParallelCommandGroup(
-                shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
-                hood.distanceCommand(swerve.getDistanceToHub())));
-    // operator.x().whileTrue(fuelHandler.tuningModeCommand());
+    driver
+        .a()
+        .and(() -> swerve.facingAllianceWall())
+        .whileTrue(fuelHandler.passingSetpointCommand(swerve::getDistanceToPassingLine));
+    // operator
+    //     .x()
+    //     .whileTrue(
+    //         new ParallelCommandGroup(
+    //             shooter.distanceCommand(swerve.getDistanceToHub()).finallyDo(shooter::stop),
+    //             hood.distanceCommand(swerve.getDistanceToHub())));
+
+    operator.x().whileTrue(fuelHandler.aimHubCommand(swerve::getDistanceToHub));
+
+    driver.start().whileTrue(fuelHandler.tuningModeCommand());
 
     // shooter.setDefaultCommand(shooter.runIdleCommand(() -> 20));
     // driver.back().onTrue(shooter.runIdleCommand(() -> 0));

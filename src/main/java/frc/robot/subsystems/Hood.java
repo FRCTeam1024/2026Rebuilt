@@ -113,7 +113,7 @@ public class Hood extends SubsystemBase implements Logged {
     return run(
         () ->
             setGoalPosition(
-                ShooterParameterCalculator.calculate(distance.getAsDouble()).hoodPosition()));
+                ShooterParameterCalculator.calculateHub(distance.getAsDouble()).hoodPosition()));
   }
 
   public Command currentHome() {

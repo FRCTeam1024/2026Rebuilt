@@ -2,8 +2,10 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.ShooterParameterCalculator;
 import frc.lib.util.TunableNumber;
 import frc.robot.Constants;
+import java.util.function.DoubleSupplier;
 
 public class FuelHandler {
 
@@ -52,6 +54,18 @@ public class FuelHandler {
         intake.intakeCommand(), conveyor.feedAutoJamClear(), kicker.feedCommand());
   }
 
+  public Command aimHubCommand(DoubleSupplier distance) {
+    ShooterParameterCalculator.ShooterParameters parameters[] =
+        new ShooterParameterCalculator.ShooterParameters[1];
+    return Commands.parallel(
+        Commands.run(
+            () -> {
+              parameters[0] = ShooterParameterCalculator.calculateHub(distance.getAsDouble());
+            }),
+        shooter.velocityCommand(() -> parameters[0].shooterVelocity()),
+        hood.setPositionCommand(() -> parameters[0].hoodPosition()));
+  }
+
   public Command feedIntoShooterHoodCommand() {
     return Commands.parallel(
         intake.intakeCommand(),
@@ -69,10 +83,16 @@ public class FuelHandler {
         intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition));
   }
 
-  public Command passingSetpointCommand() {
+  public Command passingSetpointCommand(DoubleSupplier distance) {
+    ShooterParameterCalculator.ShooterParameters parameters[] =
+        new ShooterParameterCalculator.ShooterParameters[1];
     return Commands.parallel(
-        shooter.velocityCommand(() -> passingSpeedRPS),
-        hood.setPositionCommand(() -> passingHoodSetpointRPS));
+        Commands.run(
+            () -> {
+              parameters[0] = ShooterParameterCalculator.calculatePass(distance.getAsDouble());
+            }),
+        shooter.velocityCommand(() -> parameters[0].shooterVelocity()),
+        hood.setPositionCommand(() -> parameters[0].hoodPosition()));
   }
 
   public Command tuningModeCommand() {

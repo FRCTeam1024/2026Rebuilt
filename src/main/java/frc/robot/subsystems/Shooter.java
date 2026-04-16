@@ -147,7 +147,7 @@ public class Shooter extends SubsystemBase implements Logged {
     return runEnd(
         () -> {
           setVelocity(
-              ShooterParameterCalculator.calculate(distance.getAsDouble()).shooterVelocity());
+              ShooterParameterCalculator.calculateHub(distance.getAsDouble()).shooterVelocity());
         },
         () -> {
           stop();

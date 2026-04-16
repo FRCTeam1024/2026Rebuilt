@@ -25,6 +25,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.TunableNumber;
@@ -50,6 +51,7 @@ public class Swerve extends SubsystemBase implements Logged {
   private AprilTagVision vision = new AprilTagVision();
 
   private double hubDistance;
+  private double passingLineDistance;
 
   private TunableNumber headingKpTuner = new TunableNumber("Tuning/Swerve/headingKp", headingkP);
   private TunableNumber headingKdTuner = new TunableNumber("Tuning/Swerve/headingKd", headingkD);
@@ -346,8 +348,18 @@ public class Swerve extends SubsystemBase implements Logged {
         });
   }
 
-  public DoubleSupplier getDistanceToHub() {
-    return () -> hubDistance;
+  public double getDistanceToHub() {
+    return hubDistance;
+  }
+
+  public double getDistanceToPassingLine() {
+    return passingLineDistance;
+  }
+
+  public boolean facingAllianceWall() {
+    double dsWallDirection =
+        DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red ? 0 : 180;
+    return Math.abs(getPose().getRotation().getDegrees()) < 15;
   }
 
   public void dumpVisionQueue() {
@@ -374,14 +386,15 @@ public class Swerve extends SubsystemBase implements Logged {
         getPose());
 
     log("Pose", poseEstimator.getEstimatedPosition());
-    var hubCenter =
-        DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue)
-                == DriverStation.Alliance.Blue
-            ? FieldPoses.blueHubCenter
-            : FieldPoses.redHubCenter;
-    hubDistance = getPose().getTranslation().getDistance((hubCenter));
+
+    hubDistance = getPose().getTranslation().getDistance((FieldPoses.getHubCenter()));
+    passingLineDistance =
+        Math.abs(getPose().getTranslation().getX() - FieldPoses.getPassingLineX());
+
     log("Distance to center of hub", hubDistance);
+    log("Distance to passing line", passingLineDistance);
     log("Heading Setpoint", headingController.getSetpoint());
+    log("Facing alliance wall", facingAllianceWall());
     log("Gyro Angular Velocity", Units.rotationsToRadians(-gyro.getAngularVelocityYaw()));
     headingController.setP(headingKpTuner.get());
     headingController.setD(headingKdTuner.get());
@@ -391,12 +404,12 @@ public class Swerve extends SubsystemBase implements Logged {
 
     log("foobar ff", headingFeedforward.getKa());
     // Gyro timing diagnostics
-    var yawFrame = gyro.getYawFrame();
-    var angVeloFrame = gyro.getAngularVelocityFrame();
+    // var yawFrame = gyro.getYawFrame();
+    // var angVeloFrame = gyro.getAngularVelocityFrame();
 
-    log("GyroFrames/Yaw/Data", yawFrame.getData());
-    log("GyroFrames/Yaw/Timestamp", yawFrame.getTimestamp());
-    log("GyroFrames/AngularVelocity/Data", angVeloFrame.getZ());
-    log("GyroFrames/AngularVelocity/Timestamp", angVeloFrame.getTimestamp());
+    // log("GyroFrames/Yaw/Data", yawFrame.getData());
+    // log("GyroFrames/Yaw/Timestamp", yawFrame.getTimestamp());
+    // log("GyroFrames/AngularVelocity/Data", angVeloFrame.getZ());
+    // log("GyroFrames/AngularVelocity/Timestamp", angVeloFrame.getTimestamp());
   }
 }
