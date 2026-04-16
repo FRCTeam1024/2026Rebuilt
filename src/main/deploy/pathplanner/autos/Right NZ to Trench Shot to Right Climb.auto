@@ -15,15 +15,34 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "runIntake"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "Right Fuel Intake from Neutral Through Trench"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "extendIntake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "runIntake"
+                      }
+                    }
+                  ]
                 }
               }
             ]

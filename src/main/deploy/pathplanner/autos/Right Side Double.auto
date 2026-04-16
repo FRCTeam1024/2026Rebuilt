@@ -15,15 +15,27 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "runIntake"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "First Time Right Intake From Neutral"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "extendIntake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "runIntake"
                 }
               }
             ]
