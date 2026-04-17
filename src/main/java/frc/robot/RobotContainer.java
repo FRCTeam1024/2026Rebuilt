@@ -61,7 +61,8 @@ public class RobotContainer implements Logged {
             () -> applyDeadband(-driver.getLeftY(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getLeftX(), ControlConstants.stickDeadband),
             () -> applyDeadband(-driver.getRightX(), ControlConstants.stickDeadband),
-            driver.rightBumper()));
+            driver.rightBumper(),
+            driver.leftBumper()));
 
     hood.setDefaultCommand((hood.setPositionCommand(() -> 0)));
 
@@ -87,9 +88,11 @@ public class RobotContainer implements Logged {
         "shootFromAnywhere",
         new ParallelCommandGroup(
             shooter.distanceCommand(swerve::getDistanceToHub).finallyDo(shooter::stop),
-            hood.distanceCommand(swerve::getDistanceToHub).finallyDo(() -> hood.setGoalPosition(0))));
+            hood.distanceCommand(swerve::getDistanceToHub)
+                .finallyDo(() -> hood.setGoalPosition(0))));
     NamedCommands.registerCommand(
-        "aimAtHub", swerve.driveFieldRelativeCmd(() -> 0, () -> 0, () -> 0, () -> true));
+        "aimAtHub",
+        swerve.driveFieldRelativeCmd(() -> 0, () -> 0, () -> 0, () -> true, () -> false));
     // Configure the button bindings
     configureBindings();
 
@@ -157,13 +160,13 @@ public class RobotContainer implements Logged {
 
     driver
         .leftBumper()
+        .and(() -> swerve.facingAllianceWall())
         .whileTrue(
             Commands.waitUntil(() -> shooter.atSetpoint() && hood.atGoal())
                 .andThen(fuelHandler.feedIntoShooterCommand()));
 
     driver
         .leftBumper()
-        .and(() -> swerve.facingAllianceWall())
         .whileTrue(fuelHandler.passingSetpointCommand(swerve::getDistanceToPassingLine));
     // operator
     //     .x()

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.math.MathUtil.angleModulus;
 import static frc.robot.Constants.SwerveConstants;
 import static frc.robot.Constants.SwerveConstants.*;
 
@@ -25,7 +26,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.TunableNumber;
@@ -275,7 +275,11 @@ public class Swerve extends SubsystemBase implements Logged {
   }
 
   public Command driveFieldRelativeCmd(
-      DoubleSupplier x, DoubleSupplier y, DoubleSupplier omega, BooleanSupplier aim) {
+      DoubleSupplier x,
+      DoubleSupplier y,
+      DoubleSupplier omega,
+      BooleanSupplier aimHub,
+      BooleanSupplier aimPassingLine) {
     return run(
         () -> {
           double translationVal = x.getAsDouble();
@@ -287,14 +291,21 @@ public class Swerve extends SubsystemBase implements Logged {
             strafeVal = strafeVal * -1;
           }
 
-          var shouldAim = aim.getAsBoolean();
+          var shouldAim = aimHub.getAsBoolean() || aimPassingLine.getAsBoolean();
           if (shouldAim) {
+
             // If we were not previously aiming, reset
             if (!aiming) {
               headingController.reset(getHeading().getRadians());
             }
-            Rotation2d goalHeading =
-                FieldPoses.getHubCenter().minus(getPose().getTranslation()).getAngle();
+
+            Rotation2d goalHeading;
+            if (aimHub.getAsBoolean()) {
+              goalHeading = FieldPoses.getHubCenter().minus(getPose().getTranslation()).getAngle();
+            } else {
+              goalHeading = FieldPoses.getAllianceWallHeading();
+            }
+
             var prevSetpoint = headingController.getSetpoint();
             if (Math.abs(goalHeading.minus(getHeading()).getRadians())
                 > Constants.SwerveConstants.headingGoalRange) {
@@ -357,9 +368,8 @@ public class Swerve extends SubsystemBase implements Logged {
   }
 
   public boolean facingAllianceWall() {
-    double dsWallDirection =
-        DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red ? 0 : 180;
-    return Math.abs(getHeading().getDegrees() - dsWallDirection) < 15;
+    return Math.abs(angleModulus(getHeading().getRadians() - FieldPoses.getAllianceWallHeading().getRadians()))
+        < Units.degreesToRadians(15);
   }
 
   public void dumpVisionQueue() {
@@ -374,6 +384,7 @@ public class Swerve extends SubsystemBase implements Logged {
       log("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
       log("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
     }
+    log("AllianceWallHeadingAbsoluteError",Math.abs(angleModulus(getHeading().getRadians() - FieldPoses.getAllianceWallHeading().getRadians())));
     log("Gyro Yaw", getGyroYaw());
     poseEstimator.update(getGyroYaw(), getModulePositions());
     vision.processVisionUpdates(

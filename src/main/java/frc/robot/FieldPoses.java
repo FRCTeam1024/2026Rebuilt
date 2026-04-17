@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -20,5 +21,11 @@ public class FieldPoses {
   public static double getPassingLineX() {
     boolean isRed = DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red;
     return isRed ? redPassingLineX : bluePassingLineX;
+  }
+
+  public static Rotation2d getAllianceWallHeading() {
+    return DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red
+        ? Rotation2d.kZero
+        : Rotation2d.k180deg;
   }
 }
