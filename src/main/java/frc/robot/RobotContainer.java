@@ -94,6 +94,16 @@ public class RobotContainer implements Logged {
     configureBindings();
 
     autoChooser = AutoBuilder.buildAutoChooser();
+    // This flips all the paths (Left to right) and adds both to the chooser
+    // autoChooser =
+    // AutoBuilder.buildAutoChooserWithOptionsModifier(
+    //     (autos) ->
+    //         autos.flatMap(
+    //             auto -> {
+    //               var flipped = new PathPlannerAuto(auto.getName(), true);
+    //               flipped.setName("FLIPPED" + flipped.getName());
+    //               return Stream.of(auto, flipped);
+    //             }));
     setupDashboard();
   }
 
