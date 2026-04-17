@@ -327,7 +327,7 @@ public final class Constants {
     public static final double homePosition = 0;
     public static final double stowPosition = 0;
     public static final double insideBumperPosition = 0.089;
-    public static final double intakePosition = 0.224;
+    public static final double intakePosition = 0.216553;
   }
 
   public static final class ClimberConstants {
