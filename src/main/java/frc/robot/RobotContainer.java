@@ -153,7 +153,7 @@ public class RobotContainer implements Logged {
     operator.back().whileTrue(intakePivot.currentHome());
     operator.start().whileTrue(hood.currentHome());
 
-    driver.leftBumper().whileTrue(swerve.xLock());
+    // driver.leftBumper().whileTrue(swerve.xLock());
 
     driver
         .leftBumper()
