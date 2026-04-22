@@ -368,7 +368,9 @@ public class Swerve extends SubsystemBase implements Logged {
   }
 
   public boolean facingAllianceWall() {
-    return Math.abs(angleModulus(getHeading().getRadians() - FieldPoses.getAllianceWallHeading().getRadians()))
+    return Math.abs(
+            angleModulus(
+                getHeading().getRadians() - FieldPoses.getAllianceWallHeading().getRadians()))
         < Units.degreesToRadians(15);
   }
 
@@ -384,7 +386,11 @@ public class Swerve extends SubsystemBase implements Logged {
       log("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
       log("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
     }
-    log("AllianceWallHeadingAbsoluteError",Math.abs(angleModulus(getHeading().getRadians() - FieldPoses.getAllianceWallHeading().getRadians())));
+    log(
+        "AllianceWallHeadingAbsoluteError",
+        Math.abs(
+            angleModulus(
+                getHeading().getRadians() - FieldPoses.getAllianceWallHeading().getRadians())));
     log("Gyro Yaw", getGyroYaw());
     poseEstimator.update(getGyroYaw(), getModulePositions());
     vision.processVisionUpdates(
