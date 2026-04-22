@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.util.TunableNumber;
 import frc.robot.Constants;
 import frc.robot.ShooterParameterCalculator;
+import frc.robot.SurfaceSpeedCalculator;
 import java.util.function.DoubleSupplier;
 
 public class FuelHandler {
@@ -65,7 +66,11 @@ public class FuelHandler {
               parameters[0] = ShooterParameterCalculator.calculateHub(distance.getAsDouble());
             }),
         shooter.velocityCommand(() -> parameters[0].shooterVelocity()),
-        hood.setPositionCommand(() -> parameters[0].hoodPosition()));
+        hood.setPositionCommand(() -> parameters[0].hoodPosition()),
+        kicker.velocityCommand(
+            () ->
+                SurfaceSpeedCalculator.getVelocityForMatchingSurfaceSpeed(
+                    parameters[0].shooterVelocity(), 4, 3)));
   }
 
   public Command feedIntoShooterHoodCommand() {
