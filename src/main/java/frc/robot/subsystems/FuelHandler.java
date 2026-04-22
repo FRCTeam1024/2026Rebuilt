@@ -23,6 +23,8 @@ public class FuelHandler {
       new TunableNumber("FuelHandlerTuning/HoodPosition", 0);
   private final TunableNumber flywheelVelocityTuner =
       new TunableNumber("FuelHandlerTuning/FlywheelVelocity", 0);
+  private final TunableNumber kickerVelocityTuner =
+      new TunableNumber("FuelHandlerTuning/KickerVelocity", passingHoodSetpointRPS);
 
   public FuelHandler(
       Intake intake,
@@ -97,6 +99,8 @@ public class FuelHandler {
 
   public Command tuningModeCommand() {
     return Commands.parallel(
-        shooter.velocityCommand(flywheelVelocityTuner), hood.setPositionCommand(hoodPositionTuner));
+        shooter.velocityCommand(flywheelVelocityTuner),
+        hood.setPositionCommand(hoodPositionTuner),
+        kicker.velocityCommand(kickerVelocityTuner));
   }
 }
