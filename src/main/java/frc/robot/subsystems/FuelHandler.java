@@ -25,7 +25,7 @@ public class FuelHandler {
   private final TunableNumber flywheelVelocityTuner =
       new TunableNumber("FuelHandlerTuning/FlywheelVelocity", 0);
   private final TunableNumber kickerVelocityTuner =
-      new TunableNumber("FuelHandlerTuning/KickerVelocity", passingHoodSetpointRPS);
+      new TunableNumber("FuelHandlerTuning/KickerVelocity", 0);
 
   public FuelHandler(
       Intake intake,
@@ -54,7 +54,12 @@ public class FuelHandler {
 
   public Command feedIntoShooterCommand() {
     return Commands.parallel(
-        intake.intakeCommand(), conveyor.feedAutoJamClear(), kicker.feedCommand());
+        intake.intakeCommand(),
+        conveyor.feedAutoJamClear(),
+        kicker.velocityCommand(
+            () ->
+                SurfaceSpeedCalculator.getVelocityForMatchingSurfaceSpeed(
+                    shooter.getVelocitySetpoint(), 4, 3)));
   }
 
   public Command aimHubCommand(DoubleSupplier distance) {
@@ -66,11 +71,7 @@ public class FuelHandler {
               parameters[0] = ShooterParameterCalculator.calculateHub(distance.getAsDouble());
             }),
         shooter.velocityCommand(() -> parameters[0].shooterVelocity()),
-        hood.setPositionCommand(() -> parameters[0].hoodPosition()),
-        kicker.velocityCommand(
-            () ->
-                SurfaceSpeedCalculator.getVelocityForMatchingSurfaceSpeed(
-                    parameters[0].shooterVelocity(), 4, 3)));
+        hood.setPositionCommand(() -> parameters[0].hoodPosition()));
   }
 
   public Command feedIntoShooterHoodCommand() {
@@ -104,8 +105,6 @@ public class FuelHandler {
 
   public Command tuningModeCommand() {
     return Commands.parallel(
-        shooter.velocityCommand(flywheelVelocityTuner),
-        hood.setPositionCommand(hoodPositionTuner),
-        kicker.velocityCommand(kickerVelocityTuner));
+        shooter.velocityCommand(flywheelVelocityTuner), hood.setPositionCommand(hoodPositionTuner));
   }
 }

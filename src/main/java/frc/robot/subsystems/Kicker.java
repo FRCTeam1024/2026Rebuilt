@@ -41,10 +41,10 @@ public class Kicker extends SubsystemBase implements Logged {
 
     // Upper configs
     config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    config.Slot0.kS = 0.12343;
+    config.Slot0.kS = 0.16265;
     config.Slot0.kV = 0.11711;
     config.Slot0.kA = 0.0035646;
-    config.Slot0.kP = 0.14256;
+    config.Slot0.kP = 0.164;
 
     upper.getConfigurator().apply(config);
 
@@ -53,7 +53,7 @@ public class Kicker extends SubsystemBase implements Logged {
     config.Slot0.kS = 0.086639;
     config.Slot0.kV = 0.11848;
     config.Slot0.kA = 0.0029633;
-    config.Slot0.kP = 0.13805;
+    config.Slot0.kP = 0.1561;
     lower.getConfigurator().apply(config);
 
     BaseStatusSignal.setUpdateFrequencyForAll(
@@ -164,6 +164,7 @@ public class Kicker extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
+    log("Requested Velocity", velocityRequest.Velocity);
     log("Requested Voltage", voltageRequest.Output);
     log("Upper Supply Current", upper.getSupplyCurrent().getValueAsDouble());
     log("Upper Stator Current", upper.getStatorCurrent().getValueAsDouble());

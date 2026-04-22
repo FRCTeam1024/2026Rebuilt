@@ -113,6 +113,10 @@ public class Shooter extends SubsystemBase implements Logged {
         && Math.abs(right.getVelocity().getValueAsDouble()) < 0.01;
   }
 
+  public double getVelocitySetpoint() {
+    return velocityRequest.Velocity;
+  }
+
   /**
    * Spin the shooter up to the given velocity. Ends when the shooter reaches the target velocity.
    * The shooter will not be stopped when the command ends.
