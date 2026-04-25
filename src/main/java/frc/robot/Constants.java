@@ -237,8 +237,8 @@ public final class Constants {
     public static final double oscillateReverseTime = 0.05;
     public static final double oscillateOffTime2 = 0.05;
 
-    public static final double continuousFeedVolts = 7;
-
+    public static final double continuousFeedVolts = 5;
+    
     public static final double jamThresholdAmps = 30.0;
     public static final double jamThresholdDurationSeconds = 0.15;
 
