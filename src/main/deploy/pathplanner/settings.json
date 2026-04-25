@@ -4,6 +4,7 @@
   "holonomicMode": true,
   "pathFolders": [],
   "autoFolders": [
+    "Hidden",
     "Test auto"
   ],
   "defaultMaxVel": 2.0,
