@@ -20,6 +20,8 @@ import frc.robot.Constants.ControlConstants;
 import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.*;
+import java.util.List;
+import java.util.Set;
 import monologue.Logged;
 
 /**
@@ -53,6 +55,16 @@ public class RobotContainer implements Logged {
   private final SendableChooser<Command> autoChooser;
 
   private final ShuffleboardTab driverTab = Shuffleboard.getTab("Driver");
+
+  private final Set<String> hiddenAutos =
+      List.of(
+              "Center Hub Shot",
+              "Left NZ to Trench Shot",
+              "Right NZ to Trench Shot",
+              "Z Test Auto - Do Not Use")
+          .stream()
+          .map(String::toLowerCase)
+          .collect(java.util.stream.Collectors.toSet());
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -96,7 +108,6 @@ public class RobotContainer implements Logged {
     // Configure the button bindings
     configureBindings();
 
-    autoChooser = AutoBuilder.buildAutoChooser();
     // This flips all the paths (Left to right) and adds both to the chooser
     // autoChooser =
     // AutoBuilder.buildAutoChooserWithOptionsModifier(
@@ -107,6 +118,18 @@ public class RobotContainer implements Logged {
     //               flipped.setName("FLIPPED" + flipped.getName());
     //               return Stream.of(auto, flipped);
     //             }));
+    autoChooser =
+        AutoBuilder.buildAutoChooserWithOptionsModifier(
+            autos ->
+                autos.filter(
+                    auto -> {
+                      if (isAutoHidden(auto.getName())) {
+                        System.out.println("Hiding auto: " + auto.getName());
+                        return false;
+                      } else {
+                        return true;
+                      }
+                    }));
     setupDashboard();
   }
 
@@ -204,6 +227,10 @@ public class RobotContainer implements Logged {
     driverTab.add(autoChooser).withPosition(0, 0).withSize(2, 1);
     driverTab.addBoolean("Shooter Ready", () -> shooter.atSetpoint()).withPosition(0, 1);
     Shuffleboard.selectTab("Driver");
+  }
+
+  private boolean isAutoHidden(String autoName) {
+    return hiddenAutos.contains(autoName.toLowerCase());
   }
 
   /**

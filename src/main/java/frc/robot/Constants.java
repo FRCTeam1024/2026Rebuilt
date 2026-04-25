@@ -238,7 +238,7 @@ public final class Constants {
     public static final double oscillateOffTime2 = 0.05;
 
     public static final double continuousFeedVolts = 5;
-    
+
     public static final double jamThresholdAmps = 30.0;
     public static final double jamThresholdDurationSeconds = 0.15;
 
@@ -363,8 +363,8 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-    public static final double kPXController = 1;
-    public static final double kPYController = 1;
+    public static final double kPXController = 2;
+    public static final double kPYController = 2;
     public static final double kPThetaController = 1;
 
     /* Constraint for the motion profilied robot angle controller */
