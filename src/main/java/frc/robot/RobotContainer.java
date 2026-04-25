@@ -83,7 +83,7 @@ public class RobotContainer implements Logged {
         "retractIntake", intakePivot.setGoalCommand(PivotConstants.stowPosition));
     NamedCommands.registerCommand("alignForRightClimb", swerve.autoClimbAdjust(false));
     NamedCommands.registerCommand("alignForLeftClimb", swerve.autoClimbAdjust(true));
-    NamedCommands.registerCommand("runIntake", intake.intakeCommand());
+    NamedCommands.registerCommand("runIntake", fuelHandler.spinIntakeCommand());
     NamedCommands.registerCommand(
         "shootFromAnywhere",
         new ParallelCommandGroup(
@@ -142,7 +142,10 @@ public class RobotContainer implements Logged {
 
     operator.leftBumper().whileTrue(fuelHandler.vomitCommand());
 
-    operator.leftTrigger(0.1).or(driver.leftTrigger(0.1)).whileTrue(fuelHandler.intakeCommand());
+    operator
+        .leftTrigger(0.1)
+        .or(driver.leftTrigger(0.1))
+        .whileTrue(fuelHandler.extendAndSpinIntakeCommand());
 
     operator.y().onTrue(intakePivot.setGoalCommand(PivotConstants.intakePosition));
     operator.a().onTrue(intakePivot.setGoalCommand(PivotConstants.stowPosition));

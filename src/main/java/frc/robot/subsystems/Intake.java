@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.function.BooleanSupplier;
 import monologue.Logged;
 
 public class Intake extends SubsystemBase implements Logged {
@@ -60,20 +61,28 @@ public class Intake extends SubsystemBase implements Logged {
     setOutput(0);
   }
 
-  public Command intakeCommand() {
+  public Command intakeCommand(BooleanSupplier safeToRun) {
     return runEnd(
         () -> {
-          setOutput(1.0);
+          if (safeToRun.getAsBoolean()) {
+            setOutput(1.0);
+          } else {
+            stop();
+          }
         },
         () -> {
           stop();
         });
   }
 
-  public Command ejectCommand() {
+  public Command ejectCommand(BooleanSupplier safeToRun) {
     return runEnd(
         () -> {
-          setOutput(-1.0);
+          if (safeToRun.getAsBoolean()) {
+            setOutput(-1.0);
+          } else {
+            stop();
+          }
         },
         () -> {
           stop();

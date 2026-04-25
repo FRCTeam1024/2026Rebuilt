@@ -93,6 +93,10 @@ public class IntakePivot extends SubsystemBase implements Logged {
     return motor.getVelocity().getValueAsDouble();
   }
 
+  public boolean safeToIntake() {
+    return getPosition() > safeToIntakePosition;
+  }
+
   public Command setGoalCommand(double position) {
     return runOnce(() -> setGoal(position)).withName("Set Pivot Position");
   }

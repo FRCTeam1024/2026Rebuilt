@@ -42,10 +42,13 @@ public class FuelHandler {
     this.intakePivot = intakePivot;
   }
 
-  public Command intakeCommand() {
+  public Command spinIntakeCommand() {
+    return intake.intakeCommand(intakePivot::safeToIntake);
+  }
+
+  public Command extendAndSpinIntakeCommand() {
     return Commands.parallel(
-        intake.intakeCommand(),
-        intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition));
+        spinIntakeCommand(), intakePivot.setGoalCommand(Constants.PivotConstants.intakePosition));
   }
 
   public Command extendIntake() {
@@ -54,7 +57,7 @@ public class FuelHandler {
 
   public Command feedIntoShooterCommand() {
     return Commands.parallel(
-        intake.intakeCommand(),
+        intake.intakeCommand(intakePivot::safeToIntake),
         conveyor.feedAutoJamClear(),
         kicker.velocityCommand(
             () ->
@@ -76,7 +79,7 @@ public class FuelHandler {
 
   public Command feedIntoShooterHoodCommand() {
     return Commands.parallel(
-        intake.intakeCommand(),
+        spinIntakeCommand(),
         conveyor.feedCommand(),
         kicker.feedCommand(),
         hood.setPositionCommand(() -> 6));
@@ -84,7 +87,7 @@ public class FuelHandler {
 
   public Command vomitCommand() {
     return Commands.parallel(
-        intake.ejectCommand(),
+        intake.ejectCommand(intakePivot::safeToIntake),
         conveyor.ejectCommand(),
         kicker.retractCommand(),
         shooter.velocityCommand(() -> -30),
