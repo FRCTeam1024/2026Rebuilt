@@ -14,14 +14,20 @@ public class ShooterParameterCalculator {
 
   static {
     hubMap.put(0.5, new ShooterParameters(0, 42.0));
-    hubMap.put(1.268, new ShooterParameters(0, 42.0)); // hub shot
-    hubMap.put(1.706, new ShooterParameters(10, 42)); // Side auto shot
-    hubMap.put(1.962, new ShooterParameters(20, 45)); // 1 robot away from hub
-    hubMap.put(2.267, new ShooterParameters(22, 45));
-    hubMap.put(2.572, new ShooterParameters(24, 47));
-    hubMap.put(3.149, new ShooterParameters(25, 50)); // front of tower shop test
-    hubMap.put(3.900, new ShooterParameters(35, 54));
-    hubMap.put(5.245, new ShooterParameters(67, 57)); // Corner
+    hubMap.put(1.268, new ShooterParameters(0, 38)); // hub shot
+    hubMap.put(1.706, new ShooterParameters(3, 42)); // Side auto shot
+    hubMap.put(1.962, new ShooterParameters(7, 42)); // 1 robot away from hub
+    hubMap.put(2.267, new ShooterParameters(7, 44));
+    hubMap.put(2.572, new ShooterParameters(7, 46));
+    hubMap.put(3.13, new ShooterParameters(10, 50)); // front of tower shop test
+    hubMap.put(3.45, new ShooterParameters(12, 52));
+    // hubMap.put(3.45, new ShooterParameters(11, 54)); This was ~ok, shots were really high with
+    // less consistency
+    hubMap.put(3.76, new ShooterParameters(16, 53)); // Corner
+    hubMap.put(3.900, new ShooterParameters(19, 54));
+    hubMap.put(4.5, new ShooterParameters(27, 56));
+    hubMap.put(5.21, new ShooterParameters(32.5, 60)); // Corner
+
     // map.put(4.096, new ShooterParameters(70,57));//test was limited by ceiling height
   }
 

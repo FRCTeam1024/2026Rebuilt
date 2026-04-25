@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Constants.ShooterConstants.*;
+import static frc.robot.SurfaceSpeedCalculator.angularVelocityToSurfaceSpeed;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.SignalLogger;
@@ -275,12 +276,19 @@ public class Shooter extends SubsystemBase implements Logged {
   public void periodic() {
     // log("Requested Voltage", voltageRequest.Output);
     log("Requested Velocity", velocityRequest.Velocity);
+    log(
+        "Requested Velocity (Surface Speed)",
+        angularVelocityToSurfaceSpeed(velocityRequest.Velocity, 4));
     log("Left Supply Current", left.getSupplyCurrent().getValueAsDouble());
     log("Right Supply Current", right.getSupplyCurrent().getValueAsDouble());
     log("Left Stator Current", left.getStatorCurrent().getValueAsDouble());
     log("Right Stator Current", right.getStatorCurrent().getValueAsDouble());
-    log("Left Velocity", left.getVelocity().getValueAsDouble());
-    log("Right Velocity", right.getVelocity().getValueAsDouble());
+    var leftVelocity = left.getVelocity().getValueAsDouble();
+    var rightVelocity = right.getVelocity().getValueAsDouble();
+    log("Left Velocity", leftVelocity);
+    log("Left Surface Speed", angularVelocityToSurfaceSpeed(leftVelocity, 4));
+    log("Right Velocity", rightVelocity);
+    log("Right Surface Speed", angularVelocityToSurfaceSpeed(rightVelocity, 4));
     log("Left Applied Voltage", left.getMotorVoltage().getValueAsDouble());
     log("Right Applied Voltage", right.getMotorVoltage().getValueAsDouble());
     log("Left Supply Voltage", left.getSupplyVoltage().getValueAsDouble());
@@ -293,5 +301,9 @@ public class Shooter extends SubsystemBase implements Logged {
     log("Right bridge status", right.getBridgeOutput().toString());
     log("Right faults", right.getFaultField().getValue());
     log("Left faults", left.getFaultField().getValue());
+    log("Diagnostics/LeftStationaryRotorFault", left.getFault_RotorFault1().getValue());
+    log("Diagnostics/RightStationaryRotorFault", right.getFault_RotorFault1().getValue());
+    log("Diagnostics/LeftInMotionRotorFault", left.getFault_RotorFault2().getValue());
+    log("Diagnostics/RightInMotionRotorFault", right.getFault_RotorFault2().getValue());
   }
 }

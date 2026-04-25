@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Constants.KickerConstants.*;
+import static frc.robot.SurfaceSpeedCalculator.angularVelocityToSurfaceSpeed;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.SignalLogger;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.SurfaceSpeedCalculator;
 import java.util.function.DoubleSupplier;
 import monologue.Logged;
 
@@ -68,7 +70,12 @@ public class Kicker extends SubsystemBase implements Logged {
         lower.getMotorVoltage(),
         upper.getSupplyVoltage(),
         lower.getSupplyVoltage());
-    BaseStatusSignal.setUpdateFrequencyForAll(4, upper.getDeviceTemp(), lower.getDeviceTemp());
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        4,
+        upper.getDeviceTemp(),
+        lower.getDeviceTemp(),
+        upper.getFaultField(),
+        lower.getFaultField());
 
     // For sysID
     // BaseStatusSignal.setUpdateFrequencyForAll(
@@ -165,18 +172,31 @@ public class Kicker extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     log("Requested Velocity", velocityRequest.Velocity);
+    log(
+        "Requested Velocity (Surface Speed)",
+        angularVelocityToSurfaceSpeed(velocityRequest.Velocity, 3));
     log("Requested Voltage", voltageRequest.Output);
     log("Upper Supply Current", upper.getSupplyCurrent().getValueAsDouble());
     log("Upper Stator Current", upper.getStatorCurrent().getValueAsDouble());
-    log("Upper Velocity", upper.getVelocity().getValueAsDouble());
+    var upperVelocity = upper.getVelocity().getValueAsDouble();
+    log("Upper Velocity", upperVelocity);
+    log("Upper Surface Speed", angularVelocityToSurfaceSpeed(upperVelocity, 3));
     log("Upper Applied Voltage", upper.getMotorVoltage().getValueAsDouble());
     log("Upper Supply Voltage", upper.getSupplyVoltage().getValueAsDouble());
     log("Upper Temperature", upper.getDeviceTemp().getValueAsDouble());
     log("Lower Supply Current", lower.getSupplyCurrent().getValueAsDouble());
     log("Lower Stator Current", lower.getStatorCurrent().getValueAsDouble());
-    log("Lower Velocity", lower.getVelocity().getValueAsDouble());
+    var lowerVelocity = lower.getVelocity().getValueAsDouble();
+    log("Lower Velocity", lowerVelocity);
+    log(
+        "Lower Surface Speed",
+        SurfaceSpeedCalculator.angularVelocityToSurfaceSpeed(lowerVelocity, 3));
     log("Lower Applied Voltage", lower.getMotorVoltage().getValueAsDouble());
     log("Lower Supply Voltage", lower.getSupplyVoltage().getValueAsDouble());
     log("Lower Temperature", lower.getDeviceTemp().getValueAsDouble());
+    log("Diagnostics/UpperStationaryRotorFault", upper.getFault_RotorFault1().getValue());
+    log("Diagnostics/LowerStationaryRotorFault", lower.getFault_RotorFault1().getValue());
+    log("Diagnostics/UpperInMotionRotorFault", upper.getFault_RotorFault2().getValue());
+    log("Diagnostics/LowerInMotionRotorFault", lower.getFault_RotorFault2().getValue());
   }
 }
