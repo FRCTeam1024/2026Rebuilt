@@ -18,7 +18,7 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
 
   public static final AprilTagFieldLayout kAndyMarkField =
-      AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltAndymark);
+      AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
   public static boolean aprilTagsEnabled = true;
 
@@ -346,11 +346,11 @@ public final class Constants {
     public static final double positionTolerance = 5;
 
     public static final Pose2d rightBlueClimbPose =
-        new Pose2d(1.066, 2.881, Rotation2d.fromDegrees(0));
+        new Pose2d(1.118, 2.864, Rotation2d.fromDegrees(0));
     public static final Pose2d leftBlueClimbPose =
         new Pose2d(1.130, 4.696, Rotation2d.fromDegrees(180));
     public static final Pose2d rightRedClimbPose =
-        new Pose2d(15.447, 5.215, Rotation2d.fromDegrees(180));
+        new Pose2d(15.447, 5.199, Rotation2d.fromDegrees(180));
     public static final Pose2d leftRedClimbPose =
         new Pose2d(15.399, 3.423, Rotation2d.fromDegrees(0));
   }
