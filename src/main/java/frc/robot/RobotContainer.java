@@ -209,7 +209,6 @@ public class RobotContainer implements Logged {
     // driver.back().onTrue(shooter.runIdleCommand(() -> 0));
 
     // operator.start().onTrue(shooter.sysIdRoutine());
-    // operator.leftStick().onTrue(kicker.sysIdRoutine());
 
     SmartDashboard.putNumber("Shooter velocity", hubShotRPS);
   }
@@ -220,7 +219,6 @@ public class RobotContainer implements Logged {
 
   public void emergencyStop() {
     shooter.emergencyStop();
-    kicker.emergencyStop();
   }
 
   public void setupDashboard() {

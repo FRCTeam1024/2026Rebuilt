@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.util.TunableNumber;
 import frc.robot.Constants;
 import frc.robot.ShooterParameterCalculator;
-import frc.robot.SurfaceSpeedCalculator;
 import java.util.function.DoubleSupplier;
 
 public class FuelHandler {
@@ -24,8 +23,6 @@ public class FuelHandler {
       new TunableNumber("FuelHandlerTuning/HoodPosition", 0);
   private final TunableNumber flywheelVelocityTuner =
       new TunableNumber("FuelHandlerTuning/FlywheelVelocity", 0);
-  private final TunableNumber kickerVelocityTuner =
-      new TunableNumber("FuelHandlerTuning/KickerVelocity", 0);
 
   public FuelHandler(
       Intake intake,
@@ -57,12 +54,7 @@ public class FuelHandler {
 
   public Command feedIntoShooterCommand() {
     return Commands.parallel(
-        intake.intakeCommand(intakePivot::safeToIntake),
-        conveyor.feedAutoJamClear(),
-        kicker.velocityCommand(
-            () ->
-                SurfaceSpeedCalculator.getVelocityForMatchingSurfaceSpeed(
-                    shooter.getVelocitySetpoint(), 4, 3)));
+        intake.intakeCommand(intakePivot::safeToIntake), conveyor.feedAutoJamClear(), kicker.feedCommand());
   }
 
   public Command aimHubCommand(DoubleSupplier distance) {
